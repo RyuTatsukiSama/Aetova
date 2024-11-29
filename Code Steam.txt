@@ -1,0 +1,22 @@
+
+Steam, la plateforme de distribution de jeux vidéo développée par Valve, est un logiciel complexe codé en plusieurs langages selon les différentes composantes de son architecture. Voici une répartition des principaux langages utilisés :
+
+1. Client Steam
+C++ : Le client principal de Steam est majoritairement développé en C++. Ce langage est couramment utilisé pour des applications performantes, comme les logiciels de jeu, grâce à son contrôle précis des ressources et des performances.
+HTML/CSS/JavaScript : L'interface utilisateur de Steam utilise un moteur basé sur Chromium (un projet open-source derrière Google Chrome), ce qui signifie que des technologies web modernes comme HTML, CSS et JavaScript sont utilisées pour créer des parties de l'interface.
+Exemples : La bibliothèque Steam, le magasin, et le système de chat.
+2. Backend Steam
+Java et Python : Valve utilise ces langages pour une partie des services backend, notamment pour la gestion des bases de données, les API web, et d'autres services serveurs.
+C++ : Encore ici, ce langage est utilisé pour les composants critiques, tels que le réseau et les serveurs dédiés.
+3. Fonctionnalités spécifiques
+Node.js : Utilisé pour certaines fonctionnalités en temps réel, comme les services de chat ou les notifications.
+Go (Golang) : Valve a également adopté Go pour certaines parties de l'infrastructure backend, en raison de sa simplicité et de ses performances.
+SQL : Pour gérer les données, Steam utilise probablement des bases de données SQL avec des requêtes pour des systèmes comme les comptes utilisateurs, les jeux achetés, etc.
+4. Big Picture et Steam Deck
+C++ et Vulkan/OpenGL/DirectX : Les modes Big Picture et les graphismes sur le Steam Deck reposent fortement sur des technologies graphiques développées en C++ et utilisant des API comme Vulkan ou DirectX.
+Linux (Proton) : Steam Deck utilise une base Linux avec Proton, un outil basé sur Wine, qui permet de faire fonctionner les jeux Windows sur Linux. Proton et ses outils associés sont majoritairement codés en C et C++.
+Pourquoi ces choix ?
+Performance : Steam doit être capable de gérer une grande charge d'utilisateurs simultanés (des millions en ligne à tout moment), d'où l'utilisation de C++ et de technologies performantes pour les parties critiques.
+Portabilité : Le client Steam fonctionne sur Windows, macOS, et Linux, donc Valve utilise des technologies qui permettent un code portable.
+Interface moderne : Les technologies web comme HTML et JavaScript permettent une mise à jour rapide et une interface utilisateur plus dynamique.
+Si tu as une question sur une partie spécifique de Steam (client, backend, ou Steam Deck), je peux approfondir. 
