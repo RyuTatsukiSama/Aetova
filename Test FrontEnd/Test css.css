@@ -1,3 +1,16 @@
 p {
     color: green;
 }
+
+html {
+    background-color: darkslategrey;
+}
+
+#buttons{
+    top: 10px;
+    padding: 82px;
+    margin: auto;
+    width: 450px;
+    background-color: white;
+    position: relative;
+}
