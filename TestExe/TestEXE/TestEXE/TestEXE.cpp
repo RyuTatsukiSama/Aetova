@@ -21,7 +21,7 @@ int main()
 		std::cout << fail.what() << '\n';
 	}
 
-	string path = "D:\\SVN\\Eleves\\dribault\\Unity\\Build CreaRaider\\"+str+".exe";
+	string path = "Build\\Journeep.exe";
 	std::wstring widestr = std::wstring(path.begin(), path.end());
 	const wchar_t* widecstr = widestr.c_str();
 
