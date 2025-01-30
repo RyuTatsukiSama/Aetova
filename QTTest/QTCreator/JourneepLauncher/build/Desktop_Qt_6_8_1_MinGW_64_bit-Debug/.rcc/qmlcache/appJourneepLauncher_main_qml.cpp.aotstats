@@ -1,0 +1,20 @@
+[
+    {
+        "moduleFiles": [
+            {
+                "entries": [
+                    {
+                        "codegenSuccessfull": false,
+                        "column": 23,
+                        "durationMicroseconds": 0,
+                        "errorMessage": "Cannot resolve property type  for binding on fill.",
+                        "functionName": "fill",
+                        "line": 15
+                    }
+                ],
+                "filepath": "C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/main.qml"
+            }
+        ],
+        "moduleId": "JourneepLauncher(appJourneepLauncher)"
+    }
+]

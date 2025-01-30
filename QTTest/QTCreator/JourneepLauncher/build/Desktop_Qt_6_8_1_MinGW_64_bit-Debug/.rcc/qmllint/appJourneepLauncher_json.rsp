@@ -1,0 +1,17 @@
+--bare
+-I
+C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug
+-I
+C:/Qt/6.8.1/mingw_64/qml
+--resource
+C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/.qt/rcc/qmake_JourneepLauncher.qrc
+--resource
+C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/.qt/rcc/appJourneepLauncher_raw_qml_0.qrc
+C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/main.qml
+C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/UntitledProject1/Constants.qml
+C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/UntitledProject1/EventListModel.qml
+C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/UntitledProject1/EventListSimulator.qml
+C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/UntitledProject1Content/App.qml
+C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/UntitledProject1Content/Screen01.ui.qml
+--json
+C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/appJourneepLauncher_qmllint.json

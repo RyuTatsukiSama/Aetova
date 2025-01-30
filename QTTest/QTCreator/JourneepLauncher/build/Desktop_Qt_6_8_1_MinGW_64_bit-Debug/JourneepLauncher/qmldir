@@ -1,0 +1,9 @@
+module JourneepLauncher
+typeinfo appJourneepLauncher.qmltypes
+prefer :/qt/qml/JourneepLauncher/
+Constants 1.0 UntitledProject1/Constants.qml
+EventListModel 1.0 UntitledProject1/EventListModel.qml
+EventListSimulator 1.0 UntitledProject1/EventListSimulator.qml
+App 1.0 UntitledProject1Content/App.qml
+Screen01 1.0 UntitledProject1Content/Screen01.ui.qml
+

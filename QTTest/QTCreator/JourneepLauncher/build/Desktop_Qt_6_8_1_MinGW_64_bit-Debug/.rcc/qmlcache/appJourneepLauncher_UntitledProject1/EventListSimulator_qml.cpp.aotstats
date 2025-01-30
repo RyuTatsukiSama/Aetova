@@ -1,0 +1,28 @@
+[
+    {
+        "moduleFiles": [
+            {
+                "entries": [
+                    {
+                        "codegenSuccessfull": false,
+                        "column": 22,
+                        "durationMicroseconds": 198,
+                        "errorMessage": "Cannot access value for name EventSimulator",
+                        "functionName": "onTriggered",
+                        "line": 15
+                    },
+                    {
+                        "codegenSuccessfull": false,
+                        "column": 28,
+                        "durationMicroseconds": 83,
+                        "errorMessage": "Cannot access value for name EventSystem",
+                        "functionName": "onCompleted",
+                        "line": 20
+                    }
+                ],
+                "filepath": "C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/UntitledProject1/EventListSimulator.qml"
+            }
+        ],
+        "moduleId": "JourneepLauncher(appJourneepLauncher)"
+    }
+]

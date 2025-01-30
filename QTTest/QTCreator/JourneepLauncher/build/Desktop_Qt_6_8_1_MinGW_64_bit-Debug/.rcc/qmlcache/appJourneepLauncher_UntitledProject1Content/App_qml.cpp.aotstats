@@ -1,0 +1,28 @@
+[
+    {
+        "moduleFiles": [
+            {
+                "entries": [
+                    {
+                        "codegenSuccessfull": true,
+                        "column": 12,
+                        "durationMicroseconds": 366,
+                        "errorMessage": "",
+                        "functionName": "width",
+                        "line": 8
+                    },
+                    {
+                        "codegenSuccessfull": true,
+                        "column": 13,
+                        "durationMicroseconds": 166,
+                        "errorMessage": "",
+                        "functionName": "height",
+                        "line": 9
+                    }
+                ],
+                "filepath": "C:/Users/Etudiant2/Documents/GitHub/SteamLike/QTTest/QTCreator/JourneepLauncher/UntitledProject1Content/App.qml"
+            }
+        ],
+        "moduleId": "JourneepLauncher(appJourneepLauncher)"
+    }
+]
