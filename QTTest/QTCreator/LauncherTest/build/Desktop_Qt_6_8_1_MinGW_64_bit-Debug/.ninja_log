@@ -1,0 +1,40 @@
+# ninja log v6
+5	724	7597875259730293	build.ninja	ac14d028d26c2525
+26	51	7597875262083468	CMakeFiles/clean.additional	baedbe210acaa455
+51	58	7597875262336818	clean	577b940aee94fbd7
+12	545	7597875482856828	LauncherTest_autogen/timestamp	ca82475ecead0298
+12	545	7597875482856828	LauncherTest_autogen/mocs_compilation.cpp	ca82475ecead0298
+12	545	7597875482856828	C:/Users/doria/Documents/GitHub/SteamLike/QT Test/QT Creator/LauncherTest/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/LauncherTest_autogen/timestamp	ca82475ecead0298
+12	545	7597875482856828	C:/Users/doria/Documents/GitHub/SteamLike/QT Test/QT Creator/LauncherTest/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/LauncherTest_autogen/mocs_compilation.cpp	ca82475ecead0298
+549	2140	7597875483572654	CMakeFiles/LauncherTest.dir/LauncherTest_autogen/mocs_compilation.cpp.obj	8b69269fcc9b65cd
+553	2143	7597875483602662	CMakeFiles/LauncherTest.dir/main.cpp.obj	163284ea796b84a4
+556	2207	7597875483637743	CMakeFiles/LauncherTest.dir/mainwindow.cpp.obj	97a2beb1023b0a14
+2208	2362	7597875500154128	LauncherTest.exe	8a4e83a7799bdce1
+12	149	7597876574265118	LauncherTest_autogen/timestamp	ca82475ecead0298
+12	149	7597876574265118	LauncherTest_autogen/mocs_compilation.cpp	ca82475ecead0298
+12	149	7597876574265118	C:/Users/doria/Documents/GitHub/SteamLike/QT Test/QT Creator/LauncherTest/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/LauncherTest_autogen/timestamp	ca82475ecead0298
+12	149	7597876574265118	C:/Users/doria/Documents/GitHub/SteamLike/QT Test/QT Creator/LauncherTest/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/LauncherTest_autogen/mocs_compilation.cpp	ca82475ecead0298
+150	1874	7597876575662431	CMakeFiles/LauncherTest.dir/main.cpp.obj	163284ea796b84a4
+154	1879	7597876575697636	CMakeFiles/LauncherTest.dir/mainwindow.cpp.obj	97a2beb1023b0a14
+1879	2036	7597876592951680	LauncherTest.exe	8a4e83a7799bdce1
+26	160	7597876757804050	LauncherTest_autogen/timestamp	ca82475ecead0298
+26	160	7597876757804050	LauncherTest_autogen/mocs_compilation.cpp	ca82475ecead0298
+26	160	7597876757804050	C:/Users/doria/Documents/GitHub/SteamLike/QT Test/QT Creator/LauncherTest/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/LauncherTest_autogen/timestamp	ca82475ecead0298
+26	160	7597876757804050	C:/Users/doria/Documents/GitHub/SteamLike/QT Test/QT Creator/LauncherTest/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/LauncherTest_autogen/mocs_compilation.cpp	ca82475ecead0298
+161	1849	7597876759147386	CMakeFiles/LauncherTest.dir/main.cpp.obj	163284ea796b84a4
+165	1874	7597876759182472	CMakeFiles/LauncherTest.dir/mainwindow.cpp.obj	97a2beb1023b0a14
+1874	2037	7597876776283298	LauncherTest.exe	8a4e83a7799bdce1
+31	169	7597877068278287	LauncherTest_autogen/timestamp	ca82475ecead0298
+31	169	7597877068278287	LauncherTest_autogen/mocs_compilation.cpp	ca82475ecead0298
+31	169	7597877068278287	C:/Users/doria/Documents/GitHub/SteamLike/QT Test/QT Creator/LauncherTest/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/LauncherTest_autogen/timestamp	ca82475ecead0298
+31	169	7597877068278287	C:/Users/doria/Documents/GitHub/SteamLike/QT Test/QT Creator/LauncherTest/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/LauncherTest_autogen/mocs_compilation.cpp	ca82475ecead0298
+170	1744	7597877069666513	CMakeFiles/LauncherTest.dir/main.cpp.obj	163284ea796b84a4
+174	1775	7597877069701636	CMakeFiles/LauncherTest.dir/mainwindow.cpp.obj	97a2beb1023b0a14
+1775	1925	7597877085714501	LauncherTest.exe	8a4e83a7799bdce1
+24	161	7597879313513257	LauncherTest_autogen/timestamp	ca82475ecead0298
+24	161	7597879313513257	LauncherTest_autogen/mocs_compilation.cpp	ca82475ecead0298
+24	161	7597879313513257	C:/Users/doria/Documents/GitHub/SteamLike/QT Test/QT Creator/LauncherTest/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/LauncherTest_autogen/timestamp	ca82475ecead0298
+24	161	7597879313513257	C:/Users/doria/Documents/GitHub/SteamLike/QT Test/QT Creator/LauncherTest/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/LauncherTest_autogen/mocs_compilation.cpp	ca82475ecead0298
+162	1837	7597879314889733	CMakeFiles/LauncherTest.dir/main.cpp.obj	163284ea796b84a4
+166	1904	7597879314929784	CMakeFiles/LauncherTest.dir/mainwindow.cpp.obj	97a2beb1023b0a14
+1904	2053	7597879332311698	LauncherTest.exe	8a4e83a7799bdce1
