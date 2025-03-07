@@ -29,6 +29,11 @@ Rectangle {
             onClicked: animation.start()
         }
 
+        Connections {
+            target : button
+            onClicked: gameLauncher.LaunchGame()
+        }
+
         SequentialAnimation {
             id: animation
 

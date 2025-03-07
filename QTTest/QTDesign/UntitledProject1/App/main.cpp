@@ -3,13 +3,15 @@
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-
+#include "gamelauncher.h"
+#include <QQmlContext>
 #include "autogen/environment.h"
 
 int main(int argc, char *argv[])
 {
     set_qt_environment();
     QGuiApplication app(argc, argv);
+    GameLauncher gl;
 
     QQmlApplicationEngine engine;
     const QUrl url(mainQmlFile);
@@ -19,6 +21,8 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+
+    engine.rootContext()->setContextProperty("gameLauncher",&gl);
 
     engine.addImportPath(QCoreApplication::applicationDirPath() + "/qml");
     engine.addImportPath(":/");

@@ -20,7 +20,10 @@ find_package(Qt6 6.7 REQUIRED COMPONENTS Core Gui Qml Quick)
 qt_standard_project_setup()
 
 
-qt_add_executable(${CMAKE_PROJECT_NAME})
+qt_add_executable(${CMAKE_PROJECT_NAME}
+    App/gamelauncher.h App/gamelauncher.cpp
+    App/gamethread.h
+)
 qt_add_resources(${CMAKE_PROJECT_NAME} "configuration"
     PREFIX "/"
     FILES
