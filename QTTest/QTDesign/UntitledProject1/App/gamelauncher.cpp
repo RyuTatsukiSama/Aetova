@@ -19,4 +19,5 @@ void GameLauncher::launchGame(const QString name)
 void GameLauncher::handleFinish(const QString &s)
 {
     qDebug() << s;
+
 }
