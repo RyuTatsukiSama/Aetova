@@ -22,6 +22,7 @@ Rectangle {
         text: qsTr("Play")
         anchors.verticalCenter: parent.verticalCenter
         checkable: true
+        property string gameName: "Journeep"
         anchors.horizontalCenter: parent.horizontalCenter
 
         Connections {
@@ -31,7 +32,7 @@ Rectangle {
 
         Connections {
             target : button
-            onClicked: gameLauncher.LaunchGame()
+            onClicked: gameLauncher.launchGame(button.gameName)
         }
 
         SequentialAnimation {

@@ -9,8 +9,8 @@ class GameLauncher : public QObject
 public:
     explicit GameLauncher(QObject *parent = nullptr);
 public slots :
-    void HandleFinish(const QString &s);
-    void LaunchGame();
+    void handleFinish(const QString &s);
+    void launchGame(QString name);
 };
 
 #endif // GAMELAUNCHER_H
