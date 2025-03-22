@@ -101,7 +101,7 @@ Rectangle {
         text: qsTr("Glitch Hunter")
         property string path: "Glitch Hunter\\Glitch Hunter"
         font.pointSize: 30
-        property string exeName: "Glitch Hunter"
+        property string exeName: "GlitchHunter"
         Connections {
             target: glitchHunter
             function onClicked() {

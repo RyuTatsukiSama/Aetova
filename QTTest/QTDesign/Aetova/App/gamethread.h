@@ -15,12 +15,19 @@ class GameThread : public QThread
     void run() override
     {
         std::cout << "entrer" << std::endl;
+        string workingDir = "common\\" + pathToExe.toStdString();
+        std::wstring widestrWD = std::wstring(workingDir.begin(),workingDir.end());
+        const wchar_t* widecstrWD = widestrWD.c_str();
+
         string path = "common\\" + pathToExe.toStdString() + "\\" + exeName.toStdString() + ".exe";
         std::wstring widestr = std::wstring(path.begin(), path.end());
         const wchar_t* widecstr = widestr.c_str();
 
         STARTUPINFO si = { sizeof(STARTUPINFO) };
         PROCESS_INFORMATION pi;
+
+        si.dwFlags = STARTF_USESHOWWINDOW;
+        si.wShowWindow = SW_SHOW;
 
         // Launch programm
         if (CreateProcess(widecstr,   // Path to Exe
@@ -30,7 +37,7 @@ class GameThread : public QThread
                           FALSE,                               // Héritage des handles
                           0,                                   // Flags
                           NULL,                                // Variables d'environnement
-                          NULL,                                // Répertoire de travail
+                          widecstrWD,                                // Répertoire de travail
                           &si,                                 // Infos de démarrage
                           &pi))                                // Infos sur le processus créé
         {
@@ -39,6 +46,7 @@ class GameThread : public QThread
             CloseHandle(pi.hProcess);
             CloseHandle(pi.hThread);
             emit threadFinish("End without problem");
+            system("pause");
         }
         else {
             // Gestion des erreurs
