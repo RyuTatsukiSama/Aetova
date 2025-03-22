@@ -5,16 +5,17 @@
 #include <QThread>
 #include <windows.h>
 #include <iostream>
+#include <string>
 using namespace std;
 
 class GameThread : public QThread
-{
+{   
     Q_OBJECT
 
     void run() override
     {
         std::cout << "entrer" << std::endl;
-        string path = "JourneepBuild\\Journeep.exe";
+        string path = "common\\" + gName.toStdString() + "\\" + gName.toStdString() + ".exe";
         std::wstring widestr = std::wstring(path.begin(), path.end());
         const wchar_t* widecstr = widestr.c_str();
 
@@ -48,6 +49,8 @@ class GameThread : public QThread
 
 signals :
     void threadFinish(const QString &s);
+public :
+    QString gName;
 };
 
 #endif // GAMETHREAD_H

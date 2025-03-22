@@ -6,16 +6,18 @@ GameLauncher::GameLauncher(QObject *parent)
     : QObject{parent}
 {}
 
-void GameLauncher::LaunchGame()
+void GameLauncher::launchGame(const QString name)
 {
     std::cout << "LaunchGame" << std::endl;
     GameThread* gt = new GameThread();
-    connect(gt, &GameThread::threadFinish, this, &GameLauncher::HandleFinish);
+    gt->gName = name;
+    connect(gt, &GameThread::threadFinish, this, &GameLauncher::handleFinish);
     connect(gt, &GameThread::finished, gt, &QObject::deleteLater);
     gt->start();
 }
 
-void GameLauncher::HandleFinish(const QString &s)
+void GameLauncher::handleFinish(const QString &s)
 {
     qDebug() << s;
+
 }
