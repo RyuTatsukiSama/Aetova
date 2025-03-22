@@ -42,9 +42,6 @@ Item {
             icon.cache: false
             icon.color: "#000000"
             icon.source: "../Dependencies/Components/examples/TransitionItem/images/svg/assistive-listening-systems.svg"
-            style : ButtonStyle {
-
-            }
         }
     }
 }
