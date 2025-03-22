@@ -29,12 +29,13 @@ Rectangle {
     Button {
         id: button
         x: 760
-        y: 360
+        y: 300
         width: 400
         height: 70
         text: qsTr("Template Button")
         font.pointSize: 30
-        property string gameName: "Test"
+        property string path: "path\\Test"
+        property string exeName: "Test"
 
         background: Rectangle {
             color: "#8b64a3"
@@ -43,23 +44,24 @@ Rectangle {
 
         Connections {
             target: button
-            onClicked: gameLauncher.launchGame(button.gameName)
+            onClicked: gameLauncher.launchGame(button.path, button.exeName)
         }
     }
 
     Button {
         id: journeep
         x: 760
-        y: 505
+        y: 445
         width: 400
         height: 70
         text: qsTr("Journeep")
-        property string gameName: "Journeep"
+        property string path: "Journeep"
+        property string exeName: "Journeep"
         font.pointSize: 30
         Connections {
             target: journeep
             function onClicked() {
-                gameLauncher.launchGame(journeep.gameName)
+                gameLauncher.launchGame(journeep.path, journeep.exeName)
             }
         }
         background: Rectangle {
@@ -71,16 +73,39 @@ Rectangle {
     Button {
         id: hydreal
         x: 760
-        y: 650
+        y: 590
         width: 400
         height: 70
         text: qsTr("Hydreal")
-        property string gameName: "Hydreal"
+        property string path: "Hydreal\\Exe"
+        property string exeName: "Hydreal"
         font.pointSize: 30
         Connections {
             target: hydreal
             function onClicked() {
-                gameLauncher.launchGame(hydreal.gameName)
+                gameLauncher.launchGame(hydreal.path, hydreal.exeName)
+            }
+        }
+        background: Rectangle {
+            color: "#8b64a3"
+            radius: 8
+        }
+    }
+
+    Button {
+        id: glitchHunter
+        x: 760
+        y: 735
+        width: 400
+        height: 70
+        text: qsTr("Glitch Hunter")
+        property string path: "Glitch Hunter\\Glitch Hunter"
+        font.pointSize: 30
+        property string exeName: "Glitch Hunter"
+        Connections {
+            target: glitchHunter
+            function onClicked() {
+                gameLauncher.launchGame(glitchHunter.path, glitchHunter.exeName)
             }
         }
         background: Rectangle {
