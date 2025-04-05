@@ -115,14 +115,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Qt\6.8.2\msvc2022_64\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Depedencies\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus%(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Qt\6.8.2\msvc2022_64\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Depedencies\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>Qt6Widgetsd.lib;Qt6Cored.lib;Qt6Guid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
