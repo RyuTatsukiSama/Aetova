@@ -1,6 +1,6 @@
 #include "gamelauncher.h"
 #include "gamethread.h"
-#include <qdebug.h>
+#include <QtCore/qdebug.h>
 
 GameLauncher::GameLauncher(QObject *parent)
     : QObject{parent}

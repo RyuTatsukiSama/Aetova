@@ -1,7 +1,7 @@
 #ifndef GAMELAUNCHER_H
 #define GAMELAUNCHER_H
 
-#include <QObject>
+#include "QtCore/qobject.h"
 
 class GameLauncher : public QObject
 {

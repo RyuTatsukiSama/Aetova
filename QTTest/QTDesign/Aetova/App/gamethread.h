@@ -1,8 +1,8 @@
 #ifndef GAMETHREAD_H
 #define GAMETHREAD_H
 
-#include <QObject>
-#include <QThread>
+#include <QtCore/qthread.h>
+#include "QtCore/qobject.h"
 #include <windows.h>
 #include <iostream>
 #include <string>
@@ -37,7 +37,7 @@ class GameThread : public QThread
                           FALSE,                               // Héritage des handles
                           0,                                   // Flags
                           NULL,                                // Variables d'environnement
-                          widecstrWD,                                // Répertoire de travail
+                          widecstrWD,                          // Répertoire de travail
                           &si,                                 // Infos de démarrage
                           &pi))                                // Infos sur le processus créé
         {
