@@ -18,10 +18,13 @@
     <ClCompile Include="main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\QTDesign\Aetova\App\gamelauncher.cpp">
+    <ClCompile Include="oldmain.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="oldmain.cpp">
+    <ClCompile Include="gamelauncher.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="gamethread.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

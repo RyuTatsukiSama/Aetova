@@ -148,7 +148,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\QTDesign\Aetova\App\gamelauncher.cpp" />
+    <ClCompile Include="gamelauncher.cpp" />
+    <ClCompile Include="gamethread.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="oldmain.cpp" />
   </ItemGroup>
