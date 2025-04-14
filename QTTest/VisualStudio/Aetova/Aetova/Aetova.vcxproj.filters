@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers sources\Game">
+      <UniqueIdentifier>{685039fc-63c0-403d-ab7c-2881d4d37df2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Game">
+      <UniqueIdentifier>{17e76be0-8de5-477e-8068-1d3b1eb424b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -22,17 +28,20 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="gamelauncher.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers sources\Game</Filter>
     </ClCompile>
     <ClCompile Include="gamethread.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers sources\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\QTDesign\Aetova\App\gamelauncher.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>Fichiers d%27en-tête\Game</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\QTDesign\Aetova\App\gamethread.h">
+      <Filter>Fichiers d%27en-tête\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="gameWindow.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

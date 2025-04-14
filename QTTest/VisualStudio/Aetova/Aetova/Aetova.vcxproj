@@ -156,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\QTDesign\Aetova\App\gamelauncher.h" />
     <ClInclude Include="..\..\..\QTDesign\Aetova\App\gamethread.h" />
+    <ClInclude Include="gameWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
