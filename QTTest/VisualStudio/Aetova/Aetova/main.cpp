@@ -27,4 +27,5 @@ int main(int argc, char* argv[])
 	QApplication::connect(button, &QPushButton::released, &window2, &QWidget::show);
 
 	return app.exec();
+
 }
