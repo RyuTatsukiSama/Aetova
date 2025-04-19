@@ -2,26 +2,20 @@
 #define GAMEWINDOW_H
 
 #include <QtWidgets/qwidget.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qpushbutton.h>
+#include "common.h"
 
 class GameWindow : public QWidget
 {
-public:
-
 	Q_OBJECT
 
-	GameWindow();
-	~GameWindow();
+public:
+
+protected :
 
 private:
 
 };
-
-GameWindow::GameWindow()
-{
-}
-
-GameWindow::~GameWindow()
-{
-}
 
 #endif

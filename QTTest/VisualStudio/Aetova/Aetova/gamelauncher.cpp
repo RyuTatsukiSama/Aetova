@@ -137,6 +137,8 @@ int GameLauncher::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 QT_WARNING_POP
 
+// -- My functions --
+
 #include "gamethread.h"
 
 GameLauncher::GameLauncher(QObject* parent)

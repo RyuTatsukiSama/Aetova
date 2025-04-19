@@ -41,7 +41,10 @@
     <ClInclude Include="..\..\..\QTDesign\Aetova\App\gamethread.h">
       <Filter>Fichiers d%27en-tête\Game</Filter>
     </ClInclude>
-    <ClInclude Include="gameWindow.h">
+    <ClInclude Include="common.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="gamewindow.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
