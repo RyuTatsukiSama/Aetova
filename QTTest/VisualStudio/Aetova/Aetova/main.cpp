@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 	QLabel* labelTeam = new QLabel(window);
 
 	labelTeam->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-	
+
 	labelTeam->setGeometry(
 		0,
 		window->height() / 2.f,
@@ -116,13 +116,13 @@ int main(int argc, char* argv[])
 	);
 
 	button->setGeometry(
-		0, 
-		0, 
-		100, 
+		0,
+		0,
+		100,
 		50
 	);
 
-	button->move(window->width() / 2 - button->width() / 2, 
+	button->move(window->width() / 2 - button->width() / 2,
 		window->height() / 2 - button->height() / 2
 	);
 	button->show();
