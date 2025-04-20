@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 	);
 
 
-	QPixmap pixmap(QDir::currentPath() + "/sprite/wallpaper.png");
+	QPixmap pixmap(":/sprite/wallpaper.png");
 	if (pixmap.isNull())
 	{
 		std::cout << "Error : Qt didn't load the image at path " + QDir::currentPath().toStdString() + "/sprite/wallpaper.jpg" << std::endl;
