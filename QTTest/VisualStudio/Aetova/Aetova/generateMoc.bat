@@ -3,13 +3,13 @@ REM ------------------------------------------
 REM Script pour générer un fichier MOC avec Qt
 REM ------------------------------------------
 
-REM === Nom du fichier header (à modifier si besoin) ===
+REM === Nom du fichier header ===
 set HEADER=gamewindow.h
 
 REM === Nom du fichier de sortie généré par moc ===
 set OUTPUT=gamewindow.cpp
 
-REM === Chemin vers le dossier bin de Qt (à adapter à ton install) ===
+REM === Chemin vers le dossier bin de Qt ===
 set QT_BIN_PATH=C:\Qt\6.8.2\msvc2022_64\bin
 
 REM === Ajoute le dossier bin de Qt au PATH pour cette session ===

@@ -152,12 +152,16 @@
     <ClCompile Include="gamethread.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="oldmain.cpp" />
+    <ClCompile Include="resources.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\QTDesign\Aetova\App\gamelauncher.h" />
     <ClInclude Include="..\..\..\QTDesign\Aetova\App\gamethread.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="gamewindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources.qrc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

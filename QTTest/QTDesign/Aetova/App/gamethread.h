@@ -50,7 +50,7 @@ class GameThread : public QThread
         }
         else {
             // Gestion des erreurs
-            std::string errorMessage = "Error lors du lancement de l'application " + path;
+            std::string errorMessage = "Error while launching the application, path : " + path;
             std::wstring widestrError = std::wstring(errorMessage.begin(), errorMessage.end());
             const wchar_t* widecstrError = widestrError.c_str();
             MessageBox(NULL, widecstrError, L"Erreur", MB_OK);
@@ -59,8 +59,11 @@ class GameThread : public QThread
     }
 
 signals :
+
     void threadFinish(const QString &s);
+
 public :
+
     QString pathToExe;
     QString exeName;
 };

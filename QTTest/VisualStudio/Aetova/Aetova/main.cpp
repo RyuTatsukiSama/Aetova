@@ -56,6 +56,7 @@ int main(int argc, char* argv[])
 
 	QString textTeam = QString::fromUtf8(u8R"(
 	<b><u>Team :</u></b><br><br>
+
 	<b>Programmers :</b><br>
 	Bréand Amaryne<br>
 	<b>Daniel Colin</b><br>
@@ -63,6 +64,7 @@ int main(int argc, char* argv[])
 	Rebattet Mickaël<br>
 	Ribault Dorian<br>
 	Thomas Sylvain<br><br>
+
 	<b>Artists :</b><br>
 	Cart Lou Anne<br>
 	Langlois Maxime<br>
@@ -100,6 +102,7 @@ int main(int argc, char* argv[])
 	<b>Targeted audience :</b> Intermediate - Experienced<br>
 			<dd>Explorers - Achievers<br>
 	<b>Software used :</b> <i>image will be display here in the future</i><br>
+            <img src=":/sprite/wallpaper.png" width="100" height="100"><br>
 	)");
 	labelDataSheet->setText(textDS.trimmed());
 
