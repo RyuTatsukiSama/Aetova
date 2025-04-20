@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 	QPixmap pixmap(":/sprite/wallpaper.png");
 	if (pixmap.isNull())
 	{
-		std::cout << "Error : Qt didn't load the image at path " + QDir::currentPath().toStdString() + "/sprite/wallpaper.jpg" << std::endl;
+		std::cout << "Error : Qt didn't load the image at path :/sprite/wallpaper.png" << std::endl;
 	}
 	imageLabel->setPixmap(pixmap);
 	imageLabel->setScaledContents(true);
@@ -100,9 +100,20 @@ int main(int argc, char* argv[])
 	<b>Language :</b> English<br>
  
 	<b>Targeted audience :</b> Intermediate - Experienced<br>
-			<dd>Explorers - Achievers<br>
-	<b>Software used :</b> <i>image will be display here in the future</i><br>
-            <img src=":/sprite/wallpaper.png" width="100" height="100"><br>
+			Explorers - Achievers<br><br>
+
+	<b>Software used :</b><br>
+            <img src=":/sprite/unity.png" width="70" height="70">
+            <img src=":/sprite/fmod.png" width="189" height="67">
+            <img src=":/sprite/maya.png" width="70" height="70">
+            <img src=":/sprite/blender.png" width="85" height="70">
+            <img src=":/sprite/ps.png" width="70" height="70"><br>
+            <img src=":/sprite/pt.png" width="70" height="70">
+            <img src=":/sprite/ds.png" width="70" height="70">
+            <img src=":/sprite/Notion.png" width="70" height="70"><br><br>
+
+	<b>Equivalent to : </b><br>
+			<img src=":/sprite/PEGI_7.png"width="70" height="86"><br>
 	)");
 	labelDataSheet->setText(textDS.trimmed());
 
@@ -119,15 +130,12 @@ int main(int argc, char* argv[])
 	);
 
 	button->setGeometry(
-		0,
-		0,
+		window->width() / 2 - button->width() / 2,
+		window->height() / 2 - button->height() / 2,
 		100,
 		50
 	);
 
-	button->move(window->width() / 2 - button->width() / 2,
-		window->height() / 2 - button->height() / 2
-	);
 	button->show();
 
 	QApplication::connect(button, &QPushButton::released, [&launcher]() {

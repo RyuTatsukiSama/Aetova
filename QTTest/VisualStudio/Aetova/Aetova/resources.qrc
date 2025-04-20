@@ -1,5 +1,16 @@
 <RCC>
 	<qresource prefix="/">
 		<file>sprite/wallpaper.png</file>
+		<file>sprite/blender.png</file>
+		<file>sprite/ds.png</file>
+		<file>sprite/fmod.png</file>
+		<file>sprite/Notion.png</file>
+		<file>sprite/ps.png</file>
+		<file>sprite/pt.png</file>
+		<file>sprite/maya.png</file>
+		<file>sprite/unity.png</file>
+		<file>sprite/PEGI_7.png</file>
+		<file>sprite/g3d.png</file>
+		<file>sprite/creajeux.png</file>
 	</qresource>
 </RCC>
