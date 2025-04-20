@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="gamelauncher.cpp" />
     <ClCompile Include="gamethread.cpp" />
+    <ClCompile Include="gamewindow.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="oldmain.cpp" />
     <ClCompile Include="resources.cpp" />

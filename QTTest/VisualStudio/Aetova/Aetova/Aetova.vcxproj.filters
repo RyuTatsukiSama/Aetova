@@ -36,6 +36,9 @@
     <ClCompile Include="resources.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="gamewindow.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\QTDesign\Aetova\App\gamelauncher.h">
