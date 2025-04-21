@@ -101,6 +101,7 @@ public:
 		);
 
 		QString textDS = QString::fromUtf8(u8R"(
+
 		<b><u>Data Sheet :</u></b><br><br>
 		<b>Type:</b> Delivery - Sport game / 3D / 3rd person view<br>
  
@@ -125,7 +126,11 @@ public:
 
 		<b>Equivalent to : </b><br>
 				<img src=":/sprite/PEGI_7.png"width="70" height="86"><br>
-		)");
+
+		<b>Editor :</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Developer :</b><br>
+		        <img src=":/sprite/creajeux.png" width="98" height="70">&nbsp;&nbsp;&nbsp;&nbsp;
+		        <img src=":/sprite/g3d.png" width="71" height="70"><br>
+		)"); // Voir pour de esoace
 		labelDataSheet->setText(textDS.trimmed());
 
 		labelDataSheet->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
