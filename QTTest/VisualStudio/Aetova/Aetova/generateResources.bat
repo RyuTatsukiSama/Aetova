@@ -1,25 +1,26 @@
 @echo off
 REM ------------------------------------------
-REM Script pour générer un fichier resources avec Qt
+REM Script for generate a resources cpp file with Qt
 REM ------------------------------------------
 
-REM === Nom du fichier qrc ===
-set RESOURCE=resources.qrc
+REM === Input for the name of the header ===
+set /p BASENAME=Enter the name of the header : 
 
-REM === Nom du fichier de sortie généré par rcc ===
-set OUTPUT=resources.cpp
+REM === File name ===
+set RESOURCE=%BASENAME%.qrc
+set OUTPUT=%BASENAME%.cpp
 
-REM === Chemin vers le dossier bin de Qt ===
+REM === path to the bin folder of Qt ===
 set QT_BIN_PATH=C:\Qt\6.8.2\msvc2022_64\bin
 
-REM === Ajoute le dossier bin de Qt au PATH pour cette session ===
+REM === add the bin folder of Qt to PATH ===
 set PATH=%QT_BIN_PATH%;%PATH%
 
-REM === Lancer la commande rcc ===
+REM === Execute rcc ===
 echo Generation of %OUTPUT% from %HEADER%
 rcc %RESOURCE% -o %OUTPUT%
 
-REM === Vérification si la génération a fonctionné ===
+REM === Verification of success ===
 if exist %OUTPUT% (
     echo File %OUTPUT% generation succeed.
 ) else (

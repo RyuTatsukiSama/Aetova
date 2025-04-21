@@ -1,25 +1,26 @@
 @echo off
 REM ------------------------------------------
-REM Script pour générer un fichier MOC avec Qt
+REM Script for generate a MOC file with Qt
 REM ------------------------------------------
 
-REM === Nom du fichier header ===
-set HEADER=gamewindow.h
+REM === Input for the name of the header ===
+set /p BASENAME=Enter the name of the header : 
 
-REM === Nom du fichier de sortie généré par moc ===
-set OUTPUT=moc_gamewindow.cpp
+REM === File name ===
+set HEADER=%BASENAME%.h
+set OUTPUT=moc_%BASENAME%.cpp
 
-REM === Chemin vers le dossier bin de Qt ===
+REM === path to the bin folder of Qt ===
 set QT_BIN_PATH=C:\Qt\6.8.2\msvc2022_64\bin
 
-REM === Ajoute le dossier bin de Qt au PATH pour cette session ===
+REM === add the bin folder of Qt to PATH ===
 set PATH=%QT_BIN_PATH%;%PATH%
 
-REM === Lancer la commande moc ===
+REM === Execute moc ===
 echo Generation of %OUTPUT% from %HEADER%
 moc %HEADER% -o %OUTPUT%
 
-REM === Vérification si la génération a fonctionné ===
+REM === Verification of success ===
 if exist %OUTPUT% (
     echo File %OUTPUT% generation succeed.
 ) else (
