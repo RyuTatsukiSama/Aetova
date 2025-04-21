@@ -38,7 +38,6 @@ public:
 		imageLabel->setPixmap(pixmap);
 		imageLabel->setScaledContents(true);
 		imageLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-		imageLabel->setMaximumHeight(this->height() / 2);
 		mainLayout->addWidget(imageLabel);
 
 		// Button
