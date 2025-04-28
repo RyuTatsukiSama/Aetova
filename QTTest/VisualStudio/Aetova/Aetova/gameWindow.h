@@ -5,7 +5,6 @@
 #include <QtWidgets/qapplication.h>
 #include <iostream>
 #include <QtWidgets/qmainwindow.h>
-#include <QtWidgets/qapplication.h>
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qlabel.h>
 #include <QtCore/qdir.h>

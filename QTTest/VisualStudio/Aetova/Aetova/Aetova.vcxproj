@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="common.cpp" />
     <ClCompile Include="gamelauncher.cpp" />
     <ClCompile Include="gamethread.cpp" />
     <ClCompile Include="gamewindow.cpp" />

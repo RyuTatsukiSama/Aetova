@@ -11,11 +11,7 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 
 	QLabel* imageLabel = new QLabel();
 
-	QPixmap pixmap(":/sprite/wallpaper.png");
-	if (pixmap.isNull()) // Do a function like LoadSprite of Pierre to don't have to write the test everytime
-	{
-		std::cout << "Error : Qt didn't load the image at path :/sprite/wallpaper.png" << std::endl;
-	}
+	QPixmap pixmap = LoadPixMap(":/sprite/wallpaper.png");
 
 	imageLabel->setPixmap(pixmap);
 	imageLabel->setScaledContents(true);
