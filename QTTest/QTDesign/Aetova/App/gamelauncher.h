@@ -15,6 +15,7 @@ public slots :
     void handleFinish(const QString& s);
 
     void launchGame(const QString pathToExe, const QString exeName);
+
 };
 
 #endif // GAMELAUNCHER_H

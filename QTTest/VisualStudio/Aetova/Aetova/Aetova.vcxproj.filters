@@ -53,9 +53,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\QTDesign\Aetova\App\gamelauncher.h">
-      <Filter>Fichiers d%27en-tête\Game</Filter>
-    </ClInclude>
     <ClInclude Include="common.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -63,6 +60,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="gamethread.h">
+      <Filter>Fichiers d%27en-tête\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="gamelauncher.h">
       <Filter>Fichiers d%27en-tête\Game</Filter>
     </ClInclude>
   </ItemGroup>

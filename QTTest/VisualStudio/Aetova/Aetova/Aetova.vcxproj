@@ -160,8 +160,8 @@
     <ClCompile Include="resources.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\QTDesign\Aetova\App\gamelauncher.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="gamelauncher.h" />
     <ClInclude Include="gamethread.h" />
     <ClInclude Include="gamewindow.h" />
   </ItemGroup>
