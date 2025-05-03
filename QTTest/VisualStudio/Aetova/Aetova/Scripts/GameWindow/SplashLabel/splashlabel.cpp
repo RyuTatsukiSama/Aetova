@@ -4,14 +4,15 @@
 
 SplashLabel::SplashLabel(QWidget* parent) : QLabel(parent)
 {
-    setScaledContents(false);
-}
-
-void SplashLabel::Init(const QPixmap& pixmap)
-{
-    setPixmap(pixmap);
-
-    // Resize ? to get the size of the window ?
+    setScaledContents(false); 
+    
+    setPixmap(LoadPixMap(":/sprite/wallpaper.png"));
+    setGeometry(
+        0,
+        0,
+        width(),
+        height() / 2
+    );
 }
 
 void SplashLabel::setPixmap(const QPixmap& pixmap)

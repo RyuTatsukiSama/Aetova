@@ -2,22 +2,21 @@
 #define SPLASHLABEL_H
 
 #include "../../Common/common.h"
-#include <QtWidgets/qlabel.h>
+#include "QtWidgets/qlabel.h"
 
 class SplashLabel : public QLabel
 {
 	Q_OBJECT
 
-public :
+public:
 	explicit SplashLabel(QWidget* parent = nullptr);
-	void Init(const QPixmap& pixmap);
 
 	void setPixmap(const QPixmap& pixmap);
 
-protected :
+protected:
 	void paintEvent(QPaintEvent* event) override;
 
-private :
+private:
 	QPixmap originalPixmap;
 };
 
