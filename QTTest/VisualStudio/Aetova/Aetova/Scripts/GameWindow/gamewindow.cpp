@@ -1,45 +1,38 @@
 #include "gamewindow.h"
+#include "SplashLabel/splashlabel.h"
 
 GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 {
-	// root layout
-	QVBoxLayout* mainLayout = new QVBoxLayout(this);
-
 	// Splash Art 
 	// -- TO DO --
 	// - Make it look more clean. make a custom label and override resizeEvent
 
-	QLabel* imageLabel = new QLabel();
-
-	QPixmap pixmap = LoadPixMap(":/sprite/wallpaper.png");
-
-	imageLabel->setPixmap(pixmap);
-	imageLabel->setScaledContents(true);
-	imageLabel->setMinimumSize(QSize(1294 / 2, 733 / 2));
-	imageLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	mainLayout->addWidget(imageLabel);
-
-	// Button
-	GameLauncher* launcher = new GameLauncher(this);
-
-	QPushButton* button = new QPushButton(
-		QApplication::translate("childwidget", "Launch Game"),
-		this
+	splashLabel = new SplashLabel(this);
+	splashLabel->setPixmap(LoadPixMap(":/sprite/wallpaper.png"));
+	splashLabel->setGeometry(
+		0,
+		0,
+		width(),
+		height() / 2
 	);
 
+	// Button
+
+	QPushButton* button = new QPushButton(
+		QApplication::translate("childwidget", "Launch Game")
+	);
+
+	GameLauncher* launcher = new GameLauncher(button);
+
 	button->setFixedSize(150, 40);
-	mainLayout->addWidget(button, 0, Qt::AlignHCenter);
 
 	QApplication::connect(button, &QPushButton::released, [&launcher]() {
 		launcher->launchGame("Journeep", "Journeep");
 		});
 
-	// Bottom Layout for Team & DataSheet
-	QHBoxLayout* bottomLayout = new QHBoxLayout();
-
 	// Team
 
-	QLabel* labelTeam = new QLabel(this);
+	QLabel* labelTeam = new QLabel();
 
 	labelTeam->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
@@ -64,11 +57,10 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 
 	labelTeam->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 	labelTeam->setWordWrap(true);
-	bottomLayout->addWidget(labelTeam);
 
 	// Data Sheet
 
-	QLabel* labelDataSheet = new QLabel(this);
+	QLabel* labelDataSheet = new QLabel();
 
 	labelDataSheet->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
@@ -83,41 +75,47 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 
 		<b><u>Data Sheet :</u></b><br><br>
 		<b>Type:</b> Delivery - Sport game / 3D / 3rd person view<br>
- 
+
 		<b>Platform :</b> PC<br>
- 
+
 		<b>Controls :</b> Controller / Keyboard - Mouse<br>
- 
+
 		<b>Language :</b> English<br>
- 
+
 		<b>Targeted audience :</b> Intermediate - Experienced<br>
 				Explorers - Achievers<br><br>
 
 		<b>Software used :</b><br>
-		        <img src=":/sprite/unity.png" width="70" height="70">
-		        <img src=":/sprite/fmod.png" width="189" height="67">
-		        <img src=":/sprite/maya.png" width="70" height="70">
-		        <img src=":/sprite/blender.png" width="85" height="70">
-		        <img src=":/sprite/ps.png" width="70" height="70"><br>
-		        <img src=":/sprite/pt.png" width="70" height="70">
-		        <img src=":/sprite/ds.png" width="70" height="70">
-		        <img src=":/sprite/Notion.png" width="70" height="70"><br><br>
+				<img src=":/sprite/unity.png" width="70" height="70">
+				<img src=":/sprite/fmod.png" width="189" height="67">
+				<img src=":/sprite/maya.png" width="70" height="70">
+				<img src=":/sprite/blender.png" width="85" height="70">
+				<img src=":/sprite/ps.png" width="70" height="70"><br>
+				<img src=":/sprite/pt.png" width="70" height="70">
+				<img src=":/sprite/ds.png" width="70" height="70">
+				<img src=":/sprite/Notion.png" width="70" height="70"><br><br>
 
 		<b>Equivalent to : </b><br>
 				<img src=":/sprite/PEGI_7.png"width="70" height="86"><br>
 
 		<b>Editor :</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Developer :</b><br>
-		        <img src=":/sprite/creajeux.png" width="98" height="70">&nbsp;&nbsp;&nbsp;&nbsp;
-		        <img src=":/sprite/g3d.png" width="71" height="70"><br>
+				<img src=":/sprite/creajeux.png" width="98" height="70">&nbsp;&nbsp;&nbsp;&nbsp;
+				<img src=":/sprite/g3d.png" width="71" height="70"><br>
 		)"); // Voir pour de esoace
 	labelDataSheet->setText(textDS.trimmed());
 
 	labelDataSheet->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 	labelDataSheet->setWordWrap(true);
-	bottomLayout->addWidget(labelDataSheet);
+}
 
-	mainLayout->addLayout(bottomLayout);
+void GameWindow::resizeEvent(QResizeEvent* event)
+{
+	QWidget::resizeEvent(event);
 
-
-	this->setLayout(mainLayout);
+	splashLabel->setGeometry(
+		0,
+		0,
+		width(),
+		height() / 2
+	);
 }

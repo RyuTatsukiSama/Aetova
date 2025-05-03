@@ -12,6 +12,8 @@
 #include "../GameProcess/GameLauncher/gamelauncher.h"
 #include "../Common/common.h"
 
+class SplashLabel;
+
 class GameWindow : public QWidget
 {
 	Q_OBJECT
@@ -21,8 +23,10 @@ public:
 
 protected :
 
-private:
+	void resizeEvent(QResizeEvent* event) override;
 
+private:
+	SplashLabel* splashLabel;
 };
 
 #endif
