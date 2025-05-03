@@ -1,30 +1,33 @@
 @echo off
 REM ------------------------------------------
-REM Script for generate a MOC file with Qt
+REM Script to generate a MOC file with Qt
 REM ------------------------------------------
 
-REM === Input for the name of the header ===
-set /p BASENAME=Enter the name of the header : 
+REM === Ask for the path to the header folder ===
+set /p HEADER_PATH=Enter the relative or absolute path to the header (e.g., ../include or C:\Project\headers): 
 
-REM === File name ===
-set HEADER=%BASENAME%.h
-set OUTPUT=moc_%BASENAME%.cpp
+REM === Ask for the base name of the header file ===
+set /p BASENAME=Enter the name of the header file (without .h): 
 
-REM === path to the bin folder of Qt ===
+REM === Compose full paths ===
+set HEADER="%HEADER_PATH%\%BASENAME%.h"
+set OUTPUT="%HEADER_PATH%\moc_%BASENAME%.cpp"
+
+REM === Path to the Qt bin folder ===
 set QT_BIN_PATH=C:\Qt\6.8.2\msvc2022_64\bin
 
-REM === add the bin folder of Qt to PATH ===
+REM === Add Qt bin to PATH ===
 set PATH=%QT_BIN_PATH%;%PATH%
 
-REM === Execute moc ===
-echo Generation of %OUTPUT% from %HEADER%
+REM === Run moc ===
+echo Generating %OUTPUT% from %HEADER%
 moc %HEADER% -o %OUTPUT%
 
-REM === Verification of success ===
+REM === Check if the output file was generated ===
 if exist %OUTPUT% (
-    echo File %OUTPUT% generation succeed.
+    echo File %OUTPUT% generated successfully.
 ) else (
-    echo Error : the file %OUTPUT% was'nt generated.
+    echo Error: file %OUTPUT% was not generated.
 )
 
 pause

@@ -1,10 +1,10 @@
 @echo off
 REM ------------------------------------------
-REM Script for generate a resources cpp file with Qt
+REM Script for generate a resources cpp file with Qt from a .qrc file
 REM ------------------------------------------
 
-REM === Input for the name of the header ===
-set /p BASENAME=Enter the name of the header : 
+REM === Input for the name of the qrc ===
+set /p BASENAME=Enter the name of the qrc : 
 
 REM === File name ===
 set RESOURCE=%BASENAME%.qrc
