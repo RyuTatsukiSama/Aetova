@@ -148,9 +148,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Resources\html.cpp" />
     <ClCompile Include="Scripts\Common\common.cpp" />
     <ClCompile Include="Scripts\GameProcess\GameLauncher\gamelauncher.cpp" />
     <ClCompile Include="Scripts\GameProcess\GameThread\gamethread.cpp" />
+    <ClCompile Include="Scripts\GameWindow\ButtonGame\buttongame.cpp" />
+    <ClCompile Include="Scripts\GameWindow\ButtonGame\moc_buttongame.cpp" />
     <ClCompile Include="Scripts\GameWindow\gamewindow.cpp" />
     <ClCompile Include="Scripts\GameWindow\SplashLabel\moc_splashlabel.cpp" />
     <ClCompile Include="Scripts\GameWindow\SplashLabel\splashlabel.cpp" />
@@ -162,12 +165,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scripts\Common\common.h" />
+    <ClInclude Include="Scripts\GameWindow\ButtonGame\buttongame.h" />
     <ClInclude Include="Scripts\GameWindow\gamewindow.h" />
     <ClInclude Include="Scripts\GameProcess\GameLauncher\gamelauncher.h" />
     <ClInclude Include="Scripts\GameProcess\GameThread\gamethread.h" />
     <ClInclude Include="Scripts\GameWindow\SplashLabel\splashlabel.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\html.qrc" />
+    <None Include="Resources\HTML\team.html" />
     <None Include="Resources\resources.qrc" />
   </ItemGroup>
   <ItemGroup>

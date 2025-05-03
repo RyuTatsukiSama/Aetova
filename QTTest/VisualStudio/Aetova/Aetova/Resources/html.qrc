@@ -1,0 +1,5 @@
+<RCC>
+	<qresource prefix="/">
+		<file>HTML/team.html</file>
+	</qresource>
+</RCC>

@@ -54,6 +54,15 @@
     <ClCompile Include="Scripts\GameWindow\SplashLabel\moc_splashlabel.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\GameWindow\ButtonGame\buttongame.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\GameWindow\ButtonGame\moc_buttongame.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\html.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scripts\Common\common.h">
@@ -71,9 +80,14 @@
     <ClInclude Include="Scripts\GameWindow\SplashLabel\splashlabel.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Scripts\GameWindow\ButtonGame\buttongame.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\resources.qrc" />
+    <None Include="Resources\HTML\team.html" />
+    <None Include="Resources\html.qrc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\sprite\blender.png">

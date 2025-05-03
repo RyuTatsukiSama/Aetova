@@ -18,7 +18,7 @@ set PATH=%QT_BIN_PATH%;%PATH%
 
 REM === Execute rcc ===
 echo Generation of %OUTPUT% from %HEADER%
-rcc %RESOURCE% -o %OUTPUT%
+rcc -name %BASENAME% %RESOURCE% -o %OUTPUT%
 
 REM === Verification of success ===
 if exist %OUTPUT% (
