@@ -13,6 +13,7 @@
 #include "../Common/common.h"
 
 class SplashLabel;
+class ButtonGame;
 
 class GameWindow : public QWidget
 {
@@ -27,6 +28,7 @@ protected :
 
 private:
 	SplashLabel* splashLabel;
+	ButtonGame* buttonGame;
 };
 
 #endif

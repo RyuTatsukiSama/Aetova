@@ -1,34 +1,26 @@
 #include "gamewindow.h"
 #include "SplashLabel/splashlabel.h"
+#include "ButtonGame/buttongame.h"
+#include "QtCore/qfile.h"
+#include "QtCore/qtextstream.h"
 
 GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 {
+	setMinimumSize(1280, 670);
+
 	// Splash Art 
 	// -- TO DO --
 	// - Make it look more clean. make a custom label and override resizeEvent
 
 	splashLabel = new SplashLabel(this);
-	splashLabel->setPixmap(LoadPixMap(":/sprite/wallpaper.png"));
-	splashLabel->setGeometry(
-		0,
-		0,
-		width(),
-		height() / 2
-	);
 
 	// Button
 
-	QPushButton* button = new QPushButton(
-		QApplication::translate("childwidget", "Launch Game")
+	buttonGame = new ButtonGame(
+		QApplication::translate("childwidget", "Launch Game"),
+		this
 	);
-
-	GameLauncher* launcher = new GameLauncher(button);
-
-	button->setFixedSize(150, 40);
-
-	QApplication::connect(button, &QPushButton::released, [&launcher]() {
-		launcher->launchGame("Journeep", "Journeep");
-		});
+	buttonGame->connectLauncher();
 
 	// Team
 
@@ -36,23 +28,20 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 
 	labelTeam->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
-	QString textTeam = QString::fromUtf8(u8R"(
-		<b><u>Team :</u></b><br><br>
+	QFile file(":/HTML/team.html");
 
-		<b>Programmers :</b><br>
-		Bréand Amaryne<br>
-		<b>Daniel Colin</b><br>
-		Paris-Chevalier Thomas<br>
-		Rebattet Mickaël<br>
-		Ribault Dorian<br>
-		Thomas Sylvain<br><br>
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+		return;
 
-		<b>Artists :</b><br>
-		Cart Lou Anne<br>
-		Langlois Maxime<br>
-		Raynal Lucas<br>
-		<b>Sarton Kathleen</b>
-		)");
+	QTextStream in(&file);
+
+	QString line = in.readLine();
+	while (!in.atEnd()) {
+		line += in.readLine();
+	}
+
+	QString textTeam = QString::fromUtf8(line.toUtf8());
+	labelTeam->setTextFormat(Qt::RichText);
 	labelTeam->setText(textTeam.trimmed());
 
 	labelTeam->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
@@ -60,7 +49,7 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 
 	// Data Sheet
 
-	QLabel* labelDataSheet = new QLabel();
+	QLabel* labelDataSheet = new QLabel(this);
 
 	labelDataSheet->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
@@ -101,7 +90,7 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 		<b>Editor :</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Developer :</b><br>
 				<img src=":/sprite/creajeux.png" width="98" height="70">&nbsp;&nbsp;&nbsp;&nbsp;
 				<img src=":/sprite/g3d.png" width="71" height="70"><br>
-		)"); // Voir pour de esoace
+		)"); // Voir pour de espace
 	labelDataSheet->setText(textDS.trimmed());
 
 	labelDataSheet->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
@@ -117,5 +106,12 @@ void GameWindow::resizeEvent(QResizeEvent* event)
 		0,
 		width(),
 		height() / 2
+	);
+
+	buttonGame->setGeometry(
+		size().width() / 2 - buttonGame->width() / 2,
+		size().height() / 2 - buttonGame->height() / 2,
+		buttonGame->width(),
+		buttonGame->height()
 	);
 }
