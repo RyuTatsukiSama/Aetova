@@ -31,19 +31,19 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 QT_WARNING_DISABLE_GCC("-Wuseless-cast")
 namespace {
-struct qt_meta_tag_ZN11SplashLabelE_t {};
+struct qt_meta_tag_ZN9TeamLabelE_t {};
 } // unnamed namespace
 
 
 #ifdef QT_MOC_HAS_STRINGDATA
-static constexpr auto qt_meta_stringdata_ZN11SplashLabelE = QtMocHelpers::stringData(
-    "SplashLabel"
+static constexpr auto qt_meta_stringdata_ZN9TeamLabelE = QtMocHelpers::stringData(
+    "TeamLabel"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
 #endif // !QT_MOC_HAS_STRINGDATA
 
-Q_CONSTINIT static const uint qt_meta_data_ZN11SplashLabelE[] = {
+Q_CONSTINIT static const uint qt_meta_data_ZN9TeamLabelE[] = {
 
  // content:
       12,       // revision
@@ -59,42 +59,42 @@ Q_CONSTINIT static const uint qt_meta_data_ZN11SplashLabelE[] = {
        0        // eod
 };
 
-Q_CONSTINIT const QMetaObject SplashLabel::staticMetaObject = { {
+Q_CONSTINIT const QMetaObject TeamLabel::staticMetaObject = { {
     QMetaObject::SuperData::link<QLabel::staticMetaObject>(),
-    qt_meta_stringdata_ZN11SplashLabelE.offsetsAndSizes,
-    qt_meta_data_ZN11SplashLabelE,
+    qt_meta_stringdata_ZN9TeamLabelE.offsetsAndSizes,
+    qt_meta_data_ZN9TeamLabelE,
     qt_static_metacall,
     nullptr,
-    qt_incomplete_metaTypeArray<qt_meta_tag_ZN11SplashLabelE_t,
+    qt_incomplete_metaTypeArray<qt_meta_tag_ZN9TeamLabelE_t,
         // Q_OBJECT / Q_GADGET
-        QtPrivate::TypeAndForceComplete<SplashLabel, std::true_type>
+        QtPrivate::TypeAndForceComplete<TeamLabel, std::true_type>
     >,
     nullptr
 } };
 
-void SplashLabel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void TeamLabel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    auto *_t = static_cast<SplashLabel *>(_o);
+    auto *_t = static_cast<TeamLabel *>(_o);
     (void)_t;
     (void)_c;
     (void)_id;
     (void)_a;
 }
 
-const QMetaObject *SplashLabel::metaObject() const
+const QMetaObject *TeamLabel::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *SplashLabel::qt_metacast(const char *_clname)
+void *TeamLabel::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
-    if (!strcmp(_clname, qt_meta_stringdata_ZN11SplashLabelE.stringdata0))
+    if (!strcmp(_clname, qt_meta_stringdata_ZN9TeamLabelE.stringdata0))
         return static_cast<void*>(this);
     return QLabel::qt_metacast(_clname);
 }
 
-int SplashLabel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int TeamLabel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QLabel::qt_metacall(_c, _id, _a);
     return _id;
