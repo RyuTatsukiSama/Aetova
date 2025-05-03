@@ -9,8 +9,8 @@
 #include <QtWidgets/qlabel.h>
 #include <QtCore/qdir.h>
 #include <QtWidgets/qboxlayout.h>
-#include "gamelauncher.h"
-#include "common.h"
+#include "../GameProcess/GameLauncher/gamelauncher.h"
+#include "../Common/common.h"
 
 class GameWindow : public QWidget
 {

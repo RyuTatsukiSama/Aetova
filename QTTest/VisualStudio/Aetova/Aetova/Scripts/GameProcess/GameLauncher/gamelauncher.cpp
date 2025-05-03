@@ -1,6 +1,6 @@
 #include "gamelauncher.h"
 #include <iostream>
-#include "gamethread.h"
+#include "../GameThread/gamethread.h"
 
 GameLauncher::GameLauncher(QObject* parent)
 	: QObject{ parent }
