@@ -1,8 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
+constexpr int SCREEN_WIDTH = 1024;
+constexpr int SCREEN_HEIGHT = 768;
 
 #include <QtCore/qstring.h>
 #include <QtWidgets/qwidget.h>
