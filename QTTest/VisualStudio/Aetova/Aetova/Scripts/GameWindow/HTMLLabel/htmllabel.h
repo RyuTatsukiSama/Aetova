@@ -4,12 +4,12 @@
 #include "../../Common/common.h"
 #include "QtWidgets/qlabel.h"
 
-class TeamLabel : public QLabel
+class HTMLLabel : public QLabel
 {
 	Q_OBJECT
 
 public:
-	explicit TeamLabel(QWidget* parent = nullptr);
+	explicit HTMLLabel(const QString& pathFile, const QRect& geometry, QWidget* parent = nullptr);
 
 protected:
 	void paintEvent(QPaintEvent* event) override;

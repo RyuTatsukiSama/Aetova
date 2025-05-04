@@ -63,10 +63,10 @@
     <ClCompile Include="Resources\html.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\GameWindow\TeamLabel\teamlabel.cpp">
+    <ClCompile Include="Scripts\GameWindow\HTMLLabel\htmllabel.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\GameWindow\TeamLabel\moc_teamlabel.cpp">
+    <ClCompile Include="Scripts\GameWindow\HTMLLabel\moc_htmllabel.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,7 +89,7 @@
     <ClInclude Include="Scripts\GameWindow\ButtonGame\buttongame.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Scripts\GameWindow\TeamLabel\teamlabel.h">
+    <ClInclude Include="Scripts\GameWindow\HTMLLabel\htmllabel.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -97,6 +97,7 @@
     <None Include="Resources\resources.qrc" />
     <None Include="Resources\HTML\team.html" />
     <None Include="Resources\html.qrc" />
+    <None Include="Resources\HTML\datasheet.html" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\sprite\blender.png">
@@ -137,6 +138,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Resources\oldmain.txt" />
+    <Text Include="Resources\BackuptScripts\oldmain.txt" />
   </ItemGroup>
 </Project>

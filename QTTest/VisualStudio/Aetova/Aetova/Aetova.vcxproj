@@ -155,10 +155,10 @@
     <ClCompile Include="Scripts\GameWindow\ButtonGame\buttongame.cpp" />
     <ClCompile Include="Scripts\GameWindow\ButtonGame\moc_buttongame.cpp" />
     <ClCompile Include="Scripts\GameWindow\gamewindow.cpp" />
+    <ClCompile Include="Scripts\GameWindow\HTMLLabel\moc_htmllabel.cpp" />
     <ClCompile Include="Scripts\GameWindow\SplashLabel\moc_splashlabel.cpp" />
     <ClCompile Include="Scripts\GameWindow\SplashLabel\splashlabel.cpp" />
-    <ClCompile Include="Scripts\GameWindow\TeamLabel\moc_teamlabel.cpp" />
-    <ClCompile Include="Scripts\GameWindow\TeamLabel\teamlabel.cpp" />
+    <ClCompile Include="Scripts\GameWindow\HTMLLabel\htmllabel.cpp" />
     <ClCompile Include="Scripts\main.cpp" />
     <ClCompile Include="Scripts\GameProcess\GameLauncher\moc_gamelauncher.cpp" />
     <ClCompile Include="Scripts\GameProcess\GameThread\moc_gamethread.cpp" />
@@ -172,10 +172,11 @@
     <ClInclude Include="Scripts\GameProcess\GameLauncher\gamelauncher.h" />
     <ClInclude Include="Scripts\GameProcess\GameThread\gamethread.h" />
     <ClInclude Include="Scripts\GameWindow\SplashLabel\splashlabel.h" />
-    <ClInclude Include="Scripts\GameWindow\TeamLabel\teamlabel.h" />
+    <ClInclude Include="Scripts\GameWindow\HTMLLabel\htmllabel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\html.qrc" />
+    <None Include="Resources\HTML\datasheet.html" />
     <None Include="Resources\HTML\team.html" />
     <None Include="Resources\resources.qrc" />
   </ItemGroup>
@@ -194,7 +195,7 @@
     <Image Include="Resources\sprite\wallpaper.png" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Resources\oldmain.txt" />
+    <Text Include="Resources\BackuptScripts\oldmain.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

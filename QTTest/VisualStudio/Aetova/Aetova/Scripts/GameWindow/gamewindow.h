@@ -14,6 +14,7 @@
 
 class SplashLabel;
 class ButtonGame;
+class HTMLLabel;
 
 class GameWindow : public QWidget
 {
@@ -29,6 +30,8 @@ protected :
 private:
 	SplashLabel* splashLabel;
 	ButtonGame* buttonGame;
+	HTMLLabel* labelTeam;
+	HTMLLabel* labeldatasheet;
 };
 
 #endif
