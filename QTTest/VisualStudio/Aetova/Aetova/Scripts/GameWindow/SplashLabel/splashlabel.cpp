@@ -11,7 +11,7 @@ SplashLabel::SplashLabel(QWidget* parent) : QLabel(parent)
         0,
         0,
         width(),
-        height() / 2
+        SCREEN_HEIGHT / 2
     );
 }
 

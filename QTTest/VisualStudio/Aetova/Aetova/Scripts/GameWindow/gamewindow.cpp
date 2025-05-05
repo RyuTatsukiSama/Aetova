@@ -5,7 +5,7 @@
 
 GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 {
-	setMinimumSize(1280, 670);
+	setMinimumSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// Splash Art 
 
@@ -16,9 +16,9 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 	labelTeam = new HTMLLabel(":/HTML/team.html",
 		QRect(
 			0,
-			height() / 2,
+			SCREEN_HEIGHT / 2,
 			width() / 2,
-			height() / 2
+			height() - SCREEN_HEIGHT / 2
 		),
 		this);
 
@@ -27,9 +27,9 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 	labeldatasheet = new HTMLLabel(":/HTML/datasheet.html",
 		QRect(
 			width() / 2,
-			height() / 2,
+			SCREEN_HEIGHT / 2,
 			width() / 2,
-			height() / 2
+			height() - SCREEN_HEIGHT / 2
 		),
 		this);
 
@@ -50,26 +50,26 @@ void GameWindow::resizeEvent(QResizeEvent* event)
 		0,
 		0,
 		width(),
-		height() / 2
+		SCREEN_HEIGHT / 2
 	);
 
 	labelTeam->setGeometry(
 		0,
-		height() / 2,
+		SCREEN_HEIGHT / 2,
 		width() / 2,
-		height() / 2
+		height() - SCREEN_HEIGHT / 2
 	);
 
 	labeldatasheet->setGeometry(
 		width() / 2,
-		height() / 2,
+		SCREEN_HEIGHT / 2,
 		width() / 2,
-		height() / 2
+		height() - SCREEN_HEIGHT / 2
 	);
 
 	buttonGame->setGeometry(
-		size().width() / 2 - buttonGame->width() / 2,
-		size().height() / 2 - buttonGame->height() / 2,
+		width() / 2 - buttonGame->width() / 2,
+		SCREEN_HEIGHT / 2 - buttonGame->height(),
 		buttonGame->width(),
 		buttonGame->height()
 	);

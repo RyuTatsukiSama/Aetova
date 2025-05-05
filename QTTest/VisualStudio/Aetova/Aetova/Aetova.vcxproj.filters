@@ -136,6 +136,36 @@
     <Image Include="Resources\sprite\wallpaper.png">
       <Filter>Fichiers de ressources</Filter>
     </Image>
+    <Image Include="Resources\sprite\Chibi\Ama_Fond_Noir.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Resources\sprite\Chibi\Colin_Fond_Noir.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Resources\sprite\Chibi\Dorian_Fond_Noir.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Resources\sprite\Chibi\Kath_Fond_Noir.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Resources\sprite\Chibi\Lou Anne_Fond_Noir.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Resources\sprite\Chibi\Lucas_Fond_Noir.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Resources\sprite\Chibi\Maxime_Fond_Noir.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Resources\sprite\Chibi\Mickael_Fond_Noir.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Resources\sprite\Chibi\Sylvain_Fond_Noir.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Resources\sprite\Chibi\Thomas_Fond_Noir.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\BackuptScripts\oldmain.txt" />

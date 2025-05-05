@@ -12,5 +12,15 @@
 		<file>sprite/PEGI_7.png</file>
 		<file>sprite/g3d.png</file>
 		<file>sprite/creajeux.png</file>
+		<file>sprite/Chibi/Ama_Fond_Noir.png</file>
+		<file>sprite/Chibi/Colin_Fond_Noir.png</file>
+		<file>sprite/Chibi/Dorian_Fond_Noir.png</file>
+		<file>sprite/Chibi/Kath_Fond_Noir.png</file>
+		<file>sprite/Chibi/Lou Anne_Fond_Noir.png</file>
+		<file>sprite/Chibi/Lucas_Fond_Noir.png</file>
+		<file>sprite/Chibi/Maxime_Fond_Noir.png</file>
+		<file>sprite/Chibi/Mickael_Fond_Noir.png</file>
+		<file>sprite/Chibi/Sylvain_Fond_Noir.png</file>
+		<file>sprite/Chibi/Thomas_Fond_Noir.png</file>
 	</qresource>
 </RCC>
