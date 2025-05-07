@@ -22,5 +22,6 @@
 		<file>sprite/Chibi/Mickael_Fond_Noir.png</file>
 		<file>sprite/Chibi/Sylvain_Fond_Noir.png</file>
 		<file>sprite/Chibi/Thomas_Fond_Noir.png</file>
+		<file>fonts/Sansation_Regular.ttf</file>
 	</qresource>
 </RCC>
