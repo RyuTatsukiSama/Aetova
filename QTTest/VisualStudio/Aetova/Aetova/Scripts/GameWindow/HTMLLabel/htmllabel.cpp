@@ -1,9 +1,15 @@
 #include "htmllabel.h"
 #include "QtCore/qfile.h"
 #include "QtCore/qtextstream.h"
+#include "QtGui/qfontdatabase.h"
 
 HTMLLabel::HTMLLabel(const QString& pathFile, const QRect& geometry, QWidget* parent) : QLabel(parent)
 {
+	int id = QFontDatabase::addApplicationFont(":/fonts/Sansation_Regular.ttf");
+	QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+	QFont sensation(family);
+	setFont(sensation);
+
 	setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
 	QFile file(pathFile);

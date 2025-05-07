@@ -1,6 +1,8 @@
 #include "GameWindow/gamewindow.h"
 #include "Common/common.h"
 #include "GameProcess/GameThread/gamethread.h"
+#include "QtGui/qfontdatabase.h"
+#include "QtGui/qfont.h"
 
 // Use QVBoxLayout for better scaling
 // Qt has a file manager system call QFile
