@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Resources\html.cpp" />
+    <ClCompile Include="Resources\ui.cpp" />
     <ClCompile Include="Scripts\Common\common.cpp" />
     <ClCompile Include="Scripts\GameProcess\GameLauncher\gamelauncher.cpp" />
     <ClCompile Include="Scripts\GameProcess\GameThread\gamethread.cpp" />
@@ -179,6 +180,7 @@
     <None Include="Resources\HTML\datasheet.html" />
     <None Include="Resources\HTML\team.html" />
     <None Include="Resources\resources.qrc" />
+    <None Include="Resources\ui.qrc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\sprite\blender.png" />

@@ -31,6 +31,16 @@ HTMLLabel::HTMLLabel(const QString& pathFile, const QRect& geometry, QWidget* pa
 	setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 	setWordWrap(true);
 
+	setStyleSheet(R"(
+    background: qlineargradient(
+            x1: 0, y1: 0,
+            x2: 0, y2: 1,
+            stop: 0 #a290c5,
+            stop: 1 #f1b56c
+        );
+    padding: 8px;
+	)");
+
 	setGeometry(geometry);
 
 }

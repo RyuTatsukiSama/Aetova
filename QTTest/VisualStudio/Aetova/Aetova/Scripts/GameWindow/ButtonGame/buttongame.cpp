@@ -15,6 +15,22 @@ ButtonGame::ButtonGame(const QString& name, QWidget* parent) : QPushButton(name,
 
 	setFixedSize(150, 40);
 
+	setStyleSheet(R"(
+    QPushButton {
+    background-color: #a290c5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+	}
+	QPushButton:hover {
+	   background-color: #8d7bb0; /* légèrement plus sombre */
+	}
+	QPushButton:pressed {
+		background-color: #756498; /* encore plus sombre */
+	}	
+	)");
+
 	setGeometry(
 		parent->size().width() / 2 - width() / 2,
 		parent->size().height() / 2 - height() / 2,

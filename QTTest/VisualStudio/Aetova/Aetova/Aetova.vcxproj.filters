@@ -69,6 +69,9 @@
     <ClCompile Include="Scripts\GameWindow\HTMLLabel\moc_htmllabel.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Resources\ui.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scripts\Common\common.h">
@@ -98,6 +101,7 @@
     <None Include="Resources\HTML\team.html" />
     <None Include="Resources\html.qrc" />
     <None Include="Resources\HTML\datasheet.html" />
+    <None Include="Resources\ui.qrc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\sprite\blender.png">

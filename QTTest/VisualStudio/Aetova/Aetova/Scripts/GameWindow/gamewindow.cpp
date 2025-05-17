@@ -40,6 +40,10 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 		this
 	);
 	buttonGame->connectLauncher();
+
+	// Border window
+
+	//setWindowFlag(Qt::FramelessWindowHint);
 }
 
 void GameWindow::resizeEvent(QResizeEvent* event)
