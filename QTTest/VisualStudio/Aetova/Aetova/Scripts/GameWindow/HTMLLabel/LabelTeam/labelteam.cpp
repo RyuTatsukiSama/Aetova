@@ -27,7 +27,7 @@ void TeamLabel::paintEvent(QPaintEvent* event)
 
     painter.setClipPath(path);
 
-    QColor overlay(255, 255, 255, 100); // Noir avec alpha (sombre partiellement)
+    QColor overlay(255, 255, 255, 50); // Noir avec alpha (sombre partiellement)
     painter.fillRect(rect(), overlay);
     painter.fillPath(path, overlay);
 
