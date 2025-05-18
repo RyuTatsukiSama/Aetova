@@ -9,17 +9,19 @@ ButtonGame::ButtonGame(const QString& name, QWidget* parent) : QPushButton(name,
 	int id = QFontDatabase::addApplicationFont(":/fonts/Sansation_Regular.ttf");
 	QString family = QFontDatabase::applicationFontFamilies(id).at(0);
 	QFont sensation(family);
+	sensation.setPointSizeF(14);
 	setFont(sensation);
 
 	launcher = new GameLauncher(this);
 
-	setFixedSize(150, 40);
+	setFixedSize(250, 55);
 
 	setStyleSheet(R"(
     QPushButton {
     background-color: #a290c5;
     color: white;
     border: none;
+    border-radius: 12px;
     padding: 10px 20px;
     font-weight: bold;
 	}

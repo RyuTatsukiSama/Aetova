@@ -23,5 +23,6 @@
 		<file>sprite/Chibi/Sylvain_Fond_Blanc.png</file>
 		<file>sprite/Chibi/Thomas_Fond_Blanc.png</file>
 		<file>fonts/Sansation_Regular.ttf</file>
+		<file>sprite/LogoOranys.png</file>
 	</qresource>
 </RCC>

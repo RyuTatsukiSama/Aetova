@@ -2,5 +2,6 @@
 	<qresource prefix="/">
 		<file>HTML/team.html</file>
 		<file>HTML/datasheet.html</file>
+		<file>HTML/spitch.html</file>
 	</qresource>
 </RCC>

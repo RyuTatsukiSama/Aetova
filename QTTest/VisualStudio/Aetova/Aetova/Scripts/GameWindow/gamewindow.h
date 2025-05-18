@@ -15,6 +15,8 @@
 class SplashLabel;
 class ButtonGame;
 class HTMLLabel;
+class BackgroundWidget;
+class TeamLabel;
 
 class GameWindow : public QWidget
 {
@@ -28,9 +30,11 @@ protected :
 	void resizeEvent(QResizeEvent* event) override;
 
 private:
+	BackgroundWidget* background;
 	SplashLabel* splashLabel;
 	ButtonGame* buttonGame;
-	HTMLLabel* labelTeam;
+	HTMLLabel* labelSpitch;
+	TeamLabel* labelTeam;
 	HTMLLabel* labeldatasheet;
 };
 

@@ -1,5 +1,5 @@
-#ifndef TEAMLABEL_H
-#define TEAMLABEL_H
+#ifndef HTMLLABEL_H
+#define HTMLLABEL_H
 
 #include "../../Common/common.h"
 #include "QtWidgets/qlabel.h"
@@ -17,4 +17,4 @@ protected:
 private:
 };
 
-#endif // !TEAMLABEL_H
+#endif // !HTMLLABEL_H

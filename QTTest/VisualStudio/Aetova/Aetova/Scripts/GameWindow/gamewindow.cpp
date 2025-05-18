@@ -2,23 +2,25 @@
 #include "SplashLabel/splashlabel.h"
 #include "ButtonGame/buttongame.h"
 #include "HTMLLabel/htmllabel.h"
+#include "BackgroundWidget/backgroundwidget.h"
+#include "HTMLLabel/LabelTeam/labelteam.h"
 
 GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 {
 	setMinimumSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	// Splash Art 
+	// Background
 
-	splashLabel = new SplashLabel(this);
+	background = new BackgroundWidget(this);
 
-	// Team
+	// Spitch
 
-	labelTeam = new HTMLLabel(":/HTML/team.html",
+	labelSpitch = new HTMLLabel(":/HTML/spitch.html",
 		QRect(
 			0,
 			SCREEN_HEIGHT / 2,
-			width() / 2,
-			height() - SCREEN_HEIGHT / 2
+			width(),
+			100
 		),
 		this);
 
@@ -26,14 +28,26 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 
 	labeldatasheet = new HTMLLabel(":/HTML/datasheet.html",
 		QRect(
+			40,
+			SCREEN_HEIGHT / 2 + labelSpitch->height(),
 			width() / 2,
-			SCREEN_HEIGHT / 2,
-			width() / 2,
-			height() - SCREEN_HEIGHT / 2
+			height() - SCREEN_HEIGHT / 2 + labelSpitch->height()
 		),
 		this);
 
-	// Button
+	// Team
+
+	labelTeam = new TeamLabel(":/HTML/team.html",
+		QRect(
+			width() / 2,
+			SCREEN_HEIGHT / 2 + labelSpitch->height(),
+			width() / 2,
+			height() - SCREEN_HEIGHT / 2 + labelSpitch->height()
+		),
+		this);
+
+
+	/*// Button
 
 	buttonGame = new ButtonGame(
 		QApplication::translate("childwidget", "Launch Game"),
@@ -43,38 +57,47 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 
 	// Border window
 
-	//setWindowFlag(Qt::FramelessWindowHint);
+	//setWindowFlag(Qt::FramelessWindowHint);*/
 }
 
 void GameWindow::resizeEvent(QResizeEvent* event)
 {
 	QWidget::resizeEvent(event);
 
-	splashLabel->setGeometry(
+	background->setGeometry(
 		0,
 		0,
 		width(),
-		SCREEN_HEIGHT / 2
+		height()
 	);
 
-	labelTeam->setGeometry(
+	labelSpitch->setGeometry(
 		0,
 		SCREEN_HEIGHT / 2,
-		width() / 2,
-		height() - SCREEN_HEIGHT / 2
+		width(),
+		100
 	);
 
 	labeldatasheet->setGeometry(
+		40,
+		SCREEN_HEIGHT / 2 + labelSpitch->height(),
 		width() / 2,
-		SCREEN_HEIGHT / 2,
-		width() / 2,
-		height() - SCREEN_HEIGHT / 2
+		height() - SCREEN_HEIGHT / 2 + labelSpitch->height()
 	);
 
-	buttonGame->setGeometry(
+	labelTeam->setGeometry(
+		width() / 2,
+		SCREEN_HEIGHT / 2 + labelSpitch->height(),
+		width() / 2,
+		height() - SCREEN_HEIGHT / 2 + labelSpitch->height()
+	);
+
+
+
+	/*buttonGame->setGeometry(
 		width() / 2 - buttonGame->width() / 2,
-		SCREEN_HEIGHT / 2 - buttonGame->height(),
+		SCREEN_HEIGHT / 4 - buttonGame->height() / 2,
 		buttonGame->width(),
 		buttonGame->height()
-	);
+	);*/
 }

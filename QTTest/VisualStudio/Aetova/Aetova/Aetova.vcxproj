@@ -153,9 +153,13 @@
     <ClCompile Include="Scripts\Common\common.cpp" />
     <ClCompile Include="Scripts\GameProcess\GameLauncher\gamelauncher.cpp" />
     <ClCompile Include="Scripts\GameProcess\GameThread\gamethread.cpp" />
+    <ClCompile Include="Scripts\GameWindow\BackgroundWidget\backgroundwidget.cpp" />
+    <ClCompile Include="Scripts\GameWindow\BackgroundWidget\moc_backgroundwidget.cpp" />
     <ClCompile Include="Scripts\GameWindow\ButtonGame\buttongame.cpp" />
     <ClCompile Include="Scripts\GameWindow\ButtonGame\moc_buttongame.cpp" />
     <ClCompile Include="Scripts\GameWindow\gamewindow.cpp" />
+    <ClCompile Include="Scripts\GameWindow\HTMLLabel\LabelTeam\labelteam.cpp" />
+    <ClCompile Include="Scripts\GameWindow\HTMLLabel\LabelTeam\moc_labelteam.cpp" />
     <ClCompile Include="Scripts\GameWindow\HTMLLabel\moc_htmllabel.cpp" />
     <ClCompile Include="Scripts\GameWindow\SplashLabel\moc_splashlabel.cpp" />
     <ClCompile Include="Scripts\GameWindow\SplashLabel\splashlabel.cpp" />
@@ -168,16 +172,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scripts\Common\common.h" />
+    <ClInclude Include="Scripts\GameWindow\BackgroundWidget\backgroundwidget.h" />
     <ClInclude Include="Scripts\GameWindow\ButtonGame\buttongame.h" />
     <ClInclude Include="Scripts\GameWindow\gamewindow.h" />
     <ClInclude Include="Scripts\GameProcess\GameLauncher\gamelauncher.h" />
     <ClInclude Include="Scripts\GameProcess\GameThread\gamethread.h" />
+    <ClInclude Include="Scripts\GameWindow\HTMLLabel\LabelTeam\labelteam.h" />
     <ClInclude Include="Scripts\GameWindow\SplashLabel\splashlabel.h" />
     <ClInclude Include="Scripts\GameWindow\HTMLLabel\htmllabel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\html.qrc" />
     <None Include="Resources\HTML\datasheet.html" />
+    <None Include="Resources\HTML\spitch.html" />
     <None Include="Resources\HTML\team.html" />
     <None Include="Resources\resources.qrc" />
     <None Include="Resources\ui.qrc" />

@@ -72,6 +72,18 @@
     <ClCompile Include="Resources\ui.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\GameWindow\BackgroundWidget\backgroundwidget.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\GameWindow\BackgroundWidget\moc_backgroundwidget.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\GameWindow\HTMLLabel\LabelTeam\labelteam.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\GameWindow\HTMLLabel\LabelTeam\moc_labelteam.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scripts\Common\common.h">
@@ -95,6 +107,12 @@
     <ClInclude Include="Scripts\GameWindow\HTMLLabel\htmllabel.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Scripts\GameWindow\BackgroundWidget\backgroundwidget.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\GameWindow\HTMLLabel\LabelTeam\labelteam.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\resources.qrc" />
@@ -102,6 +120,7 @@
     <None Include="Resources\html.qrc" />
     <None Include="Resources\HTML\datasheet.html" />
     <None Include="Resources\ui.qrc" />
+    <None Include="Resources\HTML\spitch.html" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\sprite\blender.png">

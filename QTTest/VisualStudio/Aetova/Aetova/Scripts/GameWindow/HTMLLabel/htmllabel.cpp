@@ -5,13 +5,13 @@
 
 HTMLLabel::HTMLLabel(const QString& pathFile, const QRect& geometry, QWidget* parent) : QLabel(parent)
 {
+	// Font 
 	int id = QFontDatabase::addApplicationFont(":/fonts/Sansation_Regular.ttf");
 	QString family = QFontDatabase::applicationFontFamilies(id).at(0);
 	QFont sensation(family);
 	setFont(sensation);
 
-	setFrameStyle(QFrame::Panel | QFrame::Sunken);
-
+	// Html
 	QFile file(pathFile);
 
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -28,21 +28,17 @@ HTMLLabel::HTMLLabel(const QString& pathFile, const QRect& geometry, QWidget* pa
 	setTextFormat(Qt::RichText);
 	setText(textTeam.trimmed());
 
-	setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-	setWordWrap(true);
+	// Structure
 
-	setStyleSheet(R"(
-    background: qlineargradient(
-            x1: 0, y1: 0,
-            x2: 0, y2: 1,
-            stop: 0 #a290c5,
-            stop: 1 #f1b56c
-        );
-    padding: 8px;
-	)");
+	setAlignment(Qt::AlignTop);
+	setWordWrap(true);
+	
+	// Frame
+
+	setFrameShape(QFrame::NoFrame);
+	setFrameShadow(QFrame::Plain);
 
 	setGeometry(geometry);
-
 }
 
 void HTMLLabel::paintEvent(QPaintEvent* event)
