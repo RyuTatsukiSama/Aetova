@@ -2,6 +2,7 @@
 #include "QtGui/qpainter.h"
 #include "QtWidgets/qstyle.h"
 #include "QtWidgets/qstyleoption.h"
+#include "QtGui/qpainterpath.h"
 
 TeamLabel::TeamLabel(const QString& pathFile, const QRect& geometry, QWidget* parent) : HTMLLabel(pathFile, geometry, parent)
 {
@@ -18,8 +19,17 @@ void TeamLabel::paintEvent(QPaintEvent* event)
     QStyleOption opt;
     opt.initFrom(this);
     QPainter painter(this);
+
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
+
+    QPainterPath path;
+    path.addRoundedRect(rect(), 8, 8);
+
+    painter.setClipPath(path);
+
     QColor overlay(255, 255, 255, 100); // Noir avec alpha (sombre partiellement)
     painter.fillRect(rect(), overlay);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
+    painter.fillPath(path, overlay);
+
     QLabel::paintEvent(event);
 }

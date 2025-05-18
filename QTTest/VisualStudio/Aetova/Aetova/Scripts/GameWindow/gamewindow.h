@@ -17,6 +17,7 @@ class ButtonGame;
 class HTMLLabel;
 class BackgroundWidget;
 class TeamLabel;
+class QLabel;
 
 class GameWindow : public QWidget
 {
@@ -31,7 +32,7 @@ protected :
 
 private:
 	BackgroundWidget* background;
-	SplashLabel* splashLabel;
+	QLabel* labelLogo;
 	ButtonGame* buttonGame;
 	HTMLLabel* labelSpitch;
 	TeamLabel* labelTeam;

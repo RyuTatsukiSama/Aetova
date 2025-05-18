@@ -41,13 +41,13 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 		QRect(
 			width() / 2,
 			SCREEN_HEIGHT / 2 + labelSpitch->height(),
-			width() / 2,
-			height() - SCREEN_HEIGHT / 2 + labelSpitch->height()
+			width() / 2 - 40,
+			height() - SCREEN_HEIGHT / 2 + labelSpitch->height() - 40
 		),
 		this);
 
 
-	/*// Button
+	// Button
 
 	buttonGame = new ButtonGame(
 		QApplication::translate("childwidget", "Launch Game"),
@@ -55,9 +55,18 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 	);
 	buttonGame->connectLauncher();
 
+	labelLogo = new QLabel(this);
+	labelLogo->setPixmap(LoadPixMap(":/sprite/LogoOranys.png"));
+	labelLogo->setGeometry(QRect(
+		width() / 2 - labelLogo->width() / 2,
+		buttonGame->pos().y() - buttonGame->height() /2 - labelLogo->pixmap().height(),
+		labelLogo->pixmap().width(),
+		labelLogo->pixmap().height()
+	));
+
 	// Border window
 
-	//setWindowFlag(Qt::FramelessWindowHint);*/
+	//setWindowFlag(Qt::FramelessWindowHint);
 }
 
 void GameWindow::resizeEvent(QResizeEvent* event)
@@ -88,16 +97,22 @@ void GameWindow::resizeEvent(QResizeEvent* event)
 	labelTeam->setGeometry(
 		width() / 2,
 		SCREEN_HEIGHT / 2 + labelSpitch->height(),
-		width() / 2,
-		height() - SCREEN_HEIGHT / 2 + labelSpitch->height()
+		width() / 2 - 40,
+		height() - SCREEN_HEIGHT / 2 - labelSpitch->height() - 40
 	);
 
 
-
-	/*buttonGame->setGeometry(
+	buttonGame->setGeometry(
 		width() / 2 - buttonGame->width() / 2,
 		SCREEN_HEIGHT / 4 - buttonGame->height() / 2,
 		buttonGame->width(),
 		buttonGame->height()
-	);*/
+	);
+
+	labelLogo->setGeometry(QRect(
+		width() / 2 - labelLogo->width() / 2,
+		buttonGame->pos().y() - buttonGame->height() / 2 - labelLogo->pixmap().height(),
+		labelLogo->pixmap().width(),
+		labelLogo->pixmap().height()
+	));
 }
