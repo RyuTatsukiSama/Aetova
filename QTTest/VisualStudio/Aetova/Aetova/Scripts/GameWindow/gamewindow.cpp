@@ -59,7 +59,7 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 	labelLogo->setPixmap(LoadPixMap(":/sprite/LogoOranys.png"));
 	labelLogo->setGeometry(QRect(
 		width() / 2 - labelLogo->width() / 2,
-		buttonGame->pos().y() - buttonGame->height() /2 - labelLogo->pixmap().height(),
+		buttonGame->pos().y() - buttonGame->height() /2 - labelLogo->pixmap().height() / 1.25f,
 		labelLogo->pixmap().width(),
 		labelLogo->pixmap().height()
 	));
@@ -111,7 +111,7 @@ void GameWindow::resizeEvent(QResizeEvent* event)
 
 	labelLogo->setGeometry(QRect(
 		width() / 2 - labelLogo->width() / 2,
-		buttonGame->pos().y() - buttonGame->height() / 2 - labelLogo->pixmap().height(),
+		buttonGame->pos().y() - buttonGame->height() / 2 - labelLogo->pixmap().height() / 1.25f,
 		labelLogo->pixmap().width(),
 		labelLogo->pixmap().height()
 	));

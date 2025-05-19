@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 {
 	QApplication app(argc, argv);
 	GameWindow* gw = new GameWindow();
-	gw->resize(SCREEN_WIDTH, 1155);
+	gw->resize(SCREEN_WIDTH, 1000);
 	gw->setWindowTitle(QApplication::translate("Aetova", "Aetova"));
 	gw->show();
 
