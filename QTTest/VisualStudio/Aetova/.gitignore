@@ -3,3 +3,5 @@ Aetova/x64
 Depedencies
 *.pdb
 *.png~
+x64/Debug/common/Oranys
+x64/Release/common/Oranys
