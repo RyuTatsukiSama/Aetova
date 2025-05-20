@@ -2,6 +2,7 @@
 #include "QtCore/qfile.h"
 #include "QtCore/qtextstream.h"
 #include "QtGui/qfontdatabase.h"
+#include "QtGui/qpainter.h"
 
 HTMLLabel::HTMLLabel(const QString& pathFile, const QRect& geometry, QWidget* parent) : QLabel(parent)
 {
