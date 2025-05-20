@@ -45,7 +45,7 @@ ButtonGame::ButtonGame(const QString& name, QWidget* parent) : QPushButton(name,
 void ButtonGame::connectLauncher()
 {
 	QApplication::connect(this, &QPushButton::released, [this]() {
-		launcher->launchGame("Journeep", "Journeep");
+		launcher->launchGame("Oranys", "Oranys");
 		});
 }
 
