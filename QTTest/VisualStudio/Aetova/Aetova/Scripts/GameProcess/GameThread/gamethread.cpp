@@ -8,7 +8,7 @@ GameThread::GameThread(QObject* parent) : QThread(parent)
 
 void GameThread::run()
 {
-    std::cout << "entrer" << std::endl;
+    //std::cout << "entrer" << std::endl;
     string workingDir = "common\\" + pathToExe.toStdString();
     std::wstring widestrWD = std::wstring(workingDir.begin(), workingDir.end());
     const wchar_t* widecstrWD = widestrWD.c_str();

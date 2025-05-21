@@ -9,12 +9,12 @@ GameLauncher::GameLauncher(QObject* parent)
 
 void GameLauncher::handleFinish(const QString& s)
 {
-	std::cout << s.toStdString() << std::endl;;
+	//std::cout << s.toStdString() << std::endl;;
 }
 
 void GameLauncher::launchGame(const QString pathToExe, const QString exeName)
 {
-	std::cout << "LaunchGame" << std::endl;
+	//std::cout << "LaunchGame" << std::endl;
 	GameThread* gt = new GameThread(this);
 	gt->pathToExe = pathToExe;
 	gt->exeName = exeName;
