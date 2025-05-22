@@ -40,7 +40,6 @@ void GameThread::run()
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
         emit threadFinish("End without problem");
-        system("pause");
     }
     else {
         // Gestion des erreurs
