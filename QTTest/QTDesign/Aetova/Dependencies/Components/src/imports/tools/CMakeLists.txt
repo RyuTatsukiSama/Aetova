@@ -1,2 +1,0 @@
-add_subdirectory(eventsimulator)
-add_subdirectory(eventsystem)
