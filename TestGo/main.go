@@ -1,11 +1,11 @@
 package main
 
 import (
-	Map "example/hello/map"
+	ControlFlow "example/hello/Control_Flow"
 	utils "example/hello/utils"
 )
 
 func main() {
-	Map.Map_main()
+	ControlFlow.ControlFlow_main()
 	utils.Pause()
 }
