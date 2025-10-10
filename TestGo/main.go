@@ -1,11 +1,11 @@
 package main
 
 import (
-	docSlices "example/hello/Slices"
+	Map "example/hello/map"
 	utils "example/hello/utils"
 )
 
 func main() {
-	docSlices.Slice_main()
+	Map.Map_main()
 	utils.Pause()
 }
