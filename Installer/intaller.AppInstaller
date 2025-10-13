@@ -1,0 +1,6 @@
+<?xml version="0.1" encoding="utf-8"?>
+<AppInstaller 
+    xmlns="http://schemas.microsoft.com/appx/appinstaller/2021"
+    Version=""
+    Uri="">
+</AppInstaller>
