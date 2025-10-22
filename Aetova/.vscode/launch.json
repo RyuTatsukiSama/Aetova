@@ -5,7 +5,7 @@
       "name": "Debug",
       "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/Debug/helloworld.exe",
+      "program": "${workspaceFolder}/build/Debug/Aetova.exe",
       "cwd": "${workspaceFolder}",
       "console": "externalTerminal",
       "preLaunchTask": "CMake: build"

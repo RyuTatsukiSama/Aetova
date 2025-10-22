@@ -1,0 +1,32 @@
+@echo off
+REM ------------------------------------------
+REM Script for generate a resources cpp file with Qt from a .qrc file
+REM ------------------------------------------
+
+REM === Input for the name of the qrc ===
+set /p BASENAME=Enter the name of the qrc : 
+
+REM === File name ===
+set RESOURCE=%BASENAME%.qrc
+set OUTPUT=%BASENAME%.cpp
+
+rem === Active the two following command if qt is not in the PATH environnement ===
+
+REM === path to the bin folder of Qt ===
+REM QT_BIN_PATH=C:\Qt\6.8.2\msvc2022_64\bin
+
+REM === add the bin folder of Qt to PATH ===
+REM PATH=%QT_BIN_PATH%;%PATH%
+
+REM === Execute rcc ===
+echo Generation of %OUTPUT% from %HEADER%
+rcc -name %BASENAME% %RESOURCE% -o %OUTPUT%
+
+REM === Verification of success ===
+if exist %OUTPUT% (
+    echo File %OUTPUT% generation succeed.
+) else (
+    echo Error : the file %OUTPUT% was'nt generated.
+)
+
+pause
