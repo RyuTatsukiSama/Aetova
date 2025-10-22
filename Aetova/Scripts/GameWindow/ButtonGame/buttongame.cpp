@@ -26,7 +26,7 @@ ButtonGame::ButtonGame(const QString& name, QWidget* parent) : QPushButton(name,
     font-weight: bold;
 	}
 	QPushButton:hover {
-	   background-color: #8d7bb0; /* légèrement plus sombre */
+	   background-color: #8d7bb0; /* lï¿½gï¿½rement plus sombre */
 	}
 	QPushButton:pressed {
 		background-color: #756498; /* encore plus sombre */
@@ -45,7 +45,7 @@ ButtonGame::ButtonGame(const QString& name, QWidget* parent) : QPushButton(name,
 void ButtonGame::connectLauncher()
 {
 	QApplication::connect(this, &QPushButton::released, [this]() {
-		launcher->launchGame("Oranys", "Oranys");
+		launcher->launchGame("BuildOranys", "Oranys"); // TODO : need modulable
 		});
 }
 

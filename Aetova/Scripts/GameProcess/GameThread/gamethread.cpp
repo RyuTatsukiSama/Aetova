@@ -9,11 +9,11 @@ GameThread::GameThread(QObject* parent) : QThread(parent)
 void GameThread::run()
 {
     //std::cout << "entrer" << std::endl;
-    string workingDir = "common\\" + pathToExe.toStdString();
+    string workingDir = "apps\\" + pathToExe.toStdString();
     std::wstring widestrWD = std::wstring(workingDir.begin(), workingDir.end());
     const wchar_t* widecstrWD = widestrWD.c_str();
 
-    string path = "common\\" + pathToExe.toStdString() + "\\" + exeName.toStdString() + ".exe";
+    string path = "apps\\" + pathToExe.toStdString() + "\\" + exeName.toStdString() + ".exe";
     std::wstring widestr = std::wstring(path.begin(), path.end());
     const wchar_t* widecstr = widestr.c_str();
 
@@ -26,14 +26,14 @@ void GameThread::run()
     // Launch programm
     if (CreateProcess(widecstr,   // Path to Exe
         NULL,                                // Arguments (NULL si aucun)
-        NULL,                                // Attributs de sécurité du processus
-        NULL,                                // Attributs de sécurité du thread
-        FALSE,                               // Héritage des handles
+        NULL,                                // Attributs de sï¿½curitï¿½ du processus
+        NULL,                                // Attributs de sï¿½curitï¿½ du thread
+        FALSE,                               // Hï¿½ritage des handles
         0,                                   // Flags
         NULL,                                // Variables d'environnement
-        widecstrWD,                          // Répertoire de travail
-        &si,                                 // Infos de démarrage
-        &pi))                                // Infos sur le processus créé
+        widecstrWD,                          // Rï¿½pertoire de travail
+        &si,                                 // Infos de dï¿½marrage
+        &pi))                                // Infos sur le processus crï¿½ï¿½
     {
         // Wait the end of the process
         WaitForSingleObject(pi.hProcess, INFINITE);

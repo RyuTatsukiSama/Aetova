@@ -56,4 +56,7 @@ out/
 
 # log
 *.log
-rLogs/
+docLogs/
+
+# apps
+apps/
