@@ -1,7 +1,59 @@
-.vs
-Aetova/x64
-Depedencies
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Linker files
+*.ilk
+
+# Debugger Files
 *.pdb
-*.png~
-x64/Debug/common/Oranys
-x64/Release/common/Oranys
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# debug information files
+*.dwo
+
+# CMake cache
+CMakeCache.txt
+CMakeFiles/
+
+# Build folders
+build/
+out/
+
+# visual studio
+.vs/
+*.vcxproj
+*.vcxproj.user
+*.sln
+
+# log
+*.log
+rLogs/
