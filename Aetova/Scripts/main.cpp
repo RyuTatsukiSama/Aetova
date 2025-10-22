@@ -9,23 +9,19 @@
 // Use QVBoxLayout for better scaling
 // Qt has a file manager system call QFile
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	doc::LoggerOptions opts = doc::LoggerOptions::OptionsBuilder().build();
 	doc::setGlobalLoggerOptions(opts);
 	doc::Logger log;
-
-	std::string message = "Start of Aetova";
-	log.Caller();
-	log.Log(doc::LoggerSeverity::Info, message);
-	message = "Start of Aetova";
+	log.Log(doc::LoggerSeverity::Info, "Start Aetova");
 
 	QApplication app(argc, argv);
-	GameWindow* gw = new GameWindow();
+	GameWindow *gw = new GameWindow();
 	gw->resize(SCREEN_WIDTH, 1000);
 	gw->setWindowTitle(QApplication::translate("Aetova", "Aetova"));
 
-	QScreen* screen = QGuiApplication::primaryScreen();
+	QScreen *screen = QGuiApplication::primaryScreen();
 	QRect screenGeometry = screen->availableGeometry();
 	int x = (screenGeometry.width() - gw->width()) / 2;
 	int y = (screenGeometry.height() - gw->height()) / 2;
@@ -33,5 +29,12 @@ int main(int argc, char* argv[])
 
 	gw->show();
 
-	return app.exec();
+	int endCode = app.exec();
+
+	if (endCode == 0)
+		log.Info(std::format("Aetova end with code {}", endCode));
+	else
+		log.Error(std::format("Aetova end with code {}", endCode));
+
+	return endCode;
 }
