@@ -1,15 +1,25 @@
 #include "GameWindow/gamewindow.h"
 #include "Common/common.h"
 #include "GameProcess/GameThread/gamethread.h"
-#include "QtGui/qfontdatabase.h"
-#include "QtGui/qfont.h"
-#include "QtGui/qscreen.h"
+#include <QFontDatabase>
+#include <QFont>
+#include <QScreen>
+#include <Logger.h>
 
 // Use QVBoxLayout for better scaling
 // Qt has a file manager system call QFile
 
 int main(int argc, char* argv[])
 {
+	doc::LoggerOptions opts = doc::LoggerOptions::OptionsBuilder().build();
+	doc::setGlobalLoggerOptions(opts);
+	doc::Logger log;
+
+	std::string message = "Start of Aetova";
+	log.Caller();
+	log.Log(doc::LoggerSeverity::Info, message);
+	message = "Start of Aetova";
+
 	QApplication app(argc, argv);
 	GameWindow* gw = new GameWindow();
 	gw->resize(SCREEN_WIDTH, 1000);

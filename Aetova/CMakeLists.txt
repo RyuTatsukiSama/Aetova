@@ -38,14 +38,35 @@ qt_add_executable(Aetova
     ${SOURCES}
 )
 
-target_link_libraries(Aetova PRIVATE Qt6::Widgets)
+target_link_libraries(Aetova PRIVATE 
+    Qt6::Widgets
+    Qt6::Core
+    Qt6::Gui
+)
+
+# add the docLogger
+target_link_libraries(Aetova PRIVATE "./lib/docLogger")
+
+target_include_directories(Aetova PRIVATE "./Dependencies/docLogger_v1-1-1/include")
 
 set_target_properties(Aetova PROPERTIES
-    WIN32_EXECUTABLE ON
+    WIN32_EXECUTABLE OFF
 )
 
 add_custom_command(TARGET Aetova POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
         "${CMAKE_SOURCE_DIR}/apps"
         "$<TARGET_FILE_DIR:Aetova>/apps"
+)
+
+add_custom_command(TARGET Aetova PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
+        "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib"
+        "${CMAKE_SOURCE_DIR}/build/lib"
+)
+
+add_custom_command(TARGET Aetova POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/dll/$<CONFIG>/docLogger.dll"
+        "$<TARGET_FILE_DIR:Aetova>/docLogger.dll"    
 )

@@ -6,4 +6,4 @@ Aetova is an game distribution application for the independant game. It is an op
 
 ## Dependencies
 
-[docLogger](https://github.com/RyuTatsukiSama/docLogger)
+For Logger gestion : [docLogger](https://github.com/RyuTatsukiSama/docLogger) v1.1.1
