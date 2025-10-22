@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.31)
 
 project(Aetova VERSION 1.0.0 LANGUAGES CXX)
 
@@ -42,10 +42,6 @@ target_link_libraries(Aetova PRIVATE Qt6::Widgets)
 
 set_target_properties(Aetova PROPERTIES
     WIN32_EXECUTABLE ON
-)
-
-set( TARGET_FILE_DIR
-    "./Debug/"
 )
 
 add_custom_command(TARGET Aetova POST_BUILD
