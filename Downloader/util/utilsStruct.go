@@ -8,5 +8,6 @@ type ManifestFile struct {
 type ManifestDir struct {
 	Name       string
 	IsDownload bool
-	Sub        []interface{}
+	SubDir     []ManifestDir
+	SubFiles   []ManifestFile
 }
