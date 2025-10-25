@@ -2,7 +2,6 @@ package downloader
 
 import (
 	"Aetova/util"
-	"encoding/json"
 	"os"
 	"strconv"
 )
@@ -21,6 +20,10 @@ func ChopGame(_path string) (_err error) {
 		}
 	}
 
+	return _err
+}
+
+func createTree() (_err error) {
 	return _err
 }
 
@@ -46,19 +49,7 @@ func Chop(_path string) error {
 		return err
 	}
 
-	// check if the chop dir exist, if not create it
-	if ok, err := util.Exists("chop/"); !ok {
-		err = os.Mkdir("chop/", 0700)
-		if err != nil {
-			return err
-		}
-	} else if err != nil {
-		return err // return the error if there is one
-	}
-
-	// for manifest.json
-	jsonFile, err := os.Create("manifest.json")
-	if err != nil {
+	if err := os.MkdirAll("chop/", 0700); err != nil {
 		return err
 	}
 
@@ -68,7 +59,7 @@ func Chop(_path string) error {
 	previousI := 0
 	for i := 1000; i < len(data); i += 1000 {
 		current := data[previousI:i]
-		res, err := saveFile(current, i/1000)
+		res, err := saveChopFile(current, i/1000)
 		if err != nil {
 			return err
 		}
@@ -81,7 +72,7 @@ func Chop(_path string) error {
 
 	// last part
 	current := data[len(data)/1000*1000:]
-	res, err := saveFile(current, len(data)/1000+1)
+	res, err := saveChopFile(current, len(data)/1000+1)
 	if err != nil {
 		return err
 	}
@@ -90,17 +81,21 @@ func Chop(_path string) error {
 		IsDownload: false,
 	})
 
-	// save into the json
-	encoder := json.NewEncoder(jsonFile)
-	encoder.SetIndent("", "  ")
-	err = encoder.Encode(jsonData)
+	// for manifest.json
+	jsonFile, err := os.Create("manifest.json")
 	if err != nil {
 		return err
 	}
+
+	err = util.ToJson(jsonData, jsonFile)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func saveFile(_data []byte, _part int) (_rpath string, _err error) {
+func saveChopFile(_data []byte, _part int) (_rpath string, _err error) {
 	_rpath = "chop/part" + strconv.Itoa(_part) + "_" + "docLogger.bin"
 	if ok, err := util.Exists(_rpath); !ok {
 		// create the file

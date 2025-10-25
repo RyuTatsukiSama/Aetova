@@ -1,7 +1,6 @@
 package main
 
 import (
-	"Aetova/downloader"
 	"log"
 	"os"
 )
@@ -11,22 +10,26 @@ func main() {
 
 	err = os.Chdir("WorkingDirectory")
 
-	downloader.Unzip("docLogger_v1-1-1.zip")
+	checkErr(err)
 
-	downloader.ChopGame("uncompressed/docLogger_v1-1-1")
+	// err = downloader.Unzip("docLogger_v1-1-1.zip")
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	checkErr(err)
+
+	// err = downloader.ChopGame("uncompressed/docLogger_v1-1-1")
+
+	checkErr(err)
 
 	// err = downloader.Chop("docLogger_v1-1-1.zip")
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	checkErr(err)
 
-	// downloader.Assemble()
+	// err = downloader.Assemble()
 
+	checkErr(err)
+}
+
+func checkErr(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}

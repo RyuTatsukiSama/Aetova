@@ -2,7 +2,6 @@ package downloader
 
 import (
 	"Aetova/util"
-	"encoding/json"
 	"os"
 )
 
@@ -16,12 +15,12 @@ func Assemble() error {
 	defer file.Close()
 
 	// decode the json
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&jsonData)
+	err = util.FromJson(&jsonData, file)
 	if err != nil {
 		return err
 	}
 
+	// aseemble the binary into one file
 	allData := []byte{}
 	for i := 0; i < len(jsonData); i++ {
 		currentData, err := loadFile(jsonData[i].Name)
@@ -32,6 +31,7 @@ func Assemble() error {
 		allData = append(allData, currentData...)
 	}
 
+	// write the new file
 	path := "newdocLogger.zip"
 	if ok, err := util.Exists(path); !ok {
 		// create the file
