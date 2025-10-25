@@ -13,6 +13,8 @@ func main() {
 
 	downloader.Unzip("docLogger_v1-1-1.zip")
 
+	downloader.ChopGame("uncompressed/docLogger_v1-1-1")
+
 	if err != nil {
 		log.Fatal(err)
 	}

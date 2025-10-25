@@ -8,7 +8,7 @@ import (
 
 func Assemble() error {
 	// open the json
-	var jsonData []util.Manifest
+	var jsonData []util.ManifestFile
 	file, err := os.Open("manifest.json")
 	if err != nil {
 		return err

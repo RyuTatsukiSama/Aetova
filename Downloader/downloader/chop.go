@@ -7,6 +7,23 @@ import (
 	"strconv"
 )
 
+func ChopGame(_path string) (_err error) {
+	dir, _err := os.ReadDir(_path)
+	if _err != nil {
+		return _err
+	}
+
+	for _, entry := range dir {
+		if entry.IsDir() {
+
+		} else {
+
+		}
+	}
+
+	return _err
+}
+
 func Chop(_path string) error {
 
 	// open the .zip file
@@ -45,7 +62,7 @@ func Chop(_path string) error {
 		return err
 	}
 
-	jsonData := []util.Manifest{}
+	jsonData := []util.ManifestFile{}
 
 	// cut the data
 	previousI := 0
@@ -55,7 +72,7 @@ func Chop(_path string) error {
 		if err != nil {
 			return err
 		}
-		jsonData = append(jsonData, util.Manifest{
+		jsonData = append(jsonData, util.ManifestFile{
 			Name:       res,
 			IsDownload: false,
 		})
@@ -68,7 +85,7 @@ func Chop(_path string) error {
 	if err != nil {
 		return err
 	}
-	jsonData = append(jsonData, util.Manifest{
+	jsonData = append(jsonData, util.ManifestFile{
 		Name:       res,
 		IsDownload: false,
 	})
