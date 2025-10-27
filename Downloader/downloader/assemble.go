@@ -5,25 +5,17 @@ import (
 	"os"
 )
 
-func Assemble() error {
-	// open the json
-	var jsonData []util.ManifestFile
-	file, err := os.Open("manifest.json")
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	// decode the json
-	err = util.FromJson(&jsonData, file)
-	if err != nil {
+func Assemble(_manifest string) (err error) {
+	/*// open the json
+	var jsonData util.ManifestDir
+	if err = readJson(_manifest, &jsonData); err != nil {
 		return err
 	}
 
-	// aseemble the binary into one file
+	// assemble the binary into one file
 	allData := []byte{}
 	for i := 0; i < len(jsonData); i++ {
-		currentData, err := loadFile(jsonData[i].Name)
+		currentData, err := loadChunk(jsonData[i].Name)
 		if err != nil {
 			return err
 		}
@@ -51,11 +43,49 @@ func Assemble() error {
 	} else if err != nil {
 		return err // return an error
 	}
-
-	return nil
+	*/
+	return err
 }
 
-func loadFile(_path string) (_data []byte, err error) {
+func readJson(manifest string, jsonData *util.ManifestDir) (err error) {
+	file, err := os.Open(manifest)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	// decode the json
+	err = util.FromJson(jsonData, file)
+	if err != nil {
+		return err
+	}
+
+	return err
+}
+
+func assembleDir(manifestDir util.ManifestDir) (err error) {
+
+	return err
+}
+
+func assembleFile(path string) (err error) {
+	/*// create the file
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	// write the data in it
+	_, err = file.Write(allData)
+	if err != nil {
+		return err
+	}
+	*/
+	return err
+}
+
+func loadChunk(_path string) (_data []byte, err error) {
 	// open the .zip file
 	file, err := os.Open(_path)
 	if err != nil {

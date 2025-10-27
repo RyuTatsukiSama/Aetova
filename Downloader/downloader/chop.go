@@ -11,7 +11,7 @@ const (
 	sizeChunk int = 1000 // 1ko
 )
 
-func ChopGame(_path string) (_maDir util.ManifestDir, _err error) {
+func ChopDir(_path string) (_maDir util.ManifestDir, _err error) {
 	dir, _err := os.ReadDir(_path)
 	if _err != nil {
 		return util.ManifestDir{}, _err
@@ -23,7 +23,7 @@ func ChopGame(_path string) (_maDir util.ManifestDir, _err error) {
 	// browse file & subDir
 	for _, entry := range dir {
 		if entry.IsDir() {
-			subDir, _err := ChopGame(_path + "/" + entry.Name())
+			subDir, _err := ChopDir(_path + "/" + entry.Name())
 			if _err != nil {
 				return util.ManifestDir{}, _err
 			}
@@ -80,7 +80,7 @@ func ChopFile(_path string, _name string) ([]util.ManifestFile, error) {
 	previousI := 0
 	for i := sizeChunk; i < len(data); i += sizeChunk {
 		current := data[previousI:i]
-		res, err := saveChopFile(current, _path, _name, i/sizeChunk)
+		res, err := saveChunk(current, _path, _name, i/sizeChunk)
 		if err != nil {
 			return []util.ManifestFile{}, err
 		}
@@ -93,7 +93,7 @@ func ChopFile(_path string, _name string) ([]util.ManifestFile, error) {
 
 	// last part
 	current := data[len(data)/sizeChunk*sizeChunk:]
-	res, err := saveChopFile(current, _path, _name, len(data)/sizeChunk+1)
+	res, err := saveChunk(current, _path, _name, len(data)/sizeChunk+1)
 	if err != nil {
 		return []util.ManifestFile{}, err
 	}
@@ -105,7 +105,7 @@ func ChopFile(_path string, _name string) ([]util.ManifestFile, error) {
 	return jsonData, nil
 }
 
-func saveChopFile(_data []byte, _path string, _name string, _part int) (_rname string, _err error) {
+func saveChunk(_data []byte, _path string, _name string, _part int) (_rname string, _err error) {
 	_rname = "part" + strconv.Itoa(_part) + "_" + _name + ".bin"
 	path := "chop/" + _path + "/" + _rname // TODO : found a better naming way
 	if ok, err := util.Exists(path); !ok {
