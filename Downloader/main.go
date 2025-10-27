@@ -1,6 +1,8 @@
 package main
 
 import (
+	"Aetova/downloader"
+	"Aetova/util"
 	"log"
 	"os"
 )
@@ -12,20 +14,21 @@ func main() {
 
 	checkErr(err)
 
-	// err = downloader.Unzip("docLogger_v1-1-1.zip")
+	err = downloader.Unzip("docLogger_v1-1-1.zip")
 
 	checkErr(err)
 
-	// err = downloader.ChopGame("uncompressed/docLogger_v1-1-1")
-
+	manifest, err := downloader.ChopGame("unzip/docLogger_v1-1-1")
 	checkErr(err)
 
-	// err = downloader.Chop("docLogger_v1-1-1.zip")
+	// for manifest.json
+	jsonFile, err := os.Create("manifest.json")
+	checkErr(err)
 
+	err = util.ToJson(manifest, jsonFile)
 	checkErr(err)
 
 	// err = downloader.Assemble()
-
 	checkErr(err)
 }
 

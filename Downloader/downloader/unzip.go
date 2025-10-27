@@ -25,7 +25,7 @@ func Unzip(_path string) (_err error) {
 		defer rc.Close()
 
 		// define the new file path
-		newFilePath := fmt.Sprintf("uncompressed/%s", file.Name)
+		newFilePath := fmt.Sprintf("unzip/%s", file.Name)
 
 		if file.FileInfo().IsDir() {
 			_err = os.MkdirAll(newFilePath, 0777)
