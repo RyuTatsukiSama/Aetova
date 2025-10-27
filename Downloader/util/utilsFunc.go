@@ -3,6 +3,7 @@ package util
 import (
 	"errors"
 	"io/fs"
+	"log"
 	"os"
 )
 
@@ -15,4 +16,10 @@ func Exists(path string) (bool, error) {
 		return false, nil
 	}
 	return false, err
+}
+
+func CheckErr(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
 }
