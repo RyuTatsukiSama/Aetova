@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch server",
+            "name": "Server",
             "type": "go",
             "request": "launch",
             "mode": "debug",
@@ -13,7 +13,7 @@
             "console": "externalTerminal"
         },
         {
-            "name": "Launch client", 
+            "name": "Client", 
             "type": "go",
             "request": "launch",
             "mode": "debug",
