@@ -8,40 +8,69 @@ import (
 )
 
 const (
-	sizeChunk int = 1000 // 1ko
+	sizeChunk int = 1000
 )
 
-func ChopDir(_path string) (_maDir util.ManifestDir, _err error) {
-	dir, _err := os.ReadDir(_path)
+func ChopGame(zip string) (err error) {
+	// unzip the game send by the dev
+	var unzipPath string
+	if unzipPath, err = Unzip(zip); err != nil {
+		return err
+	}
+
+	// create the manifest.json for the game
+	var manifestDir util.ManifestDir
+	manifestDir.Name = strings.Split(unzipPath, "/")[len(strings.Split(unzipPath, "/"))-1]
+	if manifestDir, err = chopDir(unzipPath); err != nil {
+		return err
+	}
+
+	// create the manifest file
+	var file *os.File
+	if file, err = os.Create("manifest.json"); err != nil {
+		return err
+	}
+
+	// save the data into the file
+	if err = util.ToJson(manifestDir, file); err != nil {
+		return err
+	}
+
+	return err
+}
+
+func chopDir(dirPath string) (manifestDir util.ManifestDir, err error) {
+	// get the data of the directory
+	dir, _err := os.ReadDir(dirPath)
 	if _err != nil {
 		return util.ManifestDir{}, _err
 	}
 
-	_maDir.Name = strings.Split(_path, "/")[len(strings.Split(_path, "/"))-1]
-	saveDir(_path)
+	manifestDir.Name = strings.Split(dirPath, "/")[len(strings.Split(dirPath, "/"))-1]
+	createDir(dirPath)
 
 	// browse file & subDir
 	for _, entry := range dir {
 		if entry.IsDir() {
-			subDir, _err := ChopDir(_path + "/" + entry.Name())
+			subDir, _err := chopDir(dirPath + "/" + entry.Name())
 			if _err != nil {
 				return util.ManifestDir{}, _err
 			}
-			_maDir.SubDir = append(_maDir.SubDir, subDir)
+			manifestDir.SubDir = append(manifestDir.SubDir, subDir)
 
 		} else {
-			file, _err := ChopFile(_path, entry.Name())
+			file, _err := chopFile(dirPath, entry.Name())
 			if _err != nil {
 				return util.ManifestDir{}, _err
 			}
-			_maDir.SubFiles = append(_maDir.SubFiles, file...)
+			manifestDir.SubFiles = append(manifestDir.SubFiles, file)
 		}
 	}
 
-	return _maDir, _err
+	return manifestDir, err
 }
 
-func saveDir(_path string) (_err error) {
+func createDir(_path string) (_err error) {
 	if _err = os.MkdirAll("chop/", 0700); _err != nil {
 		return _err
 	}
@@ -51,30 +80,33 @@ func saveDir(_path string) (_err error) {
 	return _err
 }
 
-func ChopFile(_path string, _name string) ([]util.ManifestFile, error) {
+func chopFile(_path string, _name string) (util.ManifestFile, error) {
 
 	var allPath string = _path + "/" + _name
-	// open the .zip file
+	// open the file
 	file, err := os.Open(allPath)
 	if err != nil {
-		return []util.ManifestFile{}, err
+		return util.ManifestFile{}, err
 	}
 	defer file.Close()
 
 	// get the info for size
 	info, err := os.Stat(file.Name())
 	if err != nil {
-		return []util.ManifestFile{}, err
+		return util.ManifestFile{}, err
 	}
 
 	// put all the bytes into a slice
 	data := make([]byte, info.Size())
 	_, err = file.Read(data)
 	if err != nil {
-		return []util.ManifestFile{}, err
+		return util.ManifestFile{}, err
 	}
 
-	jsonData := []util.ManifestFile{}
+	jsonData := util.ManifestFile{
+		Name:       _name,
+		IsDownload: false,
+	}
 
 	// cut the data
 	previousI := 0
@@ -82,9 +114,9 @@ func ChopFile(_path string, _name string) ([]util.ManifestFile, error) {
 		current := data[previousI:i]
 		res, err := saveChunk(current, _path, _name, i/sizeChunk)
 		if err != nil {
-			return []util.ManifestFile{}, err
+			return util.ManifestFile{}, err
 		}
-		jsonData = append(jsonData, util.ManifestFile{
+		jsonData.Chunks = append(jsonData.Chunks, util.Chunk{
 			Name:       res,
 			IsDownload: false,
 		})
@@ -95,9 +127,9 @@ func ChopFile(_path string, _name string) ([]util.ManifestFile, error) {
 	current := data[len(data)/sizeChunk*sizeChunk:]
 	res, err := saveChunk(current, _path, _name, len(data)/sizeChunk+1)
 	if err != nil {
-		return []util.ManifestFile{}, err
+		return util.ManifestFile{}, err
 	}
-	jsonData = append(jsonData, util.ManifestFile{
+	jsonData.Chunks = append(jsonData.Chunks, util.Chunk{
 		Name:       res,
 		IsDownload: false,
 	})

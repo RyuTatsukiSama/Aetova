@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 func Unzip(path string) (unzipPath string, err error) {
@@ -16,7 +17,6 @@ func Unzip(path string) (unzipPath string, err error) {
 
 	var newFilePath string
 	for _, file := range reader.File {
-		fmt.Printf("Unzipping %s\n", file.Name)
 
 		// open the stream link to the file/dir
 		var rc io.ReadCloser
@@ -44,5 +44,5 @@ func Unzip(path string) (unzipPath string, err error) {
 		}
 	}
 
-	return newFilePath, err
+	return "unzip/" + strings.Split(path, ".")[0], err
 }
