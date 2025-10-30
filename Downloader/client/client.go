@@ -3,6 +3,7 @@ package main
 import (
 	"Aetova/downloader"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -13,16 +14,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// download
+	http.HandleFunc("/health", handleHealth)
 
-	// assemble
-	if err = dlNass(); err != nil {
-		log.Fatal(err)
-	}
-
-	// copy into the app folder
+	http.ListenAndServe(":8090", nil)
 }
 
+func handleHealth(w http.ResponseWriter, r *http.Request) {
+
+}
+
+// download and assemble
 func dlNass() (err error) {
 	// download
 

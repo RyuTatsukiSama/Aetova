@@ -19,6 +19,14 @@
             "mode": "debug",
             "program": "${workspaceFolder}/client/client.go",
             "console": "externalTerminal"
+        },
+        {
+            "name": "http tester",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/http-tester/http-tester.go",
+            "console": "externalTerminal"
         }
     ]
 }
