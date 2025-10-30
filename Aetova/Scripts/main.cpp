@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
 	gw->resize(SCREEN_WIDTH, 1000);
 	gw->setWindowTitle(QApplication::translate("Aetova", "Aetova"));
 
+	// put the GameWindow at the center of the screen
 	QScreen *screen = QGuiApplication::primaryScreen();
 	QRect screenGeometry = screen->availableGeometry();
 	int x = (screenGeometry.width() - gw->width()) / 2;
