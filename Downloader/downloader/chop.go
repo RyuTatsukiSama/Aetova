@@ -2,21 +2,26 @@ package downloader
 
 import (
 	"Aetova/util"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
-	sizeChunk int = 1000
+	sizeChunk int = 4096 // bytes
 )
 
 func ChopGame(zip string) (err error) {
+	start := time.Now()
 	// unzip the game send by the dev
 	var unzipPath string
 	if unzipPath, err = Unzip(zip); err != nil {
 		return err
 	}
+
+	fmt.Println("Unzip done !")
 
 	// create the manifest.json for the game
 	var manifestDir util.ManifestDir
@@ -36,6 +41,8 @@ func ChopGame(zip string) (err error) {
 		return err
 	}
 
+	fmt.Println("The process takes", time.Since(start))
+
 	return err
 }
 
@@ -48,6 +55,8 @@ func chopDir(dirPath string) (manifestDir util.ManifestDir, err error) {
 
 	manifestDir.Name = strings.Split(dirPath, "/")[len(strings.Split(dirPath, "/"))-1]
 	createDir(dirPath)
+
+	fmt.Println("Chop dir", manifestDir.Name, "start") // ? Here for debug purpose ( replace by docLogger later )
 
 	// browse file & subDir
 	for _, entry := range dir {
@@ -67,6 +76,8 @@ func chopDir(dirPath string) (manifestDir util.ManifestDir, err error) {
 		}
 	}
 
+	fmt.Println("Chop dir", manifestDir.Name, "done") // ? Here for debug purpose ( replace by docLogger later )
+
 	return manifestDir, err
 }
 
@@ -81,6 +92,8 @@ func createDir(_path string) (_err error) {
 }
 
 func chopFile(_path string, _name string) (util.ManifestFile, error) {
+
+	fmt.Println("Chop file", _name, "start") // ? Here for debug purpose ( replace by docLogger later )
 
 	var allPath string = _path + "/" + _name
 	// open the file
@@ -103,7 +116,7 @@ func chopFile(_path string, _name string) (util.ManifestFile, error) {
 		return util.ManifestFile{}, err
 	}
 
-	jsonData := util.ManifestFile{
+	manifestFile := util.ManifestFile{
 		Name:       _name,
 		IsDownload: false,
 	}
@@ -116,7 +129,7 @@ func chopFile(_path string, _name string) (util.ManifestFile, error) {
 		if err != nil {
 			return util.ManifestFile{}, err
 		}
-		jsonData.Chunks = append(jsonData.Chunks, util.Chunk{
+		manifestFile.Chunks = append(manifestFile.Chunks, util.Chunk{
 			Name:       res,
 			IsDownload: false,
 		})
@@ -129,12 +142,14 @@ func chopFile(_path string, _name string) (util.ManifestFile, error) {
 	if err != nil {
 		return util.ManifestFile{}, err
 	}
-	jsonData.Chunks = append(jsonData.Chunks, util.Chunk{
+	manifestFile.Chunks = append(manifestFile.Chunks, util.Chunk{
 		Name:       res,
 		IsDownload: false,
 	})
 
-	return jsonData, nil
+	fmt.Println("Chop file", _name, "done") // ? Here for debug purpose ( replace by docLogger later )
+
+	return manifestFile, nil
 }
 
 func saveChunk(_data []byte, _path string, _name string, _part int) (_rname string, _err error) {

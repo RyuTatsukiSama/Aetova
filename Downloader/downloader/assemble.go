@@ -2,7 +2,9 @@ package downloader
 
 import (
 	"Aetova/util"
+	"fmt"
 	"os"
+	"time"
 )
 
 const (
@@ -11,6 +13,7 @@ const (
 )
 
 func AssembleGame(_manifest string) (err error) {
+	start := time.Now()
 	// open the json
 	var jsonData util.ManifestDir
 	if err = readJson(_manifest, &jsonData); err != nil {
@@ -22,6 +25,7 @@ func AssembleGame(_manifest string) (err error) {
 		return err
 	}
 
+	fmt.Println("The process takes", time.Since(start))
 	return err
 }
 

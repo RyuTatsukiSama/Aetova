@@ -13,7 +13,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err = downloader.ChopGame("docLogger_v1-1-1.zip"); err != nil {
+	if err = downloader.ChopGame("BuildOranys.zip"); err != nil {
 		log.Fatal(err)
 	}
 }
