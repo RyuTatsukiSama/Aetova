@@ -1,8 +1,8 @@
 package main
 
 import (
-	server "aetova/src"
-	server_api "aetova/src/API"
+	server "aetova/server/src"
+	server_api "aetova/server/src/API"
 	"log"
 	"os"
 )

@@ -1,7 +1,7 @@
 package assemble
 
 import (
-	"aetova/utils"
+	"aetova/client/utils"
 	"fmt"
 	"os"
 	"time"

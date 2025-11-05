@@ -1,7 +1,7 @@
 package server
 
 import (
-	"aetova/utils"
+	"aetova/server/utils"
 	"fmt"
 	"os"
 	"strings"
