@@ -1,7 +1,8 @@
 package main
 
 import (
-	server "aetova/server/src"
+	server "aetova/src"
+	server_api "aetova/src/API"
 	"log"
 	"os"
 )
@@ -12,6 +13,7 @@ func main() {
 	if err = os.Chdir("wd"); err != nil {
 		log.Fatal(err)
 	}
+	log.Fatal(server_api.LaunchAPI())
 
 	if err = server.ChopGame("BuildOranys.zip"); err != nil {
 		log.Fatal(err)

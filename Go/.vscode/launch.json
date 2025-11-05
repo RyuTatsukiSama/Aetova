@@ -7,6 +7,7 @@
       "request": "launch",
       "mode": "debug",
       "program": "${workspaceFolder}/server/server.go",
+      "envFile": "${workspaceFolder}/server/.env",
       "console": "externalTerminal"
     },
     {

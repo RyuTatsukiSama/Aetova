@@ -4,7 +4,6 @@ import (
 	"aetova/utils"
 	"fmt"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -80,7 +79,7 @@ func assembleFile(file utils.ManifestFile, path string) (err error) {
 	var data []byte
 	for idChunk := 1; idChunk < file.NbChunks; idChunk++ {
 		var chunkData []byte
-		if chunkData, err = loadChunk(sourcePath + path + "/" + "part" + strconv.Itoa(idChunk) + "_" + file.Name + ".bin"); err != nil {
+		if chunkData, err = loadChunk(fmt.Sprintf("%s%s/part%d_%s.bin", sourcePath, path, idChunk, file.Name)); err != nil {
 			return err
 		}
 		data = append(data, chunkData...)

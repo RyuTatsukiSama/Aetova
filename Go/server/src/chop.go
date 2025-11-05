@@ -4,7 +4,6 @@ import (
 	"aetova/utils"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -153,7 +152,7 @@ func chopFile(_path string, _name string) (utils.ManifestFile, error) {
 
 func saveChunk(_data []byte, _path string, _name string, _part int) (_rname string, _err error) {
 
-	_rname = "part" + strconv.Itoa(_part) + "_" + _name + ".bin"
+	_rname = fmt.Sprintf("part%d_%s.bin", _part, _name)
 
 	path := "chop/" + _path + "/" + _rname // TODO : found a better naming way
 
