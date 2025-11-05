@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Server",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/server/server.go",
+      "console": "externalTerminal"
+    },
+    {
+      "name": "Client",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/client/client.go",
+      "console": "externalTerminal"
+    }
+  ]
+}

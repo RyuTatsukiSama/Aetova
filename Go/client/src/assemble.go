@@ -1,21 +1,22 @@
-package downloader
+package assemble
 
 import (
-	"Aetova/util"
+	"aetova/utils"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 )
 
 const (
-	sourcePath string = "chop"
+	sourcePath string = "chop/unzip"
 	targetPath string = "assemble"
 )
 
 func AssembleGame(_manifest string) (err error) {
 	start := time.Now()
 	// open the json
-	var jsonData util.ManifestDir
+	var jsonData utils.ManifestDir
 	if err = readJson(_manifest, &jsonData); err != nil {
 		return err
 	}
@@ -29,7 +30,7 @@ func AssembleGame(_manifest string) (err error) {
 	return err
 }
 
-func readJson(manifest string, jsonData *util.ManifestDir) (err error) {
+func readJson(manifest string, jsonData *utils.ManifestDir) (err error) {
 	file, err := os.Open(manifest)
 	if err != nil {
 		return err
@@ -37,7 +38,7 @@ func readJson(manifest string, jsonData *util.ManifestDir) (err error) {
 	defer file.Close()
 
 	// decode the json
-	err = util.FromJson(jsonData, file)
+	err = utils.FromJson(jsonData, file)
 	if err != nil {
 		return err
 	}
@@ -45,7 +46,8 @@ func readJson(manifest string, jsonData *util.ManifestDir) (err error) {
 	return err
 }
 
-func assembleDir(manifestDir util.ManifestDir, path string) (err error) {
+func assembleDir(manifestDir utils.ManifestDir, path string) (err error) {
+	fmt.Println("Start assemble", manifestDir.Name)
 
 	// create the parent directory
 	if err = os.MkdirAll(targetPath+path+manifestDir.Name+"/", 0700); err != nil {
@@ -61,21 +63,24 @@ func assembleDir(manifestDir util.ManifestDir, path string) (err error) {
 
 	// create the file
 	for _, file := range manifestDir.SubFiles {
+
 		if err = assembleFile(file, path+manifestDir.Name); err != nil {
 			return err
 		}
 	}
 
+	fmt.Println("Done assemble", manifestDir.Name)
+
 	return err
 }
 
-func assembleFile(file util.ManifestFile, path string) (err error) {
-
+func assembleFile(file utils.ManifestFile, path string) (err error) {
+	fmt.Println("Start assemble", file.Name)
 	// assemble chunk
 	var data []byte
-	for _, chunk := range file.Chunks {
+	for idChunk := 1; idChunk < file.NbChunks; idChunk++ {
 		var chunkData []byte
-		if chunkData, err = loadChunk(sourcePath + path + "/" + chunk.Name); err != nil {
+		if chunkData, err = loadChunk(sourcePath + path + "/" + "part" + strconv.Itoa(idChunk) + "_" + file.Name + ".bin"); err != nil {
 			return err
 		}
 		data = append(data, chunkData...)
@@ -91,6 +96,8 @@ func assembleFile(file util.ManifestFile, path string) (err error) {
 	if _, err = newFile.Write(data); err != nil {
 		return err
 	}
+
+	fmt.Println("Done assemble", file.Name)
 
 	return err
 }

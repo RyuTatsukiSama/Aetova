@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Aetova/downloader"
+	assemble "aetova/client/src"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,9 +15,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	http.HandleFunc("/health", handleHealth)
+	if err = dlNass(); err != nil {
+		log.Fatal(err)
+	}
 
-	http.ListenAndServe(":8090", nil)
+	//http.HandleFunc("/health", handleHealth)
+
+	//http.ListenAndServe(":8090", nil)
 }
 
 func handleHealth(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +39,7 @@ func dlNass() (err error) {
 	// download
 
 	// assemble
-	if err = downloader.AssembleGame("manifest.json"); err != nil {
+	if err = assemble.AssembleGame("manifest.json"); err != nil {
 		return err
 	}
 

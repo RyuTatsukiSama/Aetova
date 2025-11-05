@@ -1,4 +1,4 @@
-package downloader
+package server
 
 import (
 	"archive/zip"

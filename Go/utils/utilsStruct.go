@@ -1,4 +1,4 @@
-package util
+package utils
 
 type ManifestDir struct {
 	Name       string
@@ -10,10 +10,5 @@ type ManifestDir struct {
 type ManifestFile struct {
 	Name       string
 	IsDownload bool
-	Chunks     []Chunk
-}
-
-type Chunk struct {
-	Name       string
-	IsDownload bool
+	NbChunks   int
 }

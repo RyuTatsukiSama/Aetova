@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Aetova/downloader"
+	server "aetova/server/src"
 	"log"
 	"os"
 )
@@ -13,7 +13,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err = downloader.ChopGame("BuildOranys.zip"); err != nil {
+	if err = server.ChopGame("BuildOranys.zip"); err != nil {
 		log.Fatal(err)
 	}
 }
