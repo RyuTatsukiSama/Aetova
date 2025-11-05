@@ -119,9 +119,8 @@ func chopFile(_path string, _name string) (utils.ManifestFile, error) {
 	}
 
 	manifestFile := utils.ManifestFile{
-		Name:       _name,
-		IsDownload: false,
-		NbChunks:   0,
+		Name:     _name,
+		NbChunks: 0,
 	}
 
 	// cut the data
