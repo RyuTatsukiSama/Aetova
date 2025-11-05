@@ -16,6 +16,7 @@
       "request": "launch",
       "mode": "debug",
       "program": "${workspaceFolder}/client/client.go",
+      "envFile": "${workspaceFolder}/client/.env",
       "console": "externalTerminal"
     }
   ]
