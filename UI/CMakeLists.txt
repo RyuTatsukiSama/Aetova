@@ -9,6 +9,10 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 qt_standard_project_setup()
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
 set(SOURCES
     "./Scripts/main.cpp"
     "./Scripts/Common/common.h"
@@ -29,13 +33,17 @@ set(SOURCES
     "./Scripts/GameWindow/HTMLLabel/LabelTeam/labelteam.cpp"
     "./Scripts/GameWindow/SplashLabel/splashlabel.h"
     "./Scripts/GameWindow/SplashLabel/splashlabel.cpp"
-    "./Resources/html.cpp"
-    "./Resources/resources.cpp"
-    "./Resources/ui.cpp"
+)
+
+set(RESSOURCES
+    "./Resources/html.qrc"
+    "./Resources/resources.qrc"
+    "./Resources/ui.qrc"
 )
 
 qt_add_executable(Aetova
     ${SOURCES}
+    ${RESSOURCES}
 )
 
 target_link_libraries(Aetova PRIVATE 
