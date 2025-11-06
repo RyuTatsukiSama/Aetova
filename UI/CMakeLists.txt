@@ -70,7 +70,7 @@ add_custom_command(TARGET Aetova POST_BUILD
 add_custom_command(TARGET Aetova PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
         "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib"
-        "${CMAKE_SOURCE_DIR}/build/lib"
+        "$<TARGET_FILE_DIR:Aetova>/lib"
 )
 
 add_custom_command(TARGET Aetova POST_BUILD
