@@ -1,17 +1,28 @@
 package server_api
 
 import (
+	"aetova/server/utils"
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 func LaunchAPI() error {
 	fmt.Print("Launch API")
 	loadHandle()
 
-	port := ":" + os.Getenv("PORT")
-	return http.ListenAndServe(port, nil)
+	port, err := strconv.Atoi(os.Getenv("PORT"))
+	if err != nil {
+		return err
+	}
+
+	port, err = utils.FindFreePort(port)
+	if err != nil {
+		return err
+	}
+
+	return http.ListenAndServe(":"+strconv.Itoa(port), nil)
 }
 
 func loadHandle() {

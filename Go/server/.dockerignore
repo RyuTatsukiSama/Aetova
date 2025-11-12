@@ -1,0 +1,16 @@
+# Environnement
+.env
+.env.*
+*.env
+
+# Git
+.gitignore
+
+# Log
+docLogger/
+*.log
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

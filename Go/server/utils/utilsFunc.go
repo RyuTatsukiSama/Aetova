@@ -2,7 +2,9 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"io/fs"
+	"net"
 	"os"
 )
 
@@ -15,4 +17,18 @@ func Exists(path string) (bool, error) {
 		return false, nil
 	}
 	return false, err
+}
+
+func FindFreePort(start int) (int, error) {
+
+	for ok := true; ok; {
+		addr := fmt.Sprintf(":%d", start)
+		listener, err := net.Listen("tcp", addr)
+		if err == nil {
+			listener.Close()
+			return start, nil
+		}
+		start++
+	}
+	return 0, fmt.Errorf("There was an error")
 }
