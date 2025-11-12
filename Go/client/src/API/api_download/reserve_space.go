@@ -7,13 +7,21 @@ import (
 )
 
 func ReserveSpaceDir(w http.ResponseWriter, manifest utils.ManifestDir, path string) {
-	var err error
-	err = os.MkdirAll(path+manifest.Name, 0700)
+	err := os.MkdirAll(path+manifest.Name, 0700)
 	if err != nil {
-		http.Error(w, "Error creating the folder", http.StatusNotFound) // TODO : find better status
+		http.Error(w, err.Error(), http.StatusNotFound) // TODO : find better status
+		return
+	}
+
+	for _, dir := range manifest.SubDir {
+		ReserveSpaceDir(w, dir, path+manifest.Name+"/")
+	}
+
+	for _, file := range manifest.SubFiles {
+		reserveSpaceFile(w, file, path+manifest.Name+"/")
 	}
 }
 
-func reserveSpaceFile(file utils.ManifestFile, path string) {
+func reserveSpaceFile(w http.ResponseWriter, file utils.ManifestFile, path string) {
 
 }
