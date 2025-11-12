@@ -9,10 +9,6 @@ import (
 	"time"
 )
 
-const (
-	sizeChunk int = 4096 // bytes
-)
-
 func ChopGame(zip string) (err error) {
 	start := time.Now()
 

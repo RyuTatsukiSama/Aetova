@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func saveChunk(_data []byte, _path string, _name string, _part int) (_rname string, _err error) {
+func saveChunk(_data []byte, _path string, _name string, _part int64) (_rname string, _err error) {
 
 	_rname = fmt.Sprintf("part%d_%s.bin", _part, _name)
 

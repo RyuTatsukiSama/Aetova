@@ -16,6 +16,7 @@ func handlerDownloader(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Send the path of a file, get the content of it
 func handlePostDownloader(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
