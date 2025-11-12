@@ -1,6 +1,7 @@
 package client_api
 
 import (
+	"aetova/client/src/API/api_download"
 	"net/http"
 )
 
@@ -14,5 +15,5 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandlePostDownload(w http.ResponseWriter, r *http.Request) {
-
+	api_download.GetManifest()
 }

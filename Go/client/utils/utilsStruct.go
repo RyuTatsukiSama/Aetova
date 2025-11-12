@@ -1,5 +1,9 @@
 package utils
 
+const (
+	SizeChunk int = 4096 // bytes
+)
+
 type ManifestDir struct {
 	Name     string
 	SubDir   []ManifestDir
@@ -9,4 +13,5 @@ type ManifestDir struct {
 type ManifestFile struct {
 	Name     string
 	NbChunks int
+	Size     int64
 }
