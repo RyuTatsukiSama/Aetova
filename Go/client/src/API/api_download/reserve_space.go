@@ -9,7 +9,7 @@ import (
 func ReserveSpaceDir(w http.ResponseWriter, manifest utils.ManifestDir, path string) {
 	err := os.MkdirAll(path+manifest.Name, 0700)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound) // TODO : find better status
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -23,5 +23,9 @@ func ReserveSpaceDir(w http.ResponseWriter, manifest utils.ManifestDir, path str
 }
 
 func reserveSpaceFile(w http.ResponseWriter, file utils.ManifestFile, path string) {
-
+	reserveBytes := make([]byte, file.Size)
+	err := os.WriteFile(path+file.Name, reserveBytes, 0700)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }

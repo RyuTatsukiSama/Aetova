@@ -28,5 +28,7 @@ func LaunchAPI() (err error) {
 		return err
 	}
 
+	// TODO : create a file (or other system) for UI to get the port where the client listen
+
 	return http.ListenAndServe(":"+strconv.Itoa(port), nil)
 }
