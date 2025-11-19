@@ -1,14 +1,15 @@
 package api_download
 
 import (
+	"errors"
+	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"strings"
 )
 
-func downloadChunk(path string) (data []byte) {
+func downloadChunk(path string) ([]byte, error) {
 	var client *http.Client = &http.Client{}
 
 	jsonData := `{"path": "` + path + `"}`
@@ -16,7 +17,7 @@ func downloadChunk(path string) (data []byte) {
 
 	req, err := http.NewRequest("POST", os.Getenv("SERVER_URL")+"/downloader", reader)
 	if err != nil {
-		log.Fatal(err)
+		return make([]byte, 0), err
 	}
 
 	req.Header.Add("api_key", os.Getenv("API_KEY"))
@@ -24,34 +25,38 @@ func downloadChunk(path string) (data []byte) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		return make([]byte, 0), err
 	}
 	if resp.StatusCode != 200 {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
-			log.Fatal(err)
+			return make([]byte, 0), err
 		}
-		log.Fatal(resp.Status + " " + string(body[:]))
+		return make([]byte, 0), errors.New(resp.Status + " " + string(body[:]))
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		return make([]byte, 0), err
 	}
 
-	return body
+	return body, nil
 }
 
-func saveChunk(path string, data []byte) {
-	// create new file
-	newFile, err := os.Create(path)
+func saveChunk(path string, data []byte, position int64) error {
+	// open file
+	newFile, err := os.OpenFile(target+path, os.O_RDWR, 0700)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer newFile.Close()
 
 	// write the byte in the new file
-	if _, err := newFile.Write(data); err != nil {
-		log.Fatal(err)
+	if _, err := newFile.WriteAt(data, position); err != nil {
+		return err
 	}
+
+	fmt.Println("Save Chunk done!")
+
+	return nil
 }

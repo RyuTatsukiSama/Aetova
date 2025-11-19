@@ -3,9 +3,8 @@ package api_download
 import (
 	"aetova/client/utils"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"io"
-	"log"
 	"net/http"
 	"os"
 )
@@ -15,34 +14,38 @@ func CheckManifest() {
 	// else get it from the server
 }
 
-func GetManifest() (manifest utils.ManifestDir, err error) {
-	fmt.Print("Download Manifest Start")
+func GetManifest(cm chan utils.ManifestDir, ce chan error) {
 	var client *http.Client = &http.Client{}
 
 	req, err := http.NewRequest("GET", os.Getenv("SERVER_URL")+"/manifest", nil)
 	if err != nil {
-		log.Fatal(err)
+		ce <- err
+		return
 	}
 
 	req.Header.Add("api_key", os.Getenv("API_KEY"))
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		ce <- err
+		return
 	}
 	if resp.StatusCode != 200 {
-		log.Fatal(resp.Status)
+		ce <- errors.New(resp.Status)
+		return
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		ce <- err
+		return
 	}
 
+	var manifest utils.ManifestDir
 	if err := json.Unmarshal(body, &manifest); err != nil {
-		log.Fatal(err)
+		ce <- err
+		return
 	}
-	fmt.Print("Download Manifest Done")
 
-	return manifest, err
+	cm <- manifest
 }

@@ -2,30 +2,56 @@ package api_download
 
 import (
 	"aetova/client/utils"
-	"net/http"
+	"context"
 	"os"
+	"time"
 )
 
-func ReserveSpaceDir(w http.ResponseWriter, manifest utils.ManifestDir, path string) {
+var (
+	Ctx context.Context
+)
+
+func ReserveSpaceDir(manifest utils.ManifestDir, path string, ce chan error, cd chan bool) {
 	err := os.MkdirAll(path+manifest.Name, 0700)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		ce <- err
 		return
 	}
 
+	time.Sleep(time.Second * 10)
+
+	chanDone := make(chan bool)
+	chanError := make(chan error)
+
 	for _, dir := range manifest.SubDir {
-		ReserveSpaceDir(w, dir, path+manifest.Name+"/")
+		go ReserveSpaceDir(dir, path+manifest.Name+"/", chanError, chanDone)
 	}
 
 	for _, file := range manifest.SubFiles {
-		reserveSpaceFile(w, file, path+manifest.Name+"/")
+		go reserveSpaceFile(file, path+manifest.Name+"/", chanError, chanDone)
 	}
+
+	for range len(manifest.SubDir) + len(manifest.SubFiles) {
+		select {
+		case <-Ctx.Done():
+			return
+		case err := <-chanError:
+			ce <- err
+			return
+		case <-chanDone:
+		}
+	}
+
+	cd <- true
 }
 
-func reserveSpaceFile(w http.ResponseWriter, file utils.ManifestFile, path string) {
+func reserveSpaceFile(file utils.ManifestFile, path string, ce chan error, cd chan bool) {
 	reserveBytes := make([]byte, file.Size)
 	err := os.WriteFile(path+file.Name, reserveBytes, 0700)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		ce <- err
+		return
 	}
+
+	cd <- true
 }

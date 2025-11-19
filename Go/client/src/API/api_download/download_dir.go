@@ -3,27 +3,29 @@ package api_download
 import (
 	"aetova/client/utils"
 	"fmt"
-	"log"
-	"os"
 )
 
-func downloadDir(manifest utils.ManifestDir, path string) {
+func downloadDir(manifest utils.ManifestDir, path string) error {
 
 	fmt.Println("Download dir " + manifest.Name + " Start")
 
-	if err := os.MkdirAll(path+manifest.Name, 0700); err != nil {
-		log.Fatal(err)
-	}
-
 	// sub dir
 	for _, dir := range manifest.SubDir {
-		downloadDir(dir, path+manifest.Name+"/")
+		err := downloadDir(dir, path+manifest.Name+"/")
+		if err != nil {
+			return err
+		}
 	}
 
 	// files
 	for _, file := range manifest.SubFiles {
-		downloadFile(file, path+manifest.Name+"/")
+		err := downloadFile(file, path+manifest.Name+"/")
+		if err != nil {
+			return err
+		}
 	}
 
 	fmt.Println("Download dir " + manifest.Name + " Done")
+
+	return nil
 }

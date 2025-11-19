@@ -37,11 +37,17 @@ func chopFile(_path string, _name string) (utils.ManifestFile, error) {
 		Size:     info.Size(),
 	}
 
+	// if the file size is exactly a multiple of SizeChunk
+	// We forget about the last part because it will be empty
+	if manifestFile.Size%utils.SizeChunk == 0 {
+		manifestFile.NbChunks -= 1
+	}
+
 	// cut the data
 	var previousI int64 = 0
 	for i := utils.SizeChunk; i < manifestFile.Size; i += utils.SizeChunk {
 		current := data[previousI:i]
-		_, err := saveChunk(current, _path, _name, i/utils.SizeChunk)
+		_, err := saveChunk(current, _path, _name, previousI/utils.SizeChunk)
 		if err != nil {
 			return utils.ManifestFile{}, err
 		}
@@ -50,8 +56,8 @@ func chopFile(_path string, _name string) (utils.ManifestFile, error) {
 	}
 
 	// last part
-	current := data[manifestFile.Size/utils.SizeChunk*utils.SizeChunk:]
-	_, err = saveChunk(current, _path, _name, manifestFile.NbChunks)
+	current := data[previousI:]
+	_, err = saveChunk(current, _path, _name, manifestFile.NbChunks-1)
 	if err != nil {
 		return utils.ManifestFile{}, err
 	}

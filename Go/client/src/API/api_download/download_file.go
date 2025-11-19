@@ -6,14 +6,21 @@ import (
 	"strconv"
 )
 
-func downloadFile(file utils.ManifestFile, path string) {
-	for part := 1; part < file.NbChunks; part++ {
-		currentPath := path + "part" + strconv.Itoa(part) + "_" + file.Name + ".bin"
+func downloadFile(file utils.ManifestFile, path string) error {
+	for part := 0; part < file.NbChunks; part++ {
+		currentChunkPath := path + "part" + strconv.Itoa(part) + "_" + file.Name + ".bin"
 
-		fmt.Println("Download file " + currentPath + " Start")
+		fmt.Println("Download file " + currentChunkPath + " Start")
 
-		saveChunk(currentPath, downloadChunk(currentPath))
+		data, err := downloadChunk(currentChunkPath)
+		if err != nil {
+			return err
+		}
 
-		fmt.Println("Download file " + currentPath + " Done")
+		saveChunk(path+file.Name, data, int64(part*utils.SizeChunk))
+
+		fmt.Println("Download file " + currentChunkPath + " Done")
 	}
+
+	return nil
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"os"
 )
 
 type Health struct {
@@ -53,7 +54,7 @@ func serverHealth() map[string]string {
 		}
 	}
 
-	// req.Header.Add("api_key", os.Getenv("API_KEY"))
+	req.Header.Add("api_key", os.Getenv("API_KEY"))
 
 	resp, err := client.Do(req)
 	if err != nil {
