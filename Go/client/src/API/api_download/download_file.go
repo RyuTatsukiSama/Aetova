@@ -4,14 +4,39 @@ import (
 	"aetova/client/utils"
 )
 
-func downloadFile(file utils.ManifestFile, path string, cd chan bool, ce chan error) {
+type WorkerData struct {
+	path     string
+	fileName string
+	part     int
+	cd       chan bool
+	ce       chan error
+}
 
+func Worker(jobs <-chan WorkerData) {
+	for j := range jobs {
+		downloadChunk(j.path, j.fileName, j.part, j.cd, j.ce)
+	}
+}
+
+func downloadFile(file utils.ManifestFile, path string, cd chan bool, ce chan error) {
+	var nbWorkers = file.NbChunks / 100
+	jobs := make(chan WorkerData, file.NbChunks)
 	chanDone := make(chan bool)
 	chanError := make(chan error)
 
-	var part int = 0
+	for wor := 0; wor < nbWorkers; wor++ {
+		go Worker(jobs)
+	}
 
-	go downloadChunk(path, file.Name, part, chanDone, chanError)
+	for part := 0; part < file.NbChunks; part++ {
+		jobs <- WorkerData{
+			path:     path,
+			fileName: file.Name,
+			part:     part,
+			cd:       chanDone,
+			ce:       chanError,
+		}
+	}
 
 	for range file.NbChunks {
 		select {
@@ -21,10 +46,6 @@ func downloadFile(file utils.ManifestFile, path string, cd chan bool, ce chan er
 			ce <- err
 			return
 		case <-chanDone:
-			if part < file.NbChunks {
-				part++
-				go downloadChunk(path, file.Name, part, chanDone, chanError)
-			}
 		}
 	}
 

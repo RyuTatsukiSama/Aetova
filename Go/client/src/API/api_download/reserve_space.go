@@ -11,6 +11,7 @@ var (
 )
 
 func ReserveSpaceDir(manifest utils.ManifestDir, path string, ce chan error, cd chan bool) {
+
 	err := os.MkdirAll(path+manifest.Name, 0700)
 	if err != nil {
 		ce <- err
@@ -43,12 +44,12 @@ func ReserveSpaceDir(manifest utils.ManifestDir, path string, ce chan error, cd 
 }
 
 func reserveSpaceFile(file utils.ManifestFile, path string, ce chan error, cd chan bool) {
-	/*reserveBytes := make([]byte, file.Size)
+	reserveBytes := make([]byte, file.Size)
 	err := os.WriteFile(path+file.Name, reserveBytes, 0700)
 	if err != nil {
 		ce <- err
 		return
-	}*/
+	}
 
 	cd <- true
 }

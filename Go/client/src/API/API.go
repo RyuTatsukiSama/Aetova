@@ -20,7 +20,7 @@ func LaunchAPI() (err error) {
 	http.HandleFunc("/download", downloadHandler)
 	http.HandleFunc("/pause", pauseHandler)
 
-	port, err := strconv.Atoi(os.Getenv("PORT"))
+	port, err := strconv.Atoi(os.Getenv("PORT")) // TODO : Change that to avoid hard code port
 	if err != nil {
 		return err
 	}

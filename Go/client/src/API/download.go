@@ -31,6 +31,8 @@ func HandlePostDownload(w http.ResponseWriter, r *http.Request) {
 	chanManifest := make(chan utils.ManifestDir)
 	chanError := make(chan error)
 
+	fmt.Println("Get Manifest")
+
 	done, manifest := grGetManifest(w, chanManifest, chanError)
 	if !done {
 		return
@@ -38,10 +40,14 @@ func HandlePostDownload(w http.ResponseWriter, r *http.Request) {
 
 	chanDone := make(chan bool)
 
+	fmt.Println("Reserve Space")
+
 	done = grReserveSpace(w, manifest, chanDone, chanError)
 	if !done {
 		return
 	}
+
+	fmt.Println("Reserve Download")
 
 	done = grDownload(w, manifest, chanDone, chanError)
 	if !done {

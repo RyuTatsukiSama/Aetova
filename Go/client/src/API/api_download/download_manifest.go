@@ -17,7 +17,7 @@ func CheckManifest() {
 func GetManifest(cm chan utils.ManifestDir, ce chan error) {
 	var client *http.Client = &http.Client{}
 
-	req, err := http.NewRequest("GET", os.Getenv("SERVER_URL")+"/manifest", nil)
+	req, err := http.NewRequest("GET", os.Getenv("SERVER_URL")+"/manifest", nil) // TODO : Change that to avoid hard code port
 	if err != nil {
 		ce <- err
 		return

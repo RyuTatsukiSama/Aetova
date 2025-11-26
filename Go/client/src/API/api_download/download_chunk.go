@@ -23,7 +23,8 @@ func downloadChunk(path string, fileName string, part int, cd chan bool, ce chan
 		return
 	}
 
-	err = saveChunk(path+fileName, data, int64(part*utils.SizeChunk))
+	err = saveChunkAt(path+fileName, data, int64(part*utils.SizeChunk))
+	// err = saveChunk(path+fileName, data)
 	if err != nil {
 		ce <- err
 		return
@@ -42,7 +43,7 @@ func downloadData(path string) ([]byte, error) {
 
 	req, err := http.NewRequest("POST", os.Getenv("SERVER_URL")+"/downloader", reader)
 	if err != nil {
-		return make([]byte, 0), err
+		return make([]byte, 0), errors.New(err.Error() + " downloadData Request")
 	}
 
 	req.Header.Add("api_key", os.Getenv("API_KEY"))
@@ -50,43 +51,52 @@ func downloadData(path string) ([]byte, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return make([]byte, 0), err
+		return make([]byte, 0), errors.New(err.Error() + " downloadData Do")
 	}
 	if resp.StatusCode != 200 {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return make([]byte, 0), err
+			return make([]byte, 0), errors.New(err.Error() + " downloadData Response")
 		}
 		return make([]byte, 0), errors.New(resp.Status + " " + string(body[:]))
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return make([]byte, 0), err
+		return make([]byte, 0), errors.New(err.Error() + " downloadData Read body")
 	}
 
 	err = resp.Body.Close()
 	if err != nil {
-		return make([]byte, 0), err
+		return make([]byte, 0), errors.New(err.Error() + " downloadData close resp")
 	}
 
 	return body, nil
 }
 
-func saveChunk(path string, data []byte, position int64) error {
+func saveChunkAt(path string, data []byte, position int64) error {
 	// open file
-	// newFile, err := os.OpenFile(target+path, os.O_RDWR, 0700)
-	// if err != nil {
-	// 	return err
-	// }
-	// defer newFile.Close()
+	newFile, err := os.OpenFile(target+path, os.O_RDWR, 0700)
+	if err != nil {
+		return errors.New(err.Error() + " saveChunkAt")
+	}
+	defer newFile.Close()
 
 	// write the byte in the new file
-	if err := os.WriteFile(target+path, data, 0700); err != nil {
-		return err
+	if _, err := newFile.WriteAt(data, position); err != nil {
+		return errors.New(err.Error() + " saveChunkAt")
 	}
 
 	fmt.Println("Save Chunk done!")
+
+	return nil
+}
+
+func saveChunk(path string, data []byte) error {
+	// write the byte in the new file
+	if err := os.WriteFile(target+path, data, 0700); err != nil {
+		return errors.New(err.Error() + " saveChunk")
+	}
 
 	return nil
 }
