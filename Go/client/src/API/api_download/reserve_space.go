@@ -4,7 +4,6 @@ import (
 	"aetova/client/utils"
 	"context"
 	"os"
-	"time"
 )
 
 var (
@@ -17,8 +16,6 @@ func ReserveSpaceDir(manifest utils.ManifestDir, path string, ce chan error, cd 
 		ce <- err
 		return
 	}
-
-	time.Sleep(time.Second * 10)
 
 	chanDone := make(chan bool)
 	chanError := make(chan error)
@@ -46,12 +43,12 @@ func ReserveSpaceDir(manifest utils.ManifestDir, path string, ce chan error, cd 
 }
 
 func reserveSpaceFile(file utils.ManifestFile, path string, ce chan error, cd chan bool) {
-	reserveBytes := make([]byte, file.Size)
+	/*reserveBytes := make([]byte, file.Size)
 	err := os.WriteFile(path+file.Name, reserveBytes, 0700)
 	if err != nil {
 		ce <- err
 		return
-	}
+	}*/
 
 	cd <- true
 }

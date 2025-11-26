@@ -2,6 +2,7 @@ package client_api
 
 import (
 	"aetova/client/utils"
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -30,6 +31,8 @@ func LaunchAPI() (err error) {
 	}
 
 	// TODO : create a file (or other system) for UI to get the port where the client listen
+
+	fmt.Print("Server start")
 
 	return http.ListenAndServe(":"+strconv.Itoa(port), nil)
 }

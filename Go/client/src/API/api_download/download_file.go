@@ -2,25 +2,31 @@ package api_download
 
 import (
 	"aetova/client/utils"
-	"fmt"
-	"strconv"
 )
 
-func downloadFile(file utils.ManifestFile, path string) error {
-	for part := 0; part < file.NbChunks; part++ {
-		currentChunkPath := path + "part" + strconv.Itoa(part) + "_" + file.Name + ".bin"
+func downloadFile(file utils.ManifestFile, path string, cd chan bool, ce chan error) {
 
-		fmt.Println("Download file " + currentChunkPath + " Start")
+	chanDone := make(chan bool)
+	chanError := make(chan error)
 
-		data, err := downloadChunk(currentChunkPath)
-		if err != nil {
-			return err
+	var part int = 0
+
+	go downloadChunk(path, file.Name, part, chanDone, chanError)
+
+	for range file.NbChunks {
+		select {
+		case <-Ctx.Done():
+			return
+		case err := <-chanError:
+			ce <- err
+			return
+		case <-chanDone:
+			if part < file.NbChunks {
+				part++
+				go downloadChunk(path, file.Name, part, chanDone, chanError)
+			}
 		}
-
-		saveChunk(path+file.Name, data, int64(part*utils.SizeChunk))
-
-		fmt.Println("Download file " + currentChunkPath + " Done")
 	}
 
-	return nil
+	cd <- true
 }

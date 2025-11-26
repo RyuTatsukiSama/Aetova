@@ -5,27 +5,36 @@ import (
 	"fmt"
 )
 
-func downloadDir(manifest utils.ManifestDir, path string) error {
+func downloadDir(manifest utils.ManifestDir, path string, cd chan bool, ce chan error) {
 
 	fmt.Println("Download dir " + manifest.Name + " Start")
 
+	chanDone := make(chan bool)
+	chanError := make(chan error)
+
 	// sub dir
 	for _, dir := range manifest.SubDir {
-		err := downloadDir(dir, path+manifest.Name+"/")
-		if err != nil {
-			return err
-		}
+		go downloadDir(dir, path+manifest.Name+"/", chanDone, chanError)
+
 	}
 
 	// files
 	for _, file := range manifest.SubFiles {
-		err := downloadFile(file, path+manifest.Name+"/")
-		if err != nil {
-			return err
+		go downloadFile(file, path+manifest.Name+"/", chanDone, chanError)
+	}
+
+	for range len(manifest.SubDir) + len(manifest.SubFiles) {
+		select {
+		case <-Ctx.Done():
+			return
+		case err := <-chanError:
+			ce <- err
+			return
+		case <-chanDone:
 		}
 	}
 
 	fmt.Println("Download dir " + manifest.Name + " Done")
 
-	return nil
+	cd <- true
 }

@@ -8,6 +8,21 @@ const (
 	target string = "downloads/"
 )
 
-func DownloadGame(manifest utils.ManifestDir) error {
-	return downloadDir(manifest, "")
+func DownloadGame(manifest utils.ManifestDir, cd chan bool, ce chan error) {
+
+	chanDone := make(chan bool)
+	chanError := make(chan error)
+
+	go downloadDir(manifest, "", chanDone, chanError)
+
+	select {
+	case <-Ctx.Done():
+		return
+	case err := <-chanError:
+		ce <- err
+		return
+	case <-chanDone:
+	}
+
+	cd <- true
 }
