@@ -15,8 +15,6 @@ func CheckManifest() {
 }
 
 func GetManifest(cm chan utils.ManifestDir, ce chan error) {
-	var client *http.Client = &http.Client{}
-
 	req, err := http.NewRequest("GET", os.Getenv("SERVER_URL")+"/manifest", nil) // TODO : Change that to avoid hard code port
 	if err != nil {
 		ce <- err
@@ -25,7 +23,7 @@ func GetManifest(cm chan utils.ManifestDir, ce chan error) {
 
 	req.Header.Add("api_key", os.Getenv("API_KEY"))
 
-	resp, err := client.Do(req)
+	resp, err := Client.Do(req)
 	if err != nil {
 		ce <- err
 		return
@@ -45,6 +43,11 @@ func GetManifest(cm chan utils.ManifestDir, ce chan error) {
 	if err := json.Unmarshal(body, &manifest); err != nil {
 		ce <- err
 		return
+	}
+
+	err = resp.Body.Close()
+	if err != nil {
+		ce <- err
 	}
 
 	cm <- manifest

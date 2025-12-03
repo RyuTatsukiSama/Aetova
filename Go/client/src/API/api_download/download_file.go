@@ -2,6 +2,12 @@ package api_download
 
 import (
 	"aetova/client/utils"
+	"errors"
+	"fmt"
+)
+
+const (
+	MaxWorkers int = 438
 )
 
 type WorkerData struct {
@@ -18,11 +24,14 @@ func Worker(jobs <-chan WorkerData) {
 	}
 }
 
-func downloadFile(file utils.ManifestFile, path string, cd chan bool, ce chan error) {
-	var nbWorkers = file.NbChunks / 100
+func downloadFile(file utils.ManifestFile, path string) error {
+
+	fmt.Println(file.Name, "start")
+
+	var nbWorkers int = MaxWorkers
 	jobs := make(chan WorkerData, file.NbChunks)
-	chanDone := make(chan bool)
-	chanError := make(chan error)
+	var chanDone = make(chan bool)
+	var chanError = make(chan error)
 
 	for wor := 0; wor < nbWorkers; wor++ {
 		go Worker(jobs)
@@ -41,13 +50,14 @@ func downloadFile(file utils.ManifestFile, path string, cd chan bool, ce chan er
 	for range file.NbChunks {
 		select {
 		case <-Ctx.Done():
-			return
+			return errors.New("request has been canceled")
 		case err := <-chanError:
-			ce <- err
-			return
+			return err
 		case <-chanDone:
 		}
 	}
 
-	cd <- true
+	fmt.Println(file.Name, "done")
+
+	return nil
 }

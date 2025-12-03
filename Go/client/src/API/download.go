@@ -26,6 +26,7 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 func HandlePostDownload(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 
+	api_download.Client = client
 	ctx, cancel = context.WithCancel(r.Context())
 
 	chanManifest := make(chan utils.ManifestDir)

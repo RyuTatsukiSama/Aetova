@@ -1,6 +1,7 @@
 package client_api
 
 import (
+	"aetova/client/src/API/api_download"
 	"aetova/client/utils"
 	"fmt"
 	"net/http"
@@ -9,13 +10,15 @@ import (
 )
 
 var (
-	client     *http.Client
+	client *http.Client = &http.Client{
+		Transport: &http.Transport{
+			MaxIdleConnsPerHost: api_download.MaxWorkers,
+		},
+	}
 	server_url string = os.Getenv("SERVER_URL")
 )
 
 func LaunchAPI() (err error) {
-	client = &http.Client{}
-
 	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/download", downloadHandler)
 	http.HandleFunc("/pause", pauseHandler)

@@ -90,5 +90,14 @@ func serverHealth() map[string]string {
 		}
 	}
 
+	err = resp.Body.Close()
+	if err != nil {
+		return map[string]string{
+			"status":         "failed",
+			"message":        "Error closing body",
+			"Detailed Error": err.Error(),
+		}
+	}
+
 	return healthCheck
 }

@@ -2,26 +2,23 @@ package api_download
 
 import (
 	"aetova/client/utils"
+	"net/http"
 )
 
 const (
 	target string = "downloads/"
 )
 
+var (
+	Client     *http.Client
+	nbDownload int = 0
+)
+
 func DownloadGame(manifest utils.ManifestDir, cd chan bool, ce chan error) {
 
-	chanDone := make(chan bool)
-	chanError := make(chan error)
-
-	go downloadDir(manifest, "", chanDone, chanError)
-
-	select {
-	case <-Ctx.Done():
-		return
-	case err := <-chanError:
+	err := downloadDir(manifest, "")
+	if err != nil {
 		ce <- err
-		return
-	case <-chanDone:
 	}
 
 	cd <- true
