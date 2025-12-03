@@ -4,7 +4,9 @@ import (
 	"aetova/client/src/API/api_download"
 	"aetova/client/utils"
 	"context"
+	"fmt"
 	"net/http"
+	"time"
 )
 
 var (
@@ -22,10 +24,15 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandlePostDownload(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
+
+	api_download.Client = client
 	ctx, cancel = context.WithCancel(r.Context())
 
 	chanManifest := make(chan utils.ManifestDir)
 	chanError := make(chan error)
+
+	fmt.Println("Get Manifest")
 
 	done, manifest := grGetManifest(w, chanManifest, chanError)
 	if !done {
@@ -34,16 +41,21 @@ func HandlePostDownload(w http.ResponseWriter, r *http.Request) {
 
 	chanDone := make(chan bool)
 
+	fmt.Println("Reserve Space")
+
 	done = grReserveSpace(w, manifest, chanDone, chanError)
 	if !done {
 		return
 	}
 
-	/*err := api_download.DownloadGame(manifest)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	fmt.Println("Reserve Download")
+
+	done = grDownload(w, manifest, chanDone, chanError)
+	if !done {
 		return
-	}*/
+	}
+
+	fmt.Println("Process takes ", time.Since(start))
 }
 
 func grGetManifest(w http.ResponseWriter, cm chan utils.ManifestDir, ce chan error) (bool, utils.ManifestDir) {
@@ -66,6 +78,23 @@ func grGetManifest(w http.ResponseWriter, cm chan utils.ManifestDir, ce chan err
 func grReserveSpace(w http.ResponseWriter, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
 	api_download.Ctx = ctx
 	go api_download.ReserveSpaceDir(manifest, "./downloads/", ce, cd)
+	select {
+	case <-ctx.Done():
+		http.Error(w, "Request canceled", http.StatusRequestTimeout)
+		return false
+	case err := <-ce:
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return false
+	case <-cd:
+	}
+
+	return true
+}
+
+func grDownload(w http.ResponseWriter, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+	api_download.Ctx = ctx
+
+	go api_download.DownloadGame(manifest, cd, ce)
 	select {
 	case <-ctx.Done():
 		http.Error(w, "Request canceled", http.StatusRequestTimeout)

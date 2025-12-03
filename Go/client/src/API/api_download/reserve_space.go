@@ -4,7 +4,6 @@ import (
 	"aetova/client/utils"
 	"context"
 	"os"
-	"time"
 )
 
 var (
@@ -12,13 +11,12 @@ var (
 )
 
 func ReserveSpaceDir(manifest utils.ManifestDir, path string, ce chan error, cd chan bool) {
+
 	err := os.MkdirAll(path+manifest.Name, 0700)
 	if err != nil {
 		ce <- err
 		return
 	}
-
-	time.Sleep(time.Second * 10)
 
 	chanDone := make(chan bool)
 	chanError := make(chan error)

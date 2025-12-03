@@ -2,12 +2,9 @@ package api_download
 
 import (
 	"aetova/client/utils"
-	"fmt"
 )
 
 func downloadDir(manifest utils.ManifestDir, path string) error {
-
-	fmt.Println("Download dir " + manifest.Name + " Start")
 
 	// sub dir
 	for _, dir := range manifest.SubDir {
@@ -15,6 +12,7 @@ func downloadDir(manifest utils.ManifestDir, path string) error {
 		if err != nil {
 			return err
 		}
+
 	}
 
 	// files
@@ -24,8 +22,6 @@ func downloadDir(manifest utils.ManifestDir, path string) error {
 			return err
 		}
 	}
-
-	fmt.Println("Download dir " + manifest.Name + " Done")
 
 	return nil
 }
