@@ -29,7 +29,7 @@ func LaunchAPI() (err error) {
 		return err
 	}
 
-	// TODO : create a file (or other system) for UI to get the port where the client listen
+	// TODO : create a file (or other system) for UI to get the port where the client listen, or have an endpoint "test" and the UI do the same thing has "FindFreePort"
 
 	return http.ListenAndServe(":"+strconv.Itoa(port), nil)
 }
