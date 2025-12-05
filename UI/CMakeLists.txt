@@ -86,3 +86,9 @@ add_custom_command(TARGET Aetova POST_BUILD
         "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/dll/$<CONFIG>/docLogger.dll"
         "$<TARGET_FILE_DIR:Aetova>/docLogger.dll"    
 )
+
+add_custom_command(TARGET Aetova POST_BUILD
+    COMMAND ${Qt6_DIR}/../../../bin/windeployqt.exe
+        --debug
+        $<TARGET_FILE:Aetova>
+)
