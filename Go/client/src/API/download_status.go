@@ -1,7 +1,9 @@
 package client_api
 
+type DownloadStatus byte
+
 const (
-	StatusNeedDownload = 0
-	StatusDownloading  = 1
-	StatusDownloaded   = 2
+	StatusNeedDownload DownloadStatus = 0
+	StatusDownloading
+	StatusDownloaded
 )

@@ -1,0 +1,90 @@
+package client_api
+
+import (
+	"aetova/client/src/API/api_download"
+	"aetova/client/src/API/resume_download"
+	"aetova/client/utils"
+	"context"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"os"
+)
+
+func resumeHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		HandlePostResume(w, r)
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func HandlePostResume(w http.ResponseWriter, r *http.Request) {
+	// check if the manifest exist
+	ok, err := utils.Exists("Manifest.json")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if !ok {
+		http.Error(w, "Resume Manifest.json not found, no download to resume", http.StatusNotFound)
+		return
+	}
+
+	// get the data of the manifest
+	var manifestDir utils.ManifestDir
+	data, err := os.ReadFile("Manifest.json")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = json.Unmarshal(data, &manifestDir)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// setup context and client
+	api_download.Client = client
+	ctx, cancel = context.WithCancel(r.Context())
+
+	chanError := make(chan error)
+
+	// browse the manifest
+	done, file, path := grBrowseManifest(w, manifestDir, chanError)
+	if !done {
+		return
+	}
+
+	// download the file that was downloading
+	fmt.Println(file, path)
+
+	// create the new manifest
+
+	// relaunch download game but with the new manifest
+}
+
+func grBrowseManifest(w http.ResponseWriter, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
+
+	chanManifest := make(chan utils.ManifestFile)
+	chanPath := make(chan string)
+
+	go resume_download.BrowseManifest(manifestDir, chanManifest, chanPath, ce)
+
+	var manifest utils.ManifestFile
+	var path string
+	select {
+	case <-ctx.Done():
+		http.Error(w, "Request canceled", http.StatusRequestTimeout)
+		return false, utils.ManifestFile{}, ""
+	case err := <-ce:
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return false, utils.ManifestFile{}, ""
+	case manifest = <-chanManifest:
+		path = <-chanPath
+	}
+
+	return true, manifest, path
+}

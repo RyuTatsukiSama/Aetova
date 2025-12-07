@@ -9,11 +9,6 @@ import (
 	"os"
 )
 
-func CheckManifest() {
-	// if manifest.json exist, just get the data from the file
-	// else get it from the server
-}
-
 func GetManifest(cm chan utils.ManifestDir, ce chan error) {
 	req, err := http.NewRequest("GET", os.Getenv("SERVER_URL")+"/manifest", nil) // TODO : Change that to avoid hard code port
 	if err != nil {

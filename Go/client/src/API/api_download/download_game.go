@@ -10,8 +10,7 @@ const (
 )
 
 var (
-	Client     *http.Client
-	nbDownload int = 0
+	Client *http.Client
 )
 
 func DownloadGame(manifest utils.ManifestDir, cd chan bool, ce chan error) {

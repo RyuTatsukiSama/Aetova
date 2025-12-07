@@ -4,6 +4,7 @@ import (
 	"aetova/client/utils"
 	"errors"
 	"fmt"
+	"os"
 )
 
 const (
@@ -27,6 +28,11 @@ func Worker(jobs <-chan WorkerData) {
 func downloadFile(file utils.ManifestFile, path string) error {
 
 	fmt.Println(file.Name, "start")
+
+	err := os.WriteFile("Manifest_"+file.Name+".bin", make([]byte, file.NbChunks), os.ModeAppend)
+	if err != nil {
+		return err
+	}
 
 	var nbWorkers int = MaxWorkers
 	jobs := make(chan WorkerData, file.NbChunks)
@@ -55,6 +61,11 @@ func downloadFile(file utils.ManifestFile, path string) error {
 			return err
 		case <-chanDone:
 		}
+	}
+
+	err = os.Remove("Manifest_" + file.Name + ".bin")
+	if err != nil {
+		return err
 	}
 
 	fmt.Println(file.Name, "done")

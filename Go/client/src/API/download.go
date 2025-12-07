@@ -4,8 +4,10 @@ import (
 	"aetova/client/src/API/api_download"
 	"aetova/client/utils"
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -23,18 +25,17 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func HandlePostDownload(w http.ResponseWriter, r *http.Request) {
+func HandlePostDownload(w http.ResponseWriter, r *http.Request) { // TODO : check if refactor can be useful, the channels really need to be created here ?
 	start := time.Now()
 
 	api_download.Client = client
 	ctx, cancel = context.WithCancel(r.Context())
 
-	chanManifest := make(chan utils.ManifestDir)
 	chanError := make(chan error)
 
 	fmt.Println("Get Manifest")
 
-	done, manifest := grGetManifest(w, chanManifest, chanError)
+	done, manifest := grGetManifest(w, chanError)
 	if !done {
 		return
 	}
@@ -58,9 +59,11 @@ func HandlePostDownload(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Process takes ", time.Since(start))
 }
 
-func grGetManifest(w http.ResponseWriter, cm chan utils.ManifestDir, ce chan error) (bool, utils.ManifestDir) {
+func grGetManifest(w http.ResponseWriter, ce chan error) (bool, utils.ManifestDir) {
 
-	go api_download.GetManifest(cm, ce)
+	chanManifest := make(chan utils.ManifestDir)
+
+	go api_download.GetManifest(chanManifest, ce)
 
 	var manifest utils.ManifestDir
 	select {
@@ -70,8 +73,21 @@ func grGetManifest(w http.ResponseWriter, cm chan utils.ManifestDir, ce chan err
 	case err := <-ce:
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return false, utils.ManifestDir{}
-	case manifest = <-cm:
+	case manifest = <-chanManifest:
 	}
+
+	data, err := json.Marshal(manifest)
+	if err != nil {
+		ce <- err
+		return false, utils.ManifestDir{}
+	}
+
+	err = os.WriteFile("Manifest.json", data, os.ModeAppend)
+	if err != nil {
+		ce <- err
+		return false, utils.ManifestDir{}
+	}
+
 	return true, manifest
 }
 
