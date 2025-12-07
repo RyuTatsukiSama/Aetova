@@ -6,7 +6,6 @@ import (
 	"aetova/client/utils"
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 )
@@ -59,7 +58,10 @@ func HandlePostResume(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// download the file that was downloading
-	fmt.Println(file, path)
+	done = grDownloadOnGoingFile(w, file, path, chanError)
+	if !done {
+		return
+	}
 
 	// create the new manifest
 
@@ -87,4 +89,23 @@ func grBrowseManifest(w http.ResponseWriter, manifestDir utils.ManifestDir, ce c
 	}
 
 	return true, manifest, path
+}
+
+func grDownloadOnGoingFile(w http.ResponseWriter, manifestFile utils.ManifestFile, path string, ce chan error) bool {
+
+	chanDone := make(chan bool)
+
+	go resume_download.ResumeFile(manifestFile, path, chanDone, ce)
+
+	select {
+	case <-ctx.Done():
+		http.Error(w, "Request canceled", http.StatusRequestTimeout)
+		return false
+	case err := <-ce:
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return false
+	case <-chanDone:
+	}
+
+	return true
 }
