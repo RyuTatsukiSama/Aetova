@@ -20,6 +20,7 @@ func resumeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandlePostResume(w http.ResponseWriter, r *http.Request) {
+
 	// check if the manifest exist
 	ok, err := utils.Exists("Manifest.json")
 	if err != nil {
@@ -92,6 +93,7 @@ func grBrowseManifest(w http.ResponseWriter, manifestDir utils.ManifestDir, ce c
 }
 
 func grDownloadOnGoingFile(w http.ResponseWriter, manifestFile utils.ManifestFile, path string, ce chan error) bool {
+	api_download.Ctx = ctx
 
 	chanDone := make(chan bool)
 

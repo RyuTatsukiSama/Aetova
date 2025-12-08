@@ -12,16 +12,16 @@ const (
 )
 
 type WorkerData struct {
-	path     string
-	fileName string
-	part     int
-	cd       chan bool
-	ce       chan error
+	Path     string
+	FileName string
+	Part     int
+	Cd       chan bool
+	Ce       chan error
 }
 
-func Worker(jobs <-chan WorkerData) {
+func Worker(jobs <-chan WorkerData, manifestFile *os.File) {
 	for j := range jobs {
-		downloadChunk(j.path, j.fileName, j.part, j.cd, j.ce)
+		downloadChunk(j, manifestFile)
 	}
 }
 
@@ -29,7 +29,12 @@ func downloadFile(file utils.ManifestFile, path string) error {
 
 	fmt.Println(file.Name, "start")
 
-	err := os.WriteFile("Manifest_"+file.Name+".bin", make([]byte, file.NbChunks), os.ModeAppend)
+	manifestFile, err := os.Create("Manifest_" + file.Name + ".bin")
+	if err != nil {
+		return err
+	}
+
+	_, err = manifestFile.Write(make([]byte, file.NbChunks))
 	if err != nil {
 		return err
 	}
@@ -40,16 +45,16 @@ func downloadFile(file utils.ManifestFile, path string) error {
 	var chanError = make(chan error)
 
 	for wor := 0; wor < nbWorkers; wor++ {
-		go Worker(jobs)
+		go Worker(jobs, manifestFile)
 	}
 
 	for part := 0; part < file.NbChunks; part++ {
 		jobs <- WorkerData{
-			path:     path,
-			fileName: file.Name,
-			part:     part,
-			cd:       chanDone,
-			ce:       chanError,
+			Path:     path,
+			FileName: file.Name,
+			Part:     part,
+			Cd:       chanDone,
+			Ce:       chanError,
 		}
 	}
 
@@ -63,7 +68,9 @@ func downloadFile(file utils.ManifestFile, path string) error {
 		}
 	}
 
-	err = os.Remove("Manifest_" + file.Name + ".bin")
+	manifestFile.Close()
+
+	err = os.Remove(manifestFile.Name())
 	if err != nil {
 		return err
 	}

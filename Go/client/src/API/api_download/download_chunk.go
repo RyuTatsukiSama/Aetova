@@ -10,24 +10,32 @@ import (
 	"strings"
 )
 
-func downloadChunk(path string, fileName string, part int, cd chan bool, ce chan error) {
+func downloadChunk(job WorkerData, manifestFile *os.File) {
 
-	currentChunkPath := path + "part" + strconv.Itoa(part) + "_" + fileName + ".bin"
+	currentChunkPath := job.Path + "part" + strconv.Itoa(job.Part) + "_" + job.FileName + ".bin"
 
 	data, err := downloadData(currentChunkPath)
 	if err != nil {
-		ce <- err
+		job.Ce <- err
 		return
 	}
 
-	err = saveChunkAt(path+fileName, data, int64(part*utils.SizeChunk))
+	err = saveChunkAt(job.Path+job.FileName, data, int64(job.Part*utils.SizeChunk))
 	//err = saveChunk(path+fileName, data)
 	if err != nil {
-		ce <- err
+		job.Ce <- err
 		return
 	}
 
-	cd <- true
+	done := make([]byte, 1)
+	done[0] = 1
+	_, err = manifestFile.WriteAt(done, int64(job.Part))
+	if err != nil {
+		job.Ce <- err
+		return
+	}
+
+	job.Cd <- true
 }
 
 func downloadData(path string) ([]byte, error) {

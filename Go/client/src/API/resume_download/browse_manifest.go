@@ -30,7 +30,7 @@ func browseDir(manifestDir utils.ManifestDir) (utils.ManifestFile, string, error
 		}
 
 		if ok {
-			return subFiles, manifestDir.Name + "/" + subFiles.Name, nil
+			return subFiles, manifestDir.Name + "/", nil
 		}
 	}
 
