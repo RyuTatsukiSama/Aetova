@@ -41,9 +41,12 @@ set(RESSOURCES
     "./Resources/ui.qrc"
 )
 
+ set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/Resources/Logo/Logo.rc")
+
 qt_add_executable(Aetova
     ${SOURCES}
     ${RESSOURCES}
+    ${app_icon_resource_windows}
 )
 
 target_link_libraries(Aetova PRIVATE 
