@@ -36,8 +36,8 @@ func browseManifest(manifestDir *utils.ManifestDir) (found bool, needDelete bool
 	found = false
 
 	var endRange int = 0 // the range we need to delete
-	for _, subDir := range manifestDir.SubDir {
-		foundRe, needDelete, err := browseManifest(&subDir)
+	for idx := range manifestDir.SubDir {
+		foundRe, needDelete, err := browseManifest(&manifestDir.SubDir[idx])
 		if err != nil {
 			return false, false, err
 		}

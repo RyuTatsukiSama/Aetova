@@ -6,7 +6,6 @@ import (
 	"aetova/client/utils"
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 )
@@ -71,7 +70,10 @@ func HandlePostResume(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// relaunch download game but with the new manifest
-	fmt.Println(newManifest)
+	done = grResumeDownload(w, newManifest, make(chan bool), chanError)
+	if !done {
+		return
+	}
 }
 
 func grSearchOnGoingManifest(w http.ResponseWriter, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
@@ -133,6 +135,23 @@ func grDownloadOnGoingFile(w http.ResponseWriter, manifestFile utils.ManifestFil
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return false
 	case <-chanDone:
+	}
+
+	return true
+}
+
+func grResumeDownload(w http.ResponseWriter, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+	api_download.Ctx = ctx
+
+	go api_download.DownloadGame(manifest, cd, ce)
+	select {
+	case <-ctx.Done():
+		http.Error(w, "Request canceled", http.StatusRequestTimeout)
+		return false
+	case err := <-ce:
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return false
+	case <-cd:
 	}
 
 	return true
