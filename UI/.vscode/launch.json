@@ -6,7 +6,7 @@
       "type": "cppvsdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build/Debug/Aetova.exe",
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/build/Debug",
       "console": "externalTerminal",
       "preLaunchTask": "CMake: build"
     }

@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Network)
 
 qt_standard_project_setup()
 
@@ -33,6 +34,8 @@ set(SOURCES
     "./Scripts/GameWindow/HTMLLabel/LabelTeam/labelteam.cpp"
     "./Scripts/GameWindow/SplashLabel/splashlabel.h"
     "./Scripts/GameWindow/SplashLabel/splashlabel.cpp"
+    "./Scripts/ClientBridge/client.h"
+    "./Scripts/ClientBridge/client.cpp"
 )
 
 set(RESSOURCES
@@ -53,6 +56,7 @@ target_link_libraries(Aetova PRIVATE
     Qt6::Widgets
     Qt6::Core
     Qt6::Gui
+    Qt6::Network
 )
 
 # add the docLogger
@@ -66,8 +70,13 @@ set_target_properties(Aetova PROPERTIES
 
 add_custom_command(TARGET Aetova POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
-        "${CMAKE_SOURCE_DIR}/apps"
-        "$<TARGET_FILE_DIR:Aetova>/apps"
+        "${CMAKE_SOURCE_DIR}/clientGo"
+        "$<TARGET_FILE_DIR:Aetova>/clientGo"
+)
+
+add_custom_command(TARGET Aetova POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+        "${CMAKE_SOURCE_DIR}/wd"
 )
 
 # Copy the lib for VS
