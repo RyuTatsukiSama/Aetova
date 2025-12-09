@@ -5,7 +5,7 @@ import (
 	"errors"
 )
 
-func BrowseManifest(manifestDir utils.ManifestDir, cm chan utils.ManifestFile, cs chan string, ce chan error) {
+func SearchOnGoingManifest(manifestDir utils.ManifestDir, cm chan utils.ManifestFile, cs chan string, ce chan error) {
 
 	manifestFile, path, err := browseDir(manifestDir)
 	if path == "" && err == nil {
@@ -23,17 +23,6 @@ func BrowseManifest(manifestDir utils.ManifestDir, cm chan utils.ManifestFile, c
 }
 
 func browseDir(manifestDir utils.ManifestDir) (utils.ManifestFile, string, error) {
-	for _, subFiles := range manifestDir.SubFiles {
-		ok, err := utils.Exists("Manifest_" + subFiles.Name + ".bin")
-		if err != nil {
-			return utils.ManifestFile{}, "", err
-		}
-
-		if ok {
-			return subFiles, manifestDir.Name + "/", nil
-		}
-	}
-
 	for _, subDir := range manifestDir.SubDir {
 		subManifest, path, err := browseDir(subDir)
 		if err != nil {
@@ -41,6 +30,17 @@ func browseDir(manifestDir utils.ManifestDir) (utils.ManifestFile, string, error
 		}
 		if path != "" {
 			return subManifest, manifestDir.Name + "/" + path, nil
+		}
+	}
+
+	for _, subFile := range manifestDir.SubFiles {
+		ok, err := utils.Exists("Manifest_" + subFile.Name + ".bin")
+		if err != nil {
+			return utils.ManifestFile{}, "", err
+		}
+
+		if ok {
+			return subFile, manifestDir.Name + "/", nil
 		}
 	}
 

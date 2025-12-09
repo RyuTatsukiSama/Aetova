@@ -49,7 +49,7 @@ func HandlePostDownload(w http.ResponseWriter, r *http.Request) { // TODO : chec
 		return
 	}
 
-	fmt.Println("Reserve Download")
+	fmt.Println("Download")
 
 	done = grDownload(w, manifest, chanDone, chanError)
 	if !done {
@@ -82,7 +82,7 @@ func grGetManifest(w http.ResponseWriter, ce chan error) (bool, utils.ManifestDi
 		return false, utils.ManifestDir{}
 	}
 
-	err = os.WriteFile("Manifest.json", data, os.ModeAppend)
+	err = os.WriteFile("Manifest.json", data, 0777)
 	if err != nil {
 		ce <- err
 		return false, utils.ManifestDir{}

@@ -33,6 +33,7 @@ func downloadFile(file utils.ManifestFile, path string) error {
 	if err != nil {
 		return err
 	}
+	defer manifestFile.Close()
 
 	_, err = manifestFile.Write(make([]byte, file.NbChunks))
 	if err != nil {
@@ -68,7 +69,10 @@ func downloadFile(file utils.ManifestFile, path string) error {
 		}
 	}
 
-	manifestFile.Close()
+	err = manifestFile.Close()
+	if err != nil {
+		return err
+	}
 
 	err = os.Remove(manifestFile.Name())
 	if err != nil {

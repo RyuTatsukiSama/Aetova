@@ -6,6 +6,7 @@ import (
 	"aetova/client/utils"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 )
@@ -52,8 +53,13 @@ func HandlePostResume(w http.ResponseWriter, r *http.Request) {
 
 	chanError := make(chan error)
 
-	// browse the manifest
-	done, file, path := grBrowseManifest(w, manifestDir, chanError)
+	// browse the manifest and create the new manifest
+	done, file, path := grSearchOnGoingManifest(w, manifestDir, chanError)
+	if !done {
+		return
+	}
+
+	done, newManifest := grCreateNewManifest(w, manifestDir, chanError)
 	if !done {
 		return
 	}
@@ -64,20 +70,20 @@ func HandlePostResume(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// create the new manifest
-
 	// relaunch download game but with the new manifest
+	fmt.Println(newManifest)
 }
 
-func grBrowseManifest(w http.ResponseWriter, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
+func grSearchOnGoingManifest(w http.ResponseWriter, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
 
 	chanManifest := make(chan utils.ManifestFile)
 	chanPath := make(chan string)
 
-	go resume_download.BrowseManifest(manifestDir, chanManifest, chanPath, ce)
+	go resume_download.SearchOnGoingManifest(manifestDir, chanManifest, chanPath, ce)
 
 	var manifest utils.ManifestFile
 	var path string
+
 	select {
 	case <-ctx.Done():
 		http.Error(w, "Request canceled", http.StatusRequestTimeout)
@@ -90,6 +96,26 @@ func grBrowseManifest(w http.ResponseWriter, manifestDir utils.ManifestDir, ce c
 	}
 
 	return true, manifest, path
+}
+
+func grCreateNewManifest(w http.ResponseWriter, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestDir) {
+	chanManifest := make(chan utils.ManifestDir)
+
+	go resume_download.CreateNewManifest(manifestDir, chanManifest, ce)
+
+	var newManifest utils.ManifestDir
+
+	select {
+	case <-ctx.Done():
+		http.Error(w, "Request canceled", http.StatusRequestTimeout)
+		return false, utils.ManifestDir{}
+	case err := <-ce:
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return false, utils.ManifestDir{}
+	case newManifest = <-chanManifest:
+	}
+
+	return true, newManifest
 }
 
 func grDownloadOnGoingFile(w http.ResponseWriter, manifestFile utils.ManifestFile, path string, ce chan error) bool {
