@@ -6,6 +6,7 @@
 #include <QScreen>
 #include <Logger.h>
 #include <QProcess>
+#include "ClientBridge/client.h"
 
 // Use QVBoxLayout for better scaling
 // Qt has a file manager system call QFile

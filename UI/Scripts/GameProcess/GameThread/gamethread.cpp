@@ -9,7 +9,7 @@ GameThread::GameThread(std::string _threadName, QObject *parent) : QThread(paren
 void GameThread::run()
 {
     // Construct the path to the working directory ( directory of the exe )
-    string workingDir = std::format("apps\\{}", pathToExe.toStdString());
+    string workingDir = std::format("wd\\downloads\\{}", pathToExe.toStdString());
     std::wstring widestrWD = std::wstring(workingDir.begin(), workingDir.end());
     const wchar_t *widecstrWD = widestrWD.c_str();
 

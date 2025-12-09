@@ -6,21 +6,25 @@
 
 class GameLauncher;
 
-
 class ButtonGame : public QPushButton
 {
 	Q_OBJECT
 
 public:
-	explicit ButtonGame(const QString& name, QWidget* parent = nullptr);
-	void connectLauncher();
+	explicit ButtonGame(const QString &name, QWidget *parent = nullptr);
+	void startConnect();
+	void downloadConnect();
+	void pauseConnect();
+	void resumeConnect();
+	void launchConnect();
 
 protected:
-
-	void paintEvent(QPaintEvent* event) override;
+	void paintEvent(QPaintEvent *event) override;
 
 private:
-	GameLauncher* launcher = nullptr;
+	GameLauncher *launcher = nullptr;
+
+	class Client *client;
 };
 
 #endif // !BUTTONGAME_H

@@ -1,12 +1,23 @@
 #include "../Common/common.h"
-#include <QNetworkAccessManager>
+#include <QObject>
+#include <Logger.h>
 
-class Client
+class ButtonGame;
+
+class Client : QObject
 {
+    Q_OBJECT
+
 private:
-    QNetworkAccessManager *manager;
+    class QNetworkAccessManager *manager;
+    class QProcess *process;
+    doc::Logger *log;
 
 public:
-    Client(/* args */);
+    Client();
     ~Client();
+
+    void download(ButtonGame *button);
+    void pause(ButtonGame *button);
+    void resume(ButtonGame *button);
 };

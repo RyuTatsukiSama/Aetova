@@ -76,7 +76,7 @@ add_custom_command(TARGET Aetova POST_BUILD
 
 add_custom_command(TARGET Aetova POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory
-        "${CMAKE_SOURCE_DIR}/wd"
+        "$<TARGET_FILE_DIR:Aetova>/wd"
 )
 
 # Copy the lib for VS

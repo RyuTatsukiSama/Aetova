@@ -4,4 +4,8 @@ set PORT=51419
 
 go build
 
-start client.exe
+copy "client.exe" "../../UI/clientGo/client.exe"
+
+start ../../UI/clientGo/client.exe
+
+pause
