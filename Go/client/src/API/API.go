@@ -5,7 +5,6 @@ import (
 	"aetova/client/utils"
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 )
 
@@ -15,7 +14,7 @@ var (
 			MaxIdleConnsPerHost: api_download.MaxWorkers,
 		},
 	}
-	server_url string = os.Getenv("SERVER_URL")
+	server_url string = "http://aetova.duckdns.org:15369"
 )
 
 func LaunchAPI() (err error) {
@@ -25,7 +24,7 @@ func LaunchAPI() (err error) {
 	http.HandleFunc("/cancel", cancelHandler)
 	http.HandleFunc("/resume", resumeHandler)
 
-	port, err := strconv.Atoi(os.Getenv("PORT")) // TODO : Change that to avoid hard code port
+	port, err := strconv.Atoi("51419") // TODO : Change that to avoid hard code port
 	if err != nil {
 		return err
 	}

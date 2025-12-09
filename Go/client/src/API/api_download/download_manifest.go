@@ -6,17 +6,16 @@ import (
 	"errors"
 	"io"
 	"net/http"
-	"os"
 )
 
 func GetManifest(cm chan utils.ManifestDir, ce chan error) {
-	req, err := http.NewRequest("GET", os.Getenv("SERVER_URL")+"/manifest", nil) // TODO : Change that to avoid hard code port
+	req, err := http.NewRequest("GET", "http://aetova.duckdns.org:15369"+"/manifest", nil) // TODO : Change that to avoid hard code port
 	if err != nil {
 		ce <- err
 		return
 	}
 
-	req.Header.Add("api_key", os.Getenv("API_KEY"))
+	req.Header.Add("api_key", "c7e642cc-9928-4248-bd3f-c9588490bb60")
 
 	resp, err := Client.Do(req)
 	if err != nil {

@@ -43,12 +43,12 @@ func downloadData(path string) ([]byte, error) {
 	jsonData := `{"path": "` + path + `"}`
 	var reader io.Reader = strings.NewReader(jsonData)
 
-	req, err := http.NewRequest("POST", os.Getenv("SERVER_URL")+"/downloader", reader)
+	req, err := http.NewRequest("POST", "http://aetova.duckdns.org:15369"+"/downloader", reader)
 	if err != nil {
 		return make([]byte, 0), errors.New(err.Error() + " downloadData Request")
 	}
 
-	req.Header.Add("api_key", os.Getenv("API_KEY"))
+	req.Header.Add("api_key", "c7e642cc-9928-4248-bd3f-c9588490bb60")
 	req.Header.Add("Content-Type", "application/json")
 
 	resp, err := Client.Do(req)
