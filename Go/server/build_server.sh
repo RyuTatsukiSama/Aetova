@@ -24,5 +24,4 @@ docker build --build-arg PORT="$container_port" -t "$image_name" .
 docker stop "$container_name"
 docker rm "$container_name"
 docker run -d --name "$container_name" --env-file .env -p "$machine_port:$container_port" "$image_name"
-
-read -p "Press Enter to continue..."
+docker up "$container_name"
