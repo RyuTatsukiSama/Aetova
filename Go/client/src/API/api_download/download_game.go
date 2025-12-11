@@ -21,9 +21,11 @@ func DownloadGame(manifest utils.ManifestDir, cd chan bool, ce chan error) {
 		ce <- err
 	}
 
-	err = os.Remove("Manifest.json")
-	if err != nil {
-		ce <- err
+	if err == nil {
+		err = os.Remove("Manifest.json")
+		if err != nil {
+			ce <- err
+		}
 	}
 
 	cd <- true
