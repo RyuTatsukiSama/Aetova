@@ -24,5 +24,4 @@ REM If a container already run
 docker stop %container_name%  
 docker rm %container_name%
 docker run -d --name %container_name% --env-file .env -p %machine_port%:%container_port% %image_name%
-
-pause
+docker up %container_name%
