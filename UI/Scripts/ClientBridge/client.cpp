@@ -45,6 +45,7 @@ void Client::download(ButtonGame *button)
     else 
     {
         log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
+        button->resumeConnect();
     } });
 }
 
