@@ -11,6 +11,10 @@ while IFS='=' read -r key value; do
     fi
 done < .env
 
+# Stop the container
+docker stop "$container_name"
+docker container "$container_name"
+
 # Rebuild image
 docker image rm "$image_name"
 docker build --build-arg PORT="$container_port" -t "$image_name" .

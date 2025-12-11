@@ -11,6 +11,10 @@ for /f "tokens=1,2 delims==" %%a in (.env) do (
     )
 )
 
+REM Stop the container
+docker stop %container_name%
+docker container rm %container_name%
+
 REM Rebuild image
 docker image rm %image_name%
 docker build --build-arg PORT=%container_port% -t %image_name% .
