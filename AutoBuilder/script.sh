@@ -12,7 +12,9 @@ difference=$(git diff origin/main --name-only ../Go/server)
 if [ -n "$difference" ]; then
 	echo "$difference" >> "$LOGFILE"
 	git pull
-	echo "$(sh ../Go/server/build_server.sh)" >> "$LOGFILE"
+	sh ../Go/server/build_server.sh >> "$LOGFILE" 2>&1
 else
 	echo "There is no difference" >> "$LOGFILE"
 fi
+
+echo "//--------- $(date '+%Y-%m-%d %H:%M:%S') AUTO BUILD END---------//" >> "$LOGFILE"
