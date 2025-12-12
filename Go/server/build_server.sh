@@ -23,5 +23,3 @@ docker build --build-arg PORT="$container_port" -t "$image_name" .
 
 # Relaunch the container
 docker run -d --name "$container_name" --env-file .env -p "$machine_port:$container_port" "$image_name"
-
-read
