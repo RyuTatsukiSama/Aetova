@@ -90,6 +90,7 @@ Client::~Client()
     delete process;
     process = nullptr;
 
+    manager->get(QNetworkRequest(QUrl("http://localhost:51419/kill")));
     delete manager;
     manager = nullptr;
 }

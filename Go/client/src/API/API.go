@@ -23,6 +23,7 @@ func LaunchAPI() (err error) {
 	http.HandleFunc("/pause", pauseHandler)
 	http.HandleFunc("/cancel", cancelHandler)
 	http.HandleFunc("/resume", resumeHandler)
+	http.HandleFunc("/kill", killHandler)
 
 	port, err := strconv.Atoi("51419") // TODO : Change that to avoid hard code port
 	if err != nil {
