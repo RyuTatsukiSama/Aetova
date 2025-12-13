@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Network)
+find_package(Qt6 REQUIRED COMPONENTS WebSockets)
 
 qt_standard_project_setup()
 
@@ -57,6 +58,7 @@ target_link_libraries(Aetova PRIVATE
     Qt6::Core
     Qt6::Gui
     Qt6::Network
+    Qt6::WebSockets
 )
 
 # add the docLogger

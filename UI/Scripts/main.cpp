@@ -5,8 +5,7 @@
 #include <QFont>
 #include <QScreen>
 #include <Logger.h>
-#include <QProcess>
-#include "ClientBridge/client.h"
+#include <QWebSocket>
 
 // Use QVBoxLayout for better scaling
 // Qt has a file manager system call QFile

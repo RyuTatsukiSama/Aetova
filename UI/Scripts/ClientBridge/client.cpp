@@ -3,6 +3,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <Logger.h>
 #include "../GameWindow/ButtonGame/buttongame.h"
 
 Client::Client()

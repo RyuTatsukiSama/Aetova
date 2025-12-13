@@ -1,23 +1,25 @@
 #include "../Common/common.h"
 #include <QObject>
-#include <Logger.h>
 
 class ButtonGame;
+namespace doc {
+	class Logger;
+}
 
 class Client : QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 
 private:
-    class QNetworkAccessManager *manager;
-    class QProcess *process;
-    doc::Logger *log;
+	class QNetworkAccessManager* manager;
+	class QProcess* process;
+	doc::Logger* log;
 
 public:
-    Client();
-    ~Client();
+	Client();
+	~Client();
 
-    void download(ButtonGame *button);
-    void pause(ButtonGame *button);
-    void resume(ButtonGame *button);
+	void download(ButtonGame* button);
+	void pause(ButtonGame* button);
+	void resume(ButtonGame* button);
 };
