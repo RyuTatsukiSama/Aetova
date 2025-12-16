@@ -1,8 +1,9 @@
 #include "buttongame.h"
 #include "../../GameProcess/GameLauncher/gamelauncher.h"
-#include "QtWidgets/qapplication.h"
-#include "QtGui/qpainter.h"
-#include "QtGui/qfontdatabase.h"
+#include <QApplication>
+#include <QPainter>
+#include <QFontDatabase>
+#include <QPalette>
 #include "../../ClientBridge/client.h"
 #include <filesystem>
 #include <iostream>
@@ -24,20 +25,20 @@ ButtonGame::ButtonGame(const QString &name, QWidget *parent) : QPushButton(name,
 	setFixedSize(250, 55);
 
 	setStyleSheet(R"(
-    QPushButton {
-    background-color: #a290c5;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 10px 20px;
-    font-weight: bold;
+	QPushButton {
+	background-color: #D4AF37;
+	color: white;
+	border: none;
+	border-radius: 12px;
+	padding: 10px 20px;
+	font-weight: bold;
 	}
 	QPushButton:hover {
-	   background-color: #8d7bb0; /* l�g�rement plus sombre */
+	   background-color: #F0C758; /* l�g�rement plus sombre */
 	}
 	QPushButton:pressed {
-		background-color: #756498; /* encore plus sombre */
-	}	
+		background-color: #bd9d46; /* encore plus sombre */
+	}
 	)");
 
 	setGeometry(
@@ -94,6 +95,22 @@ void ButtonGame::resumeConnect()
 void ButtonGame::launchConnect()
 {
 	setText("Launch");
+	setStyleSheet(R"(
+	QPushButton {
+    background-color: #366CD4;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-weight: bold;
+	}
+	QPushButton:hover {
+    	background-color: #5086E0; /* légèrement plus clair */
+	}
+	QPushButton:pressed {
+    	background-color: #2556B0; /* plus foncé */
+	}
+	)");
 	disconnect(this, &QPushButton::released, nullptr, nullptr);
 	QApplication::connect(this, &QPushButton::released, [this]()
 						  {
