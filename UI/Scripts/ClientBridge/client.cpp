@@ -64,6 +64,7 @@ void Client::pause(ButtonGame *button)
     else 
     {
         log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
+        button->resumeConnect();
     } });
 }
 
@@ -82,6 +83,7 @@ void Client::resume(ButtonGame *button)
     else 
     {
         log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
+        button->resumeConnect();
     } });
 }
 

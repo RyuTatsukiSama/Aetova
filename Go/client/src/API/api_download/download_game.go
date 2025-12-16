@@ -2,6 +2,7 @@ package api_download
 
 import (
 	"aetova/client/utils"
+	"fmt"
 	"net/http"
 	"os"
 )
@@ -22,6 +23,7 @@ func DownloadGame(manifest utils.ManifestDir, cd chan bool, ce chan error) {
 	}
 
 	if err == nil {
+		fmt.Println("Remove Manifest")
 		err = os.Remove("Manifest.json")
 		if err != nil {
 			ce <- err
