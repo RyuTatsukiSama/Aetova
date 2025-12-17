@@ -12,9 +12,10 @@ public:
 public slots:
     void handleFinish(const QString &s, const doc::LoggerSeverity &_severity);
     void launchGame(const QString pathToExe, const QString exeName);
-
+    void stopGame();
 private:
     doc::Logger log;
+    class GameThread* gt;
 };
 
 #endif // GAMELAUNCHER_H

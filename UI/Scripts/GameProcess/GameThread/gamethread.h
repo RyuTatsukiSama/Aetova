@@ -24,9 +24,11 @@ public:
 	QString exeName;
 
 	GameThread(std::string _threadName, QObject *parent = nullptr);
+	void kill();
 
 private:
 	doc::Logger log;
+	PROCESS_INFORMATION pi;
 };
 
 #endif // GAMETHREAD_H

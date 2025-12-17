@@ -19,7 +19,6 @@ void GameThread::run()
     const wchar_t *widecstr = widestr.c_str();
 
     STARTUPINFO si = {sizeof(STARTUPINFO)};
-    PROCESS_INFORMATION pi;
 
     si.dwFlags = STARTF_USESHOWWINDOW;
     si.wShowWindow = SW_SHOW;
@@ -51,4 +50,12 @@ void GameThread::run()
         // Warn the user about the problem
         emit threadFinish(exeName + " end with error " + widecstrError, doc::LoggerSeverity::Error);
     }
+}
+
+void GameThread::kill()
+{
+    TerminateProcess(pi.hProcess, 0);
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+    emit threadFinish("The user kill the ", doc::LoggerSeverity::Warning);
 }

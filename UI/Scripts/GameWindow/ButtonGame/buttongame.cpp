@@ -114,6 +114,19 @@ void ButtonGame::launchConnect()
 	disconnect(this, &QPushButton::released, nullptr, nullptr);
 	QApplication::connect(this, &QPushButton::released, [this]()
 						  {
+							  stopConnect();
+							  launcher->launchGame("BuildOranys", "Oranys"); // TODO : need modulable
+						  });
+}
+
+void ButtonGame::stopConnect()
+{
+	setText("Stop");
+
+	disconnect(this, &QPushButton::released, nullptr, nullptr);
+	QApplication::connect(this, &QPushButton::released, [this]()
+						  {
+							  launchConnect();
 							  launcher->launchGame("BuildOranys", "Oranys"); // TODO : need modulable
 						  });
 }

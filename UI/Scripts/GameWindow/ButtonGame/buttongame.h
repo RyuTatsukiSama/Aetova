@@ -17,6 +17,7 @@ public:
 	void pauseConnect();
 	void resumeConnect();
 	void launchConnect();
+	void stopConnect();
 
 protected:
 	void paintEvent(QPaintEvent *event) override;
