@@ -3,7 +3,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <Logger.h>
+#include <docLogger>
 #include <QWebSocket>
 #include "../GameWindow/ButtonGame/buttongame.h"
 

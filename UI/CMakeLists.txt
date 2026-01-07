@@ -84,14 +84,14 @@ add_custom_command(TARGET Aetova POST_BUILD
 # Copy the lib for VS
 add_custom_command(TARGET Aetova PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
-        "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib"
+        "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib/$<CONFIG>"
         "$<TARGET_FILE_DIR:Aetova>/lib"
 )
 
 # Copy the lib for VS Code
 add_custom_command(TARGET Aetova PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
-        "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib"
+        "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib/$<CONFIG>"
         "$<TARGET_FILE_DIR:Aetova>/../lib"
 )
 

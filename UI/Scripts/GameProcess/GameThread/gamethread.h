@@ -6,7 +6,7 @@
 #include <windows.h>
 #include <iostream>
 #include <string>
-#include <Logger.h>
+#include <docLogger>
 using namespace std;
 
 class GameThread : public QThread

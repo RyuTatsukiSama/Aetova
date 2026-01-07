@@ -4,8 +4,7 @@
 #include <QFontDatabase>
 #include <QFont>
 #include <QScreen>
-#include <Logger.h>
-#include <QWebSocket>
+#include <docLogger>
 
 // Use QVBoxLayout for better scaling
 // Qt has a file manager system call QFile

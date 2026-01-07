@@ -2,7 +2,7 @@
 #define GAMELAUNCHER_H
 
 #include <QObject>
-#include <Logger.h>
+#include <docLogger>
 
 class GameLauncher : public QObject
 {
