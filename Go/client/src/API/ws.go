@@ -11,10 +11,13 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-}
+var (
+	upgrader = websocket.Upgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+	}
+	MxConn MutexConnection
+)
 
 type MutexConnection struct {
 	conn *websocket.Conn
@@ -31,7 +34,7 @@ func webSocketHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	mxConn := MutexConnection{
+	MxConn = MutexConnection{
 		conn: ws,
 		mx:   &sync.Mutex{},
 	}
@@ -44,7 +47,7 @@ func webSocketHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	webSocketReader(mxConn)
+	webSocketReader(MxConn)
 }
 
 func webSocketReader(mxConn MutexConnection) {
@@ -53,6 +56,7 @@ func webSocketReader(mxConn MutexConnection) {
 	ctx, cancel = context.WithCancel(context.Background())
 	chanClose := make(chan bool)
 
+	// send message every seconds
 	go func(ctx context.Context) {
 		for {
 			select {
@@ -65,13 +69,16 @@ func webSocketReader(mxConn MutexConnection) {
 				lastTime = currentTime
 
 				if timer > time.Duration(time.Second) {
+
 					timer = 0
 					mxConn.mx.Lock()
-					if err := mxConn.conn.WriteMessage(1, []byte("U there ? :)")); err != nil {
+					err := mxConn.conn.WriteMessage(websocket.TextMessage, []byte("U there ? :)"))
+					if err != nil {
 						log.Println(err)
 						mxConn.mx.Unlock()
 						return
 					}
+
 					mxConn.mx.Unlock()
 				} else {
 					timer += deltaTime
@@ -80,30 +87,45 @@ func webSocketReader(mxConn MutexConnection) {
 		}
 	}(ctx)
 
+	// For receiving message
 	for {
 		_, message, err := mxConn.conn.ReadMessage()
 		if err != nil {
-			log.Println(err)
-			cancel()
-			return
+			log.Fatal(err)
+			break
 		}
 
 		fmt.Println(string(message))
 
-		if string(message) == "stop" {
-			cancel()
-			<-chanClose
-			closeNormalClosure := websocket.FormatCloseMessage(websocket.CloseNormalClosure, "")
-			err := mxConn.conn.WriteControl(websocket.CloseMessage, closeNormalClosure, time.Now().Add(time.Millisecond*125))
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			err = mxConn.conn.Close()
-			if err != nil {
-				log.Fatal(err)
-			}
+		switch string(message) {
+		case "download":
+			// HandlePostDownload(mxConn)
+		case "stop":
+			closeConnection(mxConn, chanClose)
 			return
+		default:
+			mxConn.mx.Lock()
+			err = mxConn.conn.WriteMessage(websocket.TextMessage, []byte(""))
+			if err != nil {
+				mxConn.mx.Unlock()
+				log.Fatal(err)
+			}
+			mxConn.mx.Unlock()
 		}
+	}
+}
+
+func closeConnection(mxConn MutexConnection, chanClose chan bool) {
+	cancel()
+	<-chanClose
+	closeNormalClosure := websocket.FormatCloseMessage(websocket.CloseNormalClosure, "")
+	err := mxConn.conn.WriteControl(websocket.CloseMessage, closeNormalClosure, time.Now().Add(time.Millisecond*125))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = mxConn.conn.Close()
+	if err != nil {
+		log.Fatal(err)
 	}
 }
