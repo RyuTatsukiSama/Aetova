@@ -4,14 +4,15 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <Logger.h>
+#include <QWebSocket>
 #include "../GameWindow/ButtonGame/buttongame.h"
 
-Client::Client()
+Client::Client(QObject* parent) : QObject(parent)
 {
     log = new doc::Logger();
 
     process = new QProcess(nullptr);
-    process->startDetached("clientGo/client.exe");
+    process->startDetached("clientGo/client.exe"); // TODO : Change this to a "CREATE_PROCESS", or a more multi platforme fonction
 
     manager = new QNetworkAccessManager(nullptr);
 
@@ -29,6 +30,34 @@ Client::Client()
         log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
     }
     reply->deleteLater(); });
+
+    websocket();
+}
+
+void Client::websocket()
+{
+    ws = new QWebSocket();
+    connect(ws, &QWebSocket::connected, [this](){
+        this->wsConnected();
+    });
+    ws->open(QUrl("ws://localhost:51419/ws"));
+}
+
+void Client::wsConnected()
+{
+    log->Info("WS Connected");
+    connect(ws, &QWebSocket::textMessageReceived, [this](QString message){
+        this->onTextMessageReceived(message);
+    });
+}
+
+void Client::onTextMessageReceived(QString message)
+{
+    log->Debug(message.toStdString());
+}
+
+void Client::wsDisconnected()
+{
 }
 
 void Client::download(ButtonGame *button)

@@ -4,7 +4,11 @@ set PORT=51419
 
 go build
 
-copy "client.exe" "../../UI/clientGo/client.exe"
+robocopy "./" "../../UI/clientGo/" client.exe /E
+if %errorlevel% gtr 7 (
+    pause
+    exit
+)
 
 start ../../UI/clientGo/client.exe
 

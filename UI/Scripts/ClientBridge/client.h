@@ -13,13 +13,22 @@ class Client : QObject
 private:
 	class QNetworkAccessManager* manager;
 	class QProcess* process;
+	class QWebSocket* ws;
 	doc::Logger* log;
 
+
 public:
-	Client();
+	Client(QObject* parent);
 	~Client();
+
+	void websocket();
 
 	void download(ButtonGame* button);
 	void pause(ButtonGame* button);
 	void resume(ButtonGame* button);
+
+private:
+	void wsConnected();
+	void wsDisconnected();
+	void onTextMessageReceived(QString message);
 };

@@ -24,6 +24,8 @@ func webSocketHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println("Client Connected!")
+
 	err = ws.WriteMessage(1, []byte("Client Connected!"))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -50,7 +52,6 @@ func webSocketReader(conn *websocket.Conn) {
 			}
 		} else {
 			timer += deltaTime
-			fmt.Println(timer)
 		}
 	}
 }

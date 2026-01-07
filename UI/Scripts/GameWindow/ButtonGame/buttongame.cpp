@@ -12,7 +12,7 @@ namespace fs = std::filesystem;
 
 ButtonGame::ButtonGame(const QString &name, QWidget *parent) : QPushButton(name, parent)
 {
-	client = new Client();
+	client = new Client(nullptr);
 
 	int id = QFontDatabase::addApplicationFont(":/fonts/Sansation_Regular.ttf");
 	QString family = QFontDatabase::applicationFontFamilies(id).at(0);
