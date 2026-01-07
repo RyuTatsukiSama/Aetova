@@ -4,7 +4,7 @@ set PORT=51419
 
 go build
 
-robocopy "./" "../../UI/clientGo/" client.exe /E
+robocopy "./" "../../UI/clientGo/" client.exe
 if %errorlevel% gtr 7 (
     pause
     exit

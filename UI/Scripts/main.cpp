@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 {
 	doc::LoggerOptions opts = doc::LoggerOptions::OptionsBuilder().build();
 	doc::setGlobalLoggerOptions(opts);
-	doc::Logger log;
+	doc::Logger log("UI");
 	log.Log(doc::LoggerSeverity::Info, "Start Aetova");
 
 	QApplication app(argc, argv);

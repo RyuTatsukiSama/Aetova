@@ -70,11 +70,7 @@ set_target_properties(Aetova PROPERTIES
     WIN32_EXECUTABLE OFF
 )
 
-add_custom_command(TARGET Aetova POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
-        "${CMAKE_SOURCE_DIR}/clientGo"
-        "$<TARGET_FILE_DIR:Aetova>/clientGo"
-)
+
 
 add_custom_command(TARGET Aetova POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory

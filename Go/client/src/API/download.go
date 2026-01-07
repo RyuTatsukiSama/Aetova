@@ -25,7 +25,7 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func HandlePostDownload(w http.ResponseWriter, r *http.Request) { // TODO : check if refactor can be useful, the channels really need to be created here ?
+func HandlePostDownload(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 
 	api_download.Client = client

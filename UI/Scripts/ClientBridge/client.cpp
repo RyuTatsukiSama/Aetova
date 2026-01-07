@@ -24,14 +24,13 @@ Client::Client(QObject* parent) : QObject(parent)
     {
         QByteArray data = reply->readAll();
         log->Info(data.toStdString());
+        websocket();
     } 
     else 
     {
         log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
     }
     reply->deleteLater(); });
-
-    websocket();
 }
 
 void Client::websocket()
@@ -49,6 +48,7 @@ void Client::wsConnected()
     connect(ws, &QWebSocket::textMessageReceived, [this](QString message){
         this->onTextMessageReceived(message);
     });
+    //ws->sendTextMessage(QString("FUCK UP THE WORLD!"));
 }
 
 void Client::onTextMessageReceived(QString message)
