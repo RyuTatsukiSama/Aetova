@@ -17,14 +17,18 @@ var (
 	server_url string = "http://aetova.duckdns.org:15369"
 )
 
-func LaunchAPI() (err error) {
+func setupRoutes() {
 	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/download", downloadHandler)
 	http.HandleFunc("/pause", pauseHandler)
 	http.HandleFunc("/cancel", cancelHandler)
 	http.HandleFunc("/resume", resumeHandler)
 	http.HandleFunc("/kill", killHandler)
+	http.HandleFunc("/ws", webSocketHandler)
+}
 
+func LaunchAPI() (err error) {
+	setupRoutes()
 	port, err := strconv.Atoi("51419") // TODO : Change that to avoid hard code port
 	if err != nil {
 		return err
@@ -36,7 +40,6 @@ func LaunchAPI() (err error) {
 	}
 
 	// TODO : create a file (or other system) for UI to get the port where the client listen, or have an endpoint "test" and the UI do the same thing has "FindFreePort"
-
 	fmt.Println("Server start")
 
 	return http.ListenAndServe(":"+strconv.Itoa(port), nil)
