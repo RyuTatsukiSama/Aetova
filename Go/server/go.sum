@@ -1,2 +1,4 @@
 github.com/RyuTatsukiSama/docLogger v1.1.1 h1:ouK9eDDSpUEIVOF1Dq51DFfgDbcw4kOJqZeBkkp5BRM=
 github.com/RyuTatsukiSama/docLogger v1.1.1/go.mod h1:ltMNp1VIb68ZriuEhylyLlQn4zyGJ/+5JRpw1XGNwK4=
+github.com/RyuTatsukiSama/docLogger/go v1.0.0 h1:7g2+U3aqZK3s2001KQO9+oxnJoxMZ5sWxIwcsmWVyAo=
+github.com/RyuTatsukiSama/docLogger/go v1.0.0/go.mod h1:QVfL9dGJQBcX9XKRm+Gt84xvkq2Bveo58a1tZ6Jbq3A=
