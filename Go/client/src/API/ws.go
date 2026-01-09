@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 	"github.com/gorilla/websocket"
 )
 
@@ -24,13 +25,26 @@ type MutexConnection struct {
 	mx   *sync.Mutex
 }
 
+func (this *MutexConnection) WriteText(message string) {
+	this.mx.Lock()
+	err := this.conn.WriteMessage(websocket.TextMessage, []byte(message))
+	if err != nil {
+		this.mx.Unlock()
+		fmt.Print(err.Error())
+	}
+	this.mx.Unlock()
+}
+
 // Create the connection with the webSocket
 func webSocketHandler(w http.ResponseWriter, r *http.Request) {
+	dLog, _, _ := docLogger.NewLogger("CLient/websocket", *docLogger.NewOptionsBuilder().Build(), context.Background())
+
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true } // TODO : Change that with the API key, or other to check security
 
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		dLog.Log(docLogger.Critical, err.Error())
 		return
 	}
 
@@ -39,7 +53,7 @@ func webSocketHandler(w http.ResponseWriter, r *http.Request) {
 		mx:   &sync.Mutex{},
 	}
 
-	fmt.Println("Client Connected!")
+	dLog.Log(docLogger.Info, "Client connected!")
 
 	err = ws.WriteMessage(websocket.TextMessage, []byte("Client Connected!"))
 	if err != nil {
@@ -51,61 +65,29 @@ func webSocketHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func webSocketReader(mxConn MutexConnection) {
-	lastTime := time.Now()
-	var timer time.Duration = 0
+	dLog, _, _ := docLogger.NewLogger("Client/websocket", *docLogger.NewOptionsBuilder().Build(), context.Background())
+
 	ctx, cancel = context.WithCancel(context.Background())
 	chanClose := make(chan bool)
 
-	// send message every seconds
-	go func(ctx context.Context) {
-		for {
-			select {
-			case <-ctx.Done():
-				chanClose <- true
-				return
-			default:
-				currentTime := time.Now()
-				deltaTime := currentTime.Sub(lastTime)
-				lastTime = currentTime
-
-				if timer > time.Duration(time.Second) {
-
-					timer = 0
-					mxConn.mx.Lock()
-					err := mxConn.conn.WriteMessage(websocket.TextMessage, []byte("U there ? :)"))
-					if err != nil {
-						log.Println(err)
-						mxConn.mx.Unlock()
-						return
-					}
-
-					mxConn.mx.Unlock()
-				} else {
-					timer += deltaTime
-				}
-			}
-		}
-	}(ctx)
-
 	// For receiving message
 	for {
-		_, message, err := mxConn.conn.ReadMessage()
+		messageType, message, err := mxConn.conn.ReadMessage()
 		if err != nil {
 			log.Fatal(err)
 			break
 		}
 
-		fmt.Println(string(message))
-
-		switch string(message) {
-		case "download":
-			// HandlePostDownload(mxConn)
-		case "stop":
+		switch messageType {
+		case websocket.CloseMessage:
 			closeConnection(mxConn, chanClose)
 			return
+		case websocket.TextMessage:
+			dLog.Log(docLogger.Debug, string(message))
+			handleTextMessage(string(message), mxConn, chanClose)
 		default:
 			mxConn.mx.Lock()
-			err = mxConn.conn.WriteMessage(websocket.TextMessage, []byte(""))
+			err := mxConn.conn.WriteMessage(websocket.TextMessage, []byte("Message type not allowed"))
 			if err != nil {
 				mxConn.mx.Unlock()
 				log.Fatal(err)
@@ -115,17 +97,64 @@ func webSocketReader(mxConn MutexConnection) {
 	}
 }
 
+func handlePongMessage(mxConn MutexConnection) {
+	mxConn.mx.Lock()
+	err := mxConn.conn.WriteMessage(websocket.TextMessage, []byte("Pong"))
+	if err != nil {
+		mxConn.mx.Unlock()
+		log.Fatal(err)
+	}
+	mxConn.mx.Unlock()
+}
+
+func handleTextMessage(message string, mxConn MutexConnection, chanClose chan bool) {
+	switch message {
+	case "download":
+		go HandlePostDownload(mxConn)
+	case "close":
+		closeConnection(mxConn, chanClose)
+		return
+	case "stop":
+		cancel()
+	case "resume":
+		go HandlePostResume(mxConn)
+	case "ping":
+		handlePongMessage(mxConn)
+	default:
+		mxConn.mx.Lock()
+		err := mxConn.conn.WriteMessage(websocket.TextMessage, []byte("Message not allowed"))
+		if err != nil {
+			mxConn.mx.Unlock()
+			log.Fatal(err)
+		}
+		mxConn.mx.Unlock()
+	}
+}
+
 func closeConnection(mxConn MutexConnection, chanClose chan bool) {
+	dLog, _, _ := docLogger.NewLogger("Client/websocket", *docLogger.NewOptionsBuilder().Build(), context.Background())
+	dLog.Log(docLogger.Debug, "Try to close connection")
+
 	cancel()
+
+	dLog.Log(docLogger.Debug, "Cancel")
+
 	<-chanClose
+
+	dLog.Log(docLogger.Debug, "Send close to channel")
+
 	closeNormalClosure := websocket.FormatCloseMessage(websocket.CloseNormalClosure, "")
 	err := mxConn.conn.WriteControl(websocket.CloseMessage, closeNormalClosure, time.Now().Add(time.Millisecond*125))
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	dLog.Log(docLogger.Debug, "Send close message")
+
 	err = mxConn.conn.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	dLog.Log(docLogger.Info, "Connection Closed!")
 }

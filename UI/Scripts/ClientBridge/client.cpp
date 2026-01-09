@@ -53,7 +53,7 @@ void Client::wsConnected()
 
 void Client::onTextMessageReceived(QString message)
 {
-    log->Debug(message.toStdString());
+    log->Debug("Message from WS : " + message.toStdString());
 }
 
 void Client::wsDisconnected()

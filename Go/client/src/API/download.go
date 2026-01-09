@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
 var (
@@ -19,47 +21,51 @@ var (
 func downloadHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
-		HandlePostDownload(w, r)
+		// HandlePostDownload(w, r)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 }
 
-func HandlePostDownload(w http.ResponseWriter, r *http.Request) {
+func HandlePostDownload(mxConn MutexConnection) {
+	dLog, dCtx, _ := docLogger.NewLogger("Client/download", *docLogger.NewOptionsBuilder().Build(), context.Background())
+
 	start := time.Now()
 
 	api_download.Client = client
-	ctx, cancel = context.WithCancel(r.Context())
 
 	chanError := make(chan error)
 
-	fmt.Println("Get Manifest")
+	dLog.Log(docLogger.Info, "Get manifest.json")
 
-	done, manifest := grGetManifest(w, chanError)
+	done, manifest := grGetManifest(mxConn, chanError, dCtx)
 	if !done {
 		return
 	}
 
 	chanDone := make(chan bool)
 
-	fmt.Println("Reserve Space")
+	dLog.Log(docLogger.Info, "Reserve space")
 
-	done = grReserveSpace(w, manifest, chanDone, chanError)
+	done = grReserveSpace(mxConn, manifest, chanDone, chanError, dCtx)
 	if !done {
 		return
 	}
 
-	fmt.Println("Download")
+	dLog.Log(docLogger.Info, "Download")
 
-	done = grDownload(w, manifest, chanDone, chanError)
+	done = grDownload(mxConn, manifest, chanDone, chanError, dCtx)
 	if !done {
 		return
 	}
 
 	fmt.Println("Process takes ", time.Since(start))
+
+	dLog.Log(docLogger.Debug, fmt.Sprintln("Process takes ", time.Since(start)))
 }
 
-func grGetManifest(w http.ResponseWriter, ce chan error) (bool, utils.ManifestDir) {
+func grGetManifest(mxConn MutexConnection, ce chan error, dCtx context.Context) (bool, utils.ManifestDir) {
+	dLog, _, _ := docLogger.NewLogger("", *docLogger.NewOptionsBuilder().Build(), dCtx)
 
 	chanManifest := make(chan utils.ManifestDir)
 
@@ -68,10 +74,11 @@ func grGetManifest(w http.ResponseWriter, ce chan error) (bool, utils.ManifestDi
 	var manifest utils.ManifestDir
 	select {
 	case <-ctx.Done():
-		http.Error(w, "Request canceled", http.StatusRequestTimeout)
+		dLog.Log(docLogger.Info, "Request Canceled")
 		return false, utils.ManifestDir{}
 	case err := <-ce:
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		mxConn.WriteText(err.Error())
+		dLog.Log(docLogger.Error, err.Error())
 		return false, utils.ManifestDir{}
 	case manifest = <-chanManifest:
 	}
@@ -91,15 +98,18 @@ func grGetManifest(w http.ResponseWriter, ce chan error) (bool, utils.ManifestDi
 	return true, manifest
 }
 
-func grReserveSpace(w http.ResponseWriter, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error, dCtx context.Context) bool {
+	dLog, _, _ := docLogger.NewLogger("", *docLogger.NewOptionsBuilder().Build(), dCtx)
+
 	api_download.Ctx = ctx
 	go api_download.ReserveSpaceDir(manifest, "./downloads/", ce, cd)
 	select {
 	case <-ctx.Done():
-		http.Error(w, "Request canceled", http.StatusRequestTimeout)
+		dLog.Log(docLogger.Info, "Request Canceled")
 		return false
 	case err := <-ce:
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		mxConn.WriteText(err.Error())
+		dLog.Log(docLogger.Error, err.Error())
 		return false
 	case <-cd:
 	}
@@ -107,16 +117,19 @@ func grReserveSpace(w http.ResponseWriter, manifest utils.ManifestDir, cd chan b
 	return true
 }
 
-func grDownload(w http.ResponseWriter, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+func grDownload(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error, dCtx context.Context) bool {
+	dLog, _, _ := docLogger.NewLogger("", *docLogger.NewOptionsBuilder().Build(), dCtx)
+
 	api_download.Ctx = ctx
 
 	go api_download.DownloadGame(manifest, cd, ce)
 	select {
 	case <-ctx.Done():
-		http.Error(w, "Request canceled", http.StatusRequestTimeout)
+		dLog.Log(docLogger.Info, "Request Canceled")
 		return false
 	case err := <-ce:
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		mxConn.WriteText(err.Error())
+		dLog.Log(docLogger.Error, err.Error())
 		return false
 	case <-cd:
 	}

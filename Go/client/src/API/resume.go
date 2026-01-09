@@ -8,27 +8,32 @@ import (
 	"encoding/json"
 	"net/http"
 	"os"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
 func resumeHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
-		HandlePostResume(w, r)
+		// HandlePostResume(w, r)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 }
 
-func HandlePostResume(w http.ResponseWriter, r *http.Request) {
+func HandlePostResume(mxConn MutexConnection) {
+	dLog, _, _ := docLogger.NewLogger("Client/resume", *docLogger.NewOptionsBuilder().Build(), context.Background())
 
 	// check if the manifest exist
 	ok, err := utils.Exists("Manifest.json")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		mxConn.WriteText(err.Error())
+		dLog.Log(docLogger.Error, err.Error())
 		return
 	}
 	if !ok {
-		http.Error(w, "Resume Manifest.json not found, no download to resume", http.StatusNotFound)
+		mxConn.WriteText("Resume Manifest.json not found, no download to resume")
+		dLog.Log(docLogger.Error, "Resume Manifest.json not found, no download to resume")
 		return
 	}
 
@@ -36,47 +41,49 @@ func HandlePostResume(w http.ResponseWriter, r *http.Request) {
 	var manifestDir utils.ManifestDir
 	data, err := os.ReadFile("Manifest.json")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		mxConn.WriteText(err.Error())
+		dLog.Log(docLogger.Error, err.Error())
 		return
 	}
 
 	err = json.Unmarshal(data, &manifestDir)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		mxConn.WriteText(err.Error())
+		dLog.Log(docLogger.Error, err.Error())
 		return
 	}
 
 	// setup context and client
 	api_download.Client = client
-	ctx, cancel = context.WithCancel(r.Context())
 
 	chanError := make(chan error)
 
 	// browse the manifest and create the new manifest
-	done, file, path := grSearchOnGoingManifest(w, manifestDir, chanError)
+	done, file, path := grSearchOnGoingManifest(mxConn, manifestDir, chanError)
 	if !done {
 		return
 	}
 
-	done, newManifest := grCreateNewManifest(w, manifestDir, chanError)
+	done, newManifest := grCreateNewManifest(mxConn, manifestDir, chanError)
 	if !done {
 		return
 	}
 
 	// download the file that was downloading
-	done = grDownloadOnGoingFile(w, file, path, chanError)
+	done = grDownloadOnGoingFile(mxConn, file, path, chanError)
 	if !done {
 		return
 	}
 
 	// relaunch download game but with the new manifest
-	done = grResumeDownload(w, newManifest, make(chan bool), chanError)
+	done = grResumeDownload(mxConn, newManifest, make(chan bool), chanError)
 	if !done {
 		return
 	}
 }
 
-func grSearchOnGoingManifest(w http.ResponseWriter, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
+func grSearchOnGoingManifest(mxConn MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
+	dLog, _, _ := docLogger.NewLogger("Client/resume", *docLogger.NewOptionsBuilder().Build(), context.Background())
 
 	chanManifest := make(chan utils.ManifestFile)
 	chanPath := make(chan string)
@@ -88,10 +95,11 @@ func grSearchOnGoingManifest(w http.ResponseWriter, manifestDir utils.ManifestDi
 
 	select {
 	case <-ctx.Done():
-		http.Error(w, "Request canceled", http.StatusRequestTimeout)
+		dLog.Log(docLogger.Info, "Request Canceled")
 		return false, utils.ManifestFile{}, ""
 	case err := <-ce:
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		mxConn.WriteText(err.Error())
+		dLog.Log(docLogger.Error, err.Error())
 		return false, utils.ManifestFile{}, ""
 	case manifest = <-chanManifest:
 		path = <-chanPath
@@ -100,7 +108,8 @@ func grSearchOnGoingManifest(w http.ResponseWriter, manifestDir utils.ManifestDi
 	return true, manifest, path
 }
 
-func grCreateNewManifest(w http.ResponseWriter, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestDir) {
+func grCreateNewManifest(mxConn MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestDir) {
+	dLog, _, _ := docLogger.NewLogger("Client/resume", *docLogger.NewOptionsBuilder().Build(), context.Background())
 	chanManifest := make(chan utils.ManifestDir)
 
 	go resume_download.CreateNewManifest(manifestDir, chanManifest, ce)
@@ -109,10 +118,11 @@ func grCreateNewManifest(w http.ResponseWriter, manifestDir utils.ManifestDir, c
 
 	select {
 	case <-ctx.Done():
-		http.Error(w, "Request canceled", http.StatusRequestTimeout)
+		dLog.Log(docLogger.Info, "Request Canceled")
 		return false, utils.ManifestDir{}
 	case err := <-ce:
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		mxConn.WriteText(err.Error())
+		dLog.Log(docLogger.Error, err.Error())
 		return false, utils.ManifestDir{}
 	case newManifest = <-chanManifest:
 	}
@@ -120,7 +130,8 @@ func grCreateNewManifest(w http.ResponseWriter, manifestDir utils.ManifestDir, c
 	return true, newManifest
 }
 
-func grDownloadOnGoingFile(w http.ResponseWriter, manifestFile utils.ManifestFile, path string, ce chan error) bool {
+func grDownloadOnGoingFile(mxConn MutexConnection, manifestFile utils.ManifestFile, path string, ce chan error) bool {
+	dLog, _, _ := docLogger.NewLogger("Client/resume", *docLogger.NewOptionsBuilder().Build(), context.Background())
 	api_download.Ctx = ctx
 
 	chanDone := make(chan bool)
@@ -129,10 +140,11 @@ func grDownloadOnGoingFile(w http.ResponseWriter, manifestFile utils.ManifestFil
 
 	select {
 	case <-ctx.Done():
-		http.Error(w, "Request canceled", http.StatusRequestTimeout)
+		dLog.Log(docLogger.Info, "Request Canceled")
 		return false
 	case err := <-ce:
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		mxConn.WriteText(err.Error())
+		dLog.Log(docLogger.Error, err.Error())
 		return false
 	case <-chanDone:
 	}
@@ -140,16 +152,18 @@ func grDownloadOnGoingFile(w http.ResponseWriter, manifestFile utils.ManifestFil
 	return true
 }
 
-func grResumeDownload(w http.ResponseWriter, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+func grResumeDownload(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+	dLog, _, _ := docLogger.NewLogger("Client/resume", *docLogger.NewOptionsBuilder().Build(), context.Background())
 	api_download.Ctx = ctx
 
 	go api_download.DownloadGame(manifest, cd, ce)
 	select {
 	case <-ctx.Done():
-		http.Error(w, "Request canceled", http.StatusRequestTimeout)
+		dLog.Log(docLogger.Info, "Request Canceled")
 		return false
 	case err := <-ce:
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		mxConn.WriteText(err.Error())
+		dLog.Log(docLogger.Error, err.Error())
 		return false
 	case <-cd:
 	}

@@ -12,7 +12,7 @@ func main() {
 
 	opts := docLogger.NewOptionsBuilder().Build()
 	docLogger.SetGlobalLoggerOptions(opts)
-	dLog, ctx, _ := docLogger.NewLogger("Client", *opts, context.Background())
+	dLog, ctx, _ := docLogger.NewLogger("Client/main", *opts, context.Background())
 
 	if err := os.Chdir("wd"); err != nil {
 		dLog.Log(docLogger.Error, err.Error())
