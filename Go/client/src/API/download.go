@@ -28,7 +28,7 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandlePostDownload(mxConn MutexConnection) {
-	dLog, dCtx, _ := docLogger.NewLogger("Client/download", *docLogger.NewOptionsBuilder().Build(), context.Background())
+	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	start := time.Now()
 
@@ -38,7 +38,7 @@ func HandlePostDownload(mxConn MutexConnection) {
 
 	dLog.Log(docLogger.Info, "Get manifest.json")
 
-	done, manifest := grGetManifest(mxConn, chanError, dCtx)
+	done, manifest := grGetManifest(mxConn, chanError)
 	if !done {
 		return
 	}
@@ -47,14 +47,14 @@ func HandlePostDownload(mxConn MutexConnection) {
 
 	dLog.Log(docLogger.Info, "Reserve space")
 
-	done = grReserveSpace(mxConn, manifest, chanDone, chanError, dCtx)
+	done = grReserveSpace(mxConn, manifest, chanDone, chanError)
 	if !done {
 		return
 	}
 
 	dLog.Log(docLogger.Info, "Download")
 
-	done = grDownload(mxConn, manifest, chanDone, chanError, dCtx)
+	done = grDownload(mxConn, manifest, chanDone, chanError)
 	if !done {
 		return
 	}
@@ -64,8 +64,8 @@ func HandlePostDownload(mxConn MutexConnection) {
 	dLog.Log(docLogger.Debug, fmt.Sprintln("Process takes ", time.Since(start)))
 }
 
-func grGetManifest(mxConn MutexConnection, ce chan error, dCtx context.Context) (bool, utils.ManifestDir) {
-	dLog, _, _ := docLogger.NewLogger("", *docLogger.NewOptionsBuilder().Build(), dCtx)
+func grGetManifest(mxConn MutexConnection, ce chan error) (bool, utils.ManifestDir) {
+	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	chanManifest := make(chan utils.ManifestDir)
 
@@ -98,9 +98,8 @@ func grGetManifest(mxConn MutexConnection, ce chan error, dCtx context.Context) 
 	return true, manifest
 }
 
-func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error, dCtx context.Context) bool {
-	dLog, _, _ := docLogger.NewLogger("", *docLogger.NewOptionsBuilder().Build(), dCtx)
-
+func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 	api_download.Ctx = ctx
 	go api_download.ReserveSpaceDir(manifest, "./downloads/", ce, cd)
 	select {
@@ -117,8 +116,8 @@ func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir, cd chan 
 	return true
 }
 
-func grDownload(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error, dCtx context.Context) bool {
-	dLog, _, _ := docLogger.NewLogger("", *docLogger.NewOptionsBuilder().Build(), dCtx)
+func grDownload(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	api_download.Ctx = ctx
 

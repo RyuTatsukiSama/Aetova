@@ -3,7 +3,6 @@ package main
 import (
 	server_api "aetova/server/src/API"
 	butcher "aetova/server/src/Butcher"
-	"context"
 	"os"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
@@ -14,7 +13,7 @@ func main() {
 
 	opts := docLogger.NewOptionsBuilder().Build()
 	docLogger.SetGlobalLoggerOptions(opts)
-	dLog, _, _ := docLogger.NewLogger("Client", *opts, context.Background())
+	dLog := docLogger.NewLogger("Client", *opts)
 
 	if err = os.MkdirAll("wd", 0700); err != nil {
 		dLog.Log(docLogger.Critical, err.Error())

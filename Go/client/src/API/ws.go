@@ -37,7 +37,7 @@ func (this *MutexConnection) WriteText(message string) {
 
 // Create the connection with the webSocket
 func webSocketHandler(w http.ResponseWriter, r *http.Request) {
-	dLog, _, _ := docLogger.NewLogger("CLient/websocket", *docLogger.NewOptionsBuilder().Build(), context.Background())
+	dLog := docLogger.NewLoggerWithGOpts("CLient/websocket")
 
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true } // TODO : Change that with the API key, or other to check security
 
@@ -65,7 +65,7 @@ func webSocketHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func webSocketReader(mxConn MutexConnection) {
-	dLog, _, _ := docLogger.NewLogger("Client/websocket", *docLogger.NewOptionsBuilder().Build(), context.Background())
+	dLog := docLogger.NewLoggerWithGOpts("Client/websocket")
 
 	ctx, cancel = context.WithCancel(context.Background())
 	chanClose := make(chan bool)
@@ -132,7 +132,7 @@ func handleTextMessage(message string, mxConn MutexConnection, chanClose chan bo
 }
 
 func closeConnection(mxConn MutexConnection, chanClose chan bool) {
-	dLog, _, _ := docLogger.NewLogger("Client/websocket", *docLogger.NewOptionsBuilder().Build(), context.Background())
+	dLog := docLogger.NewLoggerWithGOpts("Client/websocket")
 	dLog.Log(docLogger.Debug, "Try to close connection")
 
 	cancel()

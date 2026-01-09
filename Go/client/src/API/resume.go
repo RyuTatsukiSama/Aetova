@@ -4,7 +4,6 @@ import (
 	"aetova/client/src/API/api_download"
 	"aetova/client/src/API/resume_download"
 	"aetova/client/utils"
-	"context"
 	"encoding/json"
 	"net/http"
 	"os"
@@ -22,7 +21,7 @@ func resumeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandlePostResume(mxConn MutexConnection) {
-	dLog, _, _ := docLogger.NewLogger("Client/resume", *docLogger.NewOptionsBuilder().Build(), context.Background())
+	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 
 	// check if the manifest exist
 	ok, err := utils.Exists("Manifest.json")
@@ -83,7 +82,7 @@ func HandlePostResume(mxConn MutexConnection) {
 }
 
 func grSearchOnGoingManifest(mxConn MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
-	dLog, _, _ := docLogger.NewLogger("Client/resume", *docLogger.NewOptionsBuilder().Build(), context.Background())
+	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 
 	chanManifest := make(chan utils.ManifestFile)
 	chanPath := make(chan string)
@@ -109,7 +108,7 @@ func grSearchOnGoingManifest(mxConn MutexConnection, manifestDir utils.ManifestD
 }
 
 func grCreateNewManifest(mxConn MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestDir) {
-	dLog, _, _ := docLogger.NewLogger("Client/resume", *docLogger.NewOptionsBuilder().Build(), context.Background())
+	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 	chanManifest := make(chan utils.ManifestDir)
 
 	go resume_download.CreateNewManifest(manifestDir, chanManifest, ce)
@@ -131,7 +130,7 @@ func grCreateNewManifest(mxConn MutexConnection, manifestDir utils.ManifestDir, 
 }
 
 func grDownloadOnGoingFile(mxConn MutexConnection, manifestFile utils.ManifestFile, path string, ce chan error) bool {
-	dLog, _, _ := docLogger.NewLogger("Client/resume", *docLogger.NewOptionsBuilder().Build(), context.Background())
+	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 	api_download.Ctx = ctx
 
 	chanDone := make(chan bool)
@@ -153,7 +152,7 @@ func grDownloadOnGoingFile(mxConn MutexConnection, manifestFile utils.ManifestFi
 }
 
 func grResumeDownload(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
-	dLog, _, _ := docLogger.NewLogger("Client/resume", *docLogger.NewOptionsBuilder().Build(), context.Background())
+	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 	api_download.Ctx = ctx
 
 	go api_download.DownloadGame(manifest, cd, ce)

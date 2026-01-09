@@ -3,7 +3,6 @@ package client_api
 import (
 	"aetova/client/src/API/api_download"
 	"aetova/client/utils"
-	"context"
 	"net/http"
 	"strconv"
 
@@ -29,8 +28,8 @@ func setupRoutes() {
 	http.HandleFunc("/ws", webSocketHandler)
 }
 
-func LaunchAPI(pCtx context.Context) (err error) {
-	dLog, _, _ := docLogger.NewLogger("", *docLogger.NewOptionsBuilder().Build(), pCtx)
+func LaunchAPI() (err error) {
+	dLog := docLogger.NewLoggerWithGOpts("Client/api")
 
 	setupRoutes()
 	port, err := strconv.Atoi("51419") // TODO : Change that to avoid hard code port
