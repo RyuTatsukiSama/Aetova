@@ -2,6 +2,7 @@ package client_api
 
 import (
 	"aetova/client/src/API/api_download"
+	"aetova/client/src/API/ws"
 	"aetova/client/utils"
 	"net/http"
 	"strconv"
@@ -20,16 +21,11 @@ var (
 
 func setupRoutes() {
 	http.HandleFunc("/health", healthHandler)
-	http.HandleFunc("/download", downloadHandler)
-	http.HandleFunc("/pause", pauseHandler)
-	http.HandleFunc("/cancel", cancelHandler)
-	http.HandleFunc("/resume", resumeHandler)
-	http.HandleFunc("/kill", killHandler)
-	http.HandleFunc("/ws", webSocketHandler)
+	http.HandleFunc("/ws", ws.WebsocketHandler)
 }
 
 func LaunchAPI() (err error) {
-	dLog := docLogger.NewLoggerWithGOpts("Client/api")
+	dLog := docLogger.NewLoggerWithGOpts("Client/main")
 
 	setupRoutes()
 	port, err := strconv.Atoi("51419") // TODO : Change that to avoid hard code port
