@@ -2,14 +2,22 @@ package main
 
 import (
 	client_api "aetova/client/src/API"
-	"log"
+	"context"
 	"os"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
 func main() {
+
+	opts := docLogger.NewOptionsBuilder().Build()
+	docLogger.SetGlobalLoggerOptions(opts)
+	dLog, ctx, _ := docLogger.NewLogger("Client", *opts, context.Background())
+
 	if err := os.Chdir("wd"); err != nil {
-		log.Fatal(err)
+		dLog.Log(docLogger.Error, err.Error())
+		return
 	}
 
-	log.Fatal(client_api.LaunchAPI())
+	dLog.Log(docLogger.Error, client_api.LaunchAPI(ctx).Error())
 }

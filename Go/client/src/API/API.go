@@ -3,9 +3,11 @@ package client_api
 import (
 	"aetova/client/src/API/api_download"
 	"aetova/client/utils"
-	"fmt"
+	"context"
 	"net/http"
 	"strconv"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
 var (
@@ -27,7 +29,9 @@ func setupRoutes() {
 	http.HandleFunc("/ws", webSocketHandler)
 }
 
-func LaunchAPI() (err error) {
+func LaunchAPI(pCtx context.Context) (err error) {
+	dLog, _, _ := docLogger.NewLogger("", *docLogger.NewOptionsBuilder().Build(), pCtx)
+
 	setupRoutes()
 	port, err := strconv.Atoi("51419") // TODO : Change that to avoid hard code port
 	if err != nil {
@@ -40,7 +44,8 @@ func LaunchAPI() (err error) {
 	}
 
 	// TODO : create a file (or other system) for UI to get the port where the client listen, or have an endpoint "test" and the UI do the same thing has "FindFreePort"
-	fmt.Println("Client start")
+
+	dLog.Log(docLogger.Info, "Client Launch!")
 
 	return http.ListenAndServe(":"+strconv.Itoa(port), nil)
 }

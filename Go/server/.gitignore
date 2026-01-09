@@ -6,3 +6,4 @@ assemble/
 *.zip
 manifest.json
 .env
+docLogs/
