@@ -51,7 +51,7 @@ func downloadData(path string) ([]byte, error) {
 	req.Header.Add("api_key", "c7e642cc-9928-4248-bd3f-c9588490bb60")
 	req.Header.Add("Content-Type", "application/json")
 
-	resp, err := Client.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		return make([]byte, 0), errors.New(err.Error() + " downloadData Do")
 	}

@@ -1,39 +1,20 @@
-package client_api
+package ws
 
 import (
 	"aetova/client/src/API/api_download"
-	"aetova/client/src/API/ws"
 	"aetova/client/utils"
-	"context"
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"os"
 	"time"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
-var (
-	cancel context.CancelFunc
-	ctx    context.Context
-)
-
-func downloadHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case "POST":
-		// HandlePostDownload(w, r)
-	default:
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	}
-}
-
-func HandlePostDownload(mxConn ws.MutexConnection) {
+func HandlePostDownload(mxConn MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	start := time.Now()
-
-	api_download.Client = client
 
 	chanError := make(chan error)
 
@@ -60,12 +41,10 @@ func HandlePostDownload(mxConn ws.MutexConnection) {
 		return
 	}
 
-	fmt.Println("Process takes ", time.Since(start))
-
 	dLog.Log(docLogger.Debug, fmt.Sprintln("Process takes ", time.Since(start)))
 }
 
-func grGetManifest(mxConn ws.MutexConnection, ce chan error) (bool, utils.ManifestDir) {
+func grGetManifest(mxConn MutexConnection, ce chan error) (bool, utils.ManifestDir) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	chanManifest := make(chan utils.ManifestDir)
@@ -99,7 +78,7 @@ func grGetManifest(mxConn ws.MutexConnection, ce chan error) (bool, utils.Manife
 	return true, manifest
 }
 
-func grReserveSpace(mxConn ws.MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 	api_download.Ctx = ctx
 	go api_download.ReserveSpaceDir(manifest, "./downloads/", ce, cd)
@@ -117,7 +96,7 @@ func grReserveSpace(mxConn ws.MutexConnection, manifest utils.ManifestDir, cd ch
 	return true
 }
 
-func grDownload(mxConn ws.MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+func grDownload(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	api_download.Ctx = ctx

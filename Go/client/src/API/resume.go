@@ -53,9 +53,6 @@ func HandlePostResume(mxConn ws.MutexConnection) {
 		return
 	}
 
-	// setup context and client
-	api_download.Client = client
-
 	chanError := make(chan error)
 
 	// browse the manifest and create the new manifest

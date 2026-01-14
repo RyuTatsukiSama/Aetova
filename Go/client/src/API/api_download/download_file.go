@@ -3,8 +3,9 @@ package api_download
 import (
 	"aetova/client/utils"
 	"errors"
-	"fmt"
 	"os"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
 const (
@@ -26,8 +27,8 @@ func Worker(jobs <-chan WorkerData, manifestFile *os.File) {
 }
 
 func downloadFile(file utils.ManifestFile, path string) error {
-
-	fmt.Println(file.Name, "start")
+	dLog := docLogger.NewLoggerWithGOpts("Client/download")
+	dLog.Info(file.Name + " start")
 
 	manifestFile, err := os.Create("Manifest_" + file.Name + ".bin")
 	if err != nil {
@@ -79,7 +80,7 @@ func downloadFile(file utils.ManifestFile, path string) error {
 		return err
 	}
 
-	fmt.Println(file.Name, "done")
+	dLog.Info(file.Name + " done")
 
 	return nil
 }

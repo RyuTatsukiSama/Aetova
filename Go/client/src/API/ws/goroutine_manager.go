@@ -6,13 +6,13 @@ import (
 )
 
 var (
-	ctx       context.Context
-	cancel    context.CancelFunc
-	chanClose chan bool
+	ctx        context.Context
+	cancelFunc context.CancelFunc
+	chanClose  chan bool
 )
 
 func initGoroutineVar(r *http.Request) {
 
-	ctx, cancel = context.WithCancel(r.Context())
+	ctx, cancelFunc = context.WithCancel(r.Context())
 	chanClose = make(chan bool)
 }

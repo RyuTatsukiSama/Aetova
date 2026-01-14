@@ -28,7 +28,7 @@ func (mxConn *MutexConnection) closeConnection() {
 	dLog := docLogger.NewLoggerWithGOpts("Client/websocket")
 	dLog.Debug("Stop Gouroutine")
 
-	cancel()
+	cancelFunc()
 
 	dLog.Debug("Close connection")
 

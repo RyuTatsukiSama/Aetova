@@ -4,6 +4,7 @@ import (
 	"aetova/client/src/API/api_download"
 	"aetova/client/src/API/ws"
 	"aetova/client/utils"
+	"context"
 	"net/http"
 	"strconv"
 
@@ -17,6 +18,8 @@ var (
 		},
 	}
 	server_url string = "http://aetova.duckdns.org:15369"
+	ctx        context.Context
+	cancel     context.CancelFunc
 )
 
 func setupRoutes() {
