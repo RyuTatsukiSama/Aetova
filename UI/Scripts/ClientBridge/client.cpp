@@ -12,7 +12,7 @@ Client::Client(QObject* parent) : QObject(parent)
     log = new doc::Logger();
 
     process = new QProcess(nullptr);
-    process->startDetached("clientGo/client.exe"); // TODO : Change this to a "CREATE_PROCESS", or a more multi platforme fonction
+    // process->startDetached("clientGo/client.exe"); // TODO : Change this to a "CREATE_PROCESS", or a more multi platforme fonction
 
     manager = new QNetworkAccessManager(nullptr);
 
@@ -49,6 +49,7 @@ void Client::wsConnected()
         this->onTextMessageReceived(message);
     });
     //ws->sendTextMessage(QString("FUCK UP THE WORLD!"));
+    ws->close();
 }
 
 void Client::onTextMessageReceived(QString message)

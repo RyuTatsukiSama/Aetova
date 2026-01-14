@@ -86,5 +86,5 @@
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "cmake.configureOnOpen": true,
-    "cmake.generator": "Ninja Multi-Config"
+    "cmake.generator": "Visual Studio 17 2022"
 }

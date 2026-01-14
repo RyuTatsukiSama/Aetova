@@ -46,6 +46,7 @@ CMakeFiles/
 # Build folders
 build/
 out/
+docBuild/
 
 # visual studio
 .vs/
