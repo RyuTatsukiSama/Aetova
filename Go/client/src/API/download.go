@@ -2,6 +2,7 @@ package client_api
 
 import (
 	"aetova/client/src/API/api_download"
+	"aetova/client/src/API/ws"
 	"aetova/client/utils"
 	"context"
 	"encoding/json"
@@ -27,7 +28,7 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func HandlePostDownload(mxConn MutexConnection) {
+func HandlePostDownload(mxConn ws.MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	start := time.Now()
@@ -64,7 +65,7 @@ func HandlePostDownload(mxConn MutexConnection) {
 	dLog.Log(docLogger.Debug, fmt.Sprintln("Process takes ", time.Since(start)))
 }
 
-func grGetManifest(mxConn MutexConnection, ce chan error) (bool, utils.ManifestDir) {
+func grGetManifest(mxConn ws.MutexConnection, ce chan error) (bool, utils.ManifestDir) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	chanManifest := make(chan utils.ManifestDir)
@@ -98,7 +99,7 @@ func grGetManifest(mxConn MutexConnection, ce chan error) (bool, utils.ManifestD
 	return true, manifest
 }
 
-func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+func grReserveSpace(mxConn ws.MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 	api_download.Ctx = ctx
 	go api_download.ReserveSpaceDir(manifest, "./downloads/", ce, cd)
@@ -116,7 +117,7 @@ func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir, cd chan 
 	return true
 }
 
-func grDownload(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+func grDownload(mxConn ws.MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	api_download.Ctx = ctx

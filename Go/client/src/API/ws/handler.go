@@ -20,6 +20,8 @@ var (
 func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 	dLog := docLogger.NewLoggerWithGOpts("CLient/websocket")
 
+	initGoroutineVar(r)
+
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true } // TODO : Change that with the API key, or other to check security
 
 	ws, err := upgrader.Upgrade(w, r, nil)
@@ -43,5 +45,5 @@ func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// webSocketReader(MxConn)
+	webSocketReader(MxConn)
 }
