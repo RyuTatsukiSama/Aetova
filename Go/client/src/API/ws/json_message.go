@@ -27,6 +27,8 @@ func handleJsonMessage(mxConn MutexConnection) bool {
 		return false
 	}
 
+	dLog.Debug("message has been read")
+
 	switch message.Type {
 	case Text:
 		var str string

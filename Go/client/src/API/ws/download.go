@@ -11,7 +11,7 @@ import (
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
-func HandlePostDownload(mxConn MutexConnection) {
+func HandleDownload(mxConn MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	start := time.Now()
@@ -102,6 +102,7 @@ func grDownload(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool
 	api_download.Ctx = ctx
 
 	go api_download.DownloadGame(manifest, cd, ce)
+
 	select {
 	case <-ctx.Done():
 		dLog.Log(docLogger.Info, "Request Canceled")

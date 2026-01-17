@@ -2,8 +2,9 @@ package api_download
 
 import (
 	"aetova/client/utils"
-	"fmt"
 	"os"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
 const (
@@ -11,6 +12,7 @@ const (
 )
 
 func DownloadGame(manifest utils.ManifestDir, cd chan bool, ce chan error) {
+	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	err := downloadDir(manifest, "")
 	if err != nil {
@@ -18,7 +20,7 @@ func DownloadGame(manifest utils.ManifestDir, cd chan bool, ce chan error) {
 	}
 
 	if err == nil {
-		fmt.Println("Remove Manifest")
+		dLog.Info("Remove Manifest")
 		err = os.Remove("Manifest.json")
 		if err != nil {
 			ce <- err
