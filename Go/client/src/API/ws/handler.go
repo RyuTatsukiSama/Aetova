@@ -32,8 +32,8 @@ func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	MxConn = MutexConnection{
-		conn: ws,
-		mx:   &sync.Mutex{},
+		conn:    ws,
+		writeMx: &sync.Mutex{},
 	}
 
 	dLog.Log(docLogger.Info, "Client connected!")

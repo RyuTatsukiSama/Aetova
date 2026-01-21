@@ -6,12 +6,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
-func HandleDownload(mxConn MutexConnection) {
+func handleDownload(mxConn MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	start := time.Now()
@@ -29,7 +30,7 @@ func HandleDownload(mxConn MutexConnection) {
 
 	dLog.Log(docLogger.Info, "Reserve space")
 
-	done = grReserveSpace(mxConn, manifest, chanDone, chanError)
+	done = grReserveSpace(mxConn, manifest)
 	if !done {
 		return
 	}
@@ -78,19 +79,35 @@ func grGetManifest(mxConn MutexConnection, ce chan error) (bool, utils.ManifestD
 	return true, manifest
 }
 
-func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
+
 	api_download.Ctx = ctx
-	go api_download.ReserveSpaceDir(manifest, "./downloads/", ce, cd)
+
+	var wg sync.WaitGroup
+	var chanError chan error
+
+	wg.Go(func() {
+		api_download.ReserveSpaceDir(manifest, "./downloads/", chanError)
+	})
+
+	done := make(chan bool, 1)
+	go func() {
+		wg.Wait()
+		close(chanError)
+		done <- true
+	}()
+
 	select {
 	case <-ctx.Done():
 		dLog.Log(docLogger.Info, "Request Canceled")
 		return false
-	case err := <-ce:
-		mxConn.WriteText(err.Error())
-		dLog.Log(docLogger.Error, err.Error())
-		return false
-	case <-cd:
+	case <-done:
+		for err := range chanError {
+			dLog.Error(err.Error())
+			mxConn.WriteText(err.Error())
+			return false
+		}
 	}
 
 	return true

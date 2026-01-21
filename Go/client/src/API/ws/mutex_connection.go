@@ -10,18 +10,19 @@ import (
 )
 
 type MutexConnection struct {
-	conn *websocket.Conn
-	mx   *sync.Mutex
+	conn    *websocket.Conn
+	writeMx *sync.Mutex
+	readMx  *sync.Mutex
 }
 
 func (this *MutexConnection) WriteText(message string) {
-	this.mx.Lock()
+	this.writeMx.Lock()
 	err := this.conn.WriteMessage(websocket.TextMessage, []byte(message))
 	if err != nil {
-		this.mx.Unlock()
+		this.writeMx.Unlock()
 		fmt.Print(err.Error())
 	}
-	this.mx.Unlock()
+	this.writeMx.Unlock()
 }
 
 func (mxConn *MutexConnection) closeConnection() {
@@ -33,7 +34,7 @@ func (mxConn *MutexConnection) closeConnection() {
 	dLog.Debug("Close connection")
 
 	closeNormalClosure := websocket.FormatCloseMessage(websocket.CloseNormalClosure, "")
-	mxConn.mx.Lock()
+	mxConn.writeMx.Lock()
 	err := mxConn.conn.WriteControl(websocket.CloseMessage, closeNormalClosure, time.Now().Add(time.Millisecond*125))
 	if err != nil {
 		dLog.Error("Error 1 " + err.Error())
@@ -43,7 +44,7 @@ func (mxConn *MutexConnection) closeConnection() {
 	if err != nil {
 		dLog.Error("Error 2 " + err.Error())
 	}
-	mxConn.mx.Unlock()
+	mxConn.writeMx.Unlock()
 
 	dLog.Info("Connection closed")
 }

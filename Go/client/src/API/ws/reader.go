@@ -9,9 +9,11 @@ func webSocketReader(mxConn MutexConnection) {
 
 	// For receiving message
 	for {
-		if isClosed := handleJsonMessage(mxConn); isClosed {
-			dLog.Info("Close order given")
-			return
-		}
+		go handleJsonMessage(mxConn)
+
+		<-chanClose
+		dLog.Info("Close order given")
+		// close all the goroutine
+		return
 	}
 }

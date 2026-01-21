@@ -4,12 +4,14 @@ import (
 	"aetova/client/src/API/api_download"
 	"aetova/client/utils"
 	"errors"
-	"fmt"
 	"io"
 	"os"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
 func ResumeFile(file utils.ManifestFile, path string, cd chan bool, ce chan error) {
+
 	// get the data from the manifest
 	manifestFile, err := os.OpenFile("Manifest_"+file.Name+".bin", os.O_RDWR, os.ModeAppend)
 	if err != nil {
@@ -42,8 +44,9 @@ func ResumeFile(file utils.ManifestFile, path string, cd chan bool, ce chan erro
 }
 
 func downloadRemaining(remainingChunk []int, manifestFile *os.File, file utils.ManifestFile, path string) error {
+	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 
-	fmt.Println(file.Name, "resume")
+	dLog.Info(file.Name + " resume")
 
 	var nbWorkers int = api_download.MaxWorkers
 	jobs := make(chan api_download.WorkerData, len(remainingChunk))
@@ -81,7 +84,7 @@ func downloadRemaining(remainingChunk []int, manifestFile *os.File, file utils.M
 		return err
 	}
 
-	fmt.Println(file.Name, "done")
+	dLog.Info(file.Name + " done")
 
 	return nil
 }

@@ -1,28 +1,21 @@
-package client_api
+package ws
 
 import (
 	"aetova/client/src/API/api_download"
 	"aetova/client/src/API/resume_download"
-	"aetova/client/src/API/ws"
 	"aetova/client/utils"
+	"context"
 	"encoding/json"
-	"net/http"
 	"os"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
-func resumeHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case "POST":
-		// HandlePostResume(w, r)
-	default:
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	}
-}
-
-func HandlePostResume(mxConn ws.MutexConnection) {
+func handlePostResume(mxConn MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
+
+	// restart the context after cancel
+	ctx, cancelFunc = context.WithCancel(context.Background())
 
 	// check if the manifest exist
 	ok, err := utils.Exists("Manifest.json")
@@ -79,7 +72,7 @@ func HandlePostResume(mxConn ws.MutexConnection) {
 	}
 }
 
-func grSearchOnGoingManifest(mxConn ws.MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
+func grSearchOnGoingManifest(mxConn MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 
 	chanManifest := make(chan utils.ManifestFile)
@@ -105,7 +98,7 @@ func grSearchOnGoingManifest(mxConn ws.MutexConnection, manifestDir utils.Manife
 	return true, manifest, path
 }
 
-func grCreateNewManifest(mxConn ws.MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestDir) {
+func grCreateNewManifest(mxConn MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestDir) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 	chanManifest := make(chan utils.ManifestDir)
 
@@ -127,7 +120,7 @@ func grCreateNewManifest(mxConn ws.MutexConnection, manifestDir utils.ManifestDi
 	return true, newManifest
 }
 
-func grDownloadOnGoingFile(mxConn ws.MutexConnection, manifestFile utils.ManifestFile, path string, ce chan error) bool {
+func grDownloadOnGoingFile(mxConn MutexConnection, manifestFile utils.ManifestFile, path string, ce chan error) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 	api_download.Ctx = ctx
 
@@ -149,7 +142,7 @@ func grDownloadOnGoingFile(mxConn ws.MutexConnection, manifestFile utils.Manifes
 	return true
 }
 
-func grResumeDownload(mxConn ws.MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+func grResumeDownload(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 	api_download.Ctx = ctx
 

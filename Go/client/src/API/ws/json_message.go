@@ -15,19 +15,25 @@ type MessageType uint
 
 const (
 	Text MessageType = iota
+	Close
 )
 
-func handleJsonMessage(mxConn MutexConnection) bool {
+func handleJsonMessage(mxConn MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/websocket")
 
 	// TODO : Lock the mutex here soft lock the programm, but not so thread safe, find a way if possible to be more clean
 	var message Message
 	if err := mxConn.conn.ReadJSON(&message); err != nil {
 		dLog.Error("Error 7 : " + err.Error())
-		return false
+		return
 	}
 
 	dLog.Debug("message has been read")
+
+	// start another goroutine to handle multiple message
+	if message.Type != Close {
+		go handleJsonMessage(mxConn)
+	}
 
 	switch message.Type {
 	case Text:
@@ -35,13 +41,14 @@ func handleJsonMessage(mxConn MutexConnection) bool {
 		err := json.Unmarshal(message.Data, &str)
 		if err != nil {
 			dLog.Error("Error 8 :" + err.Error())
-			return false
+			return
 		}
-		return handleStringMessage(str)
+		handleStringMessage(str)
+	case Close:
+		dLog.Debug("close has been called")
+		MxConn.closeConnection()
+		chanClose <- true
 	default:
 		dLog.Error("Error 5 : Message type not allowed")
-		return false
 	}
-
-	return false
 }
