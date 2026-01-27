@@ -30,6 +30,7 @@ func downloadFile(file utils.ManifestFile, path string) error {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 	dLog.Info(file.Name + " start")
 
+	// file for the resume
 	manifestFile, err := os.Create("Manifest_" + file.Name + ".bin")
 	if err != nil {
 		return err
@@ -83,4 +84,8 @@ func downloadFile(file utils.ManifestFile, path string) error {
 	dLog.Info(file.Name + " done")
 
 	return nil
+}
+
+func newDownloadFile(file utils.ManifestFile, path string) {
+
 }

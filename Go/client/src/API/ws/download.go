@@ -26,8 +26,6 @@ func handleDownload(mxConn MutexConnection) {
 		return
 	}
 
-	chanDone := make(chan bool)
-
 	dLog.Log(docLogger.Info, "Reserve space")
 
 	done = grReserveSpace(mxConn, manifest)
@@ -37,7 +35,7 @@ func handleDownload(mxConn MutexConnection) {
 
 	dLog.Log(docLogger.Info, "Download")
 
-	done = grDownload(mxConn, manifest, chanDone, chanError)
+	done = grDownload(mxConn, manifest)
 	if !done {
 		return
 	}
@@ -85,16 +83,15 @@ func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir) bool {
 	api_download.Ctx = ctx
 
 	var wg sync.WaitGroup
-	var chanError chan error
+	var sErrors []error = make([]error, 0)
 
 	wg.Go(func() {
-		api_download.ReserveSpaceDir(manifest, "./downloads/", chanError)
+		api_download.ReserveSpaceDir(manifest, "./downloads/", sErrors)
 	})
 
 	done := make(chan bool, 1)
 	go func() {
 		wg.Wait()
-		close(chanError)
 		done <- true
 	}()
 
@@ -103,32 +100,46 @@ func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir) bool {
 		dLog.Log(docLogger.Info, "Request Canceled")
 		return false
 	case <-done:
-		for err := range chanError {
+		for i, err := range sErrors {
 			dLog.Error(err.Error())
 			mxConn.WriteText(err.Error())
-			return false
+			if i == len(sErrors)-1 {
+				return false
+			}
 		}
 	}
 
 	return true
 }
 
-func grDownload(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+func grDownload(mxConn MutexConnection, manifest utils.ManifestDir) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	api_download.Ctx = ctx
 
-	go api_download.DownloadGame(manifest, cd, ce)
+	var wg sync.WaitGroup
+	var errors []error
+
+	wg.Go(func() {
+		api_download.DownloadGame(manifest, errors)
+	})
+
+	done := make(chan bool, 1)
+	go func() {
+		wg.Wait()
+		done <- true
+	}()
 
 	select {
 	case <-ctx.Done():
 		dLog.Log(docLogger.Info, "Request Canceled")
 		return false
-	case err := <-ce:
-		mxConn.WriteText(err.Error())
-		dLog.Log(docLogger.Error, err.Error())
-		return false
-	case <-cd:
+	case <-done:
+		for _, err := range errors {
+			dLog.Error(err.Error())
+			mxConn.WriteText(err.Error())
+			return false
+		}
 	}
 
 	return true

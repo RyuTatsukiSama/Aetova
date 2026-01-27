@@ -142,11 +142,13 @@ func grDownloadOnGoingFile(mxConn MutexConnection, manifestFile utils.ManifestFi
 	return true
 }
 
+// TODO : refactor this after new refactor
 func grResumeDownload(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 	api_download.Ctx = ctx
 
-	go api_download.DownloadGame(manifest, cd, ce)
+	//go api_download.DownloadGame(manifest, cd, ce)
+
 	select {
 	case <-ctx.Done():
 		dLog.Log(docLogger.Info, "Request Canceled")

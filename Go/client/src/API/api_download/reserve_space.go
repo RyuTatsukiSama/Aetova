@@ -5,47 +5,39 @@ import (
 	"context"
 	"os"
 	"sync"
-
-	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
 var (
-	Ctx context.Context
+	Ctx     context.Context
+	NbChunk int = 0
 )
 
-func ReserveSpaceDir(manifest utils.ManifestDir, path string, ce chan error) {
-	dLog := docLogger.NewLoggerWithGOpts("Client/reserve_space")
-
-	dLog.Info(path + manifest.Name + " start")
+func ReserveSpaceDir(manifest utils.ManifestDir, path string, se []error) {
 
 	err := os.MkdirAll(path+manifest.Name, 0700)
 	if err != nil {
-		ce <- err
+		se = append(se, err)
 		return
 	}
 
-	var wg sync.WaitGroup
-	var chanError chan error
+	var wg sync.WaitGroup = sync.WaitGroup{}
+	var sErrors []error
 
 	for _, dir := range manifest.SubDir {
 		wg.Go(func() {
-			ReserveSpaceDir(dir, path+manifest.Name+"/", chanError)
-			dLog.Debug(path + manifest.Name + "/" + dir.Name + " sub folder done")
+			ReserveSpaceDir(dir, path+manifest.Name+"/", sErrors)
 		})
 	}
 
 	for _, file := range manifest.SubFiles {
 		wg.Go(func() {
-			reserveSpaceFile(file, path+manifest.Name+"/", chanError)
-			dLog.Debug(path + manifest.Name + "/" + file.Name + " sub file done")
+			reserveSpaceFile(file, path+manifest.Name+"/", sErrors)
 		})
 	}
 
 	done := make(chan bool, 1)
 	go func() {
 		wg.Wait()
-		dLog.Debug(path + " all sub done")
-		close(chanError)
 		done <- true
 	}()
 
@@ -53,24 +45,20 @@ func ReserveSpaceDir(manifest utils.ManifestDir, path string, ce chan error) {
 	case <-Ctx.Done():
 		return
 	case <-done:
-		for err := range chanError {
-			ce <- err
+		for _, err := range sErrors {
+			se = append(se, err)
 		}
 	}
-
-	dLog.Info(path + manifest.Name + " done")
 }
 
-func reserveSpaceFile(file utils.ManifestFile, path string, ce chan error) {
-	dLog := docLogger.NewLoggerWithGOpts("Client/reserve_space")
+func reserveSpaceFile(file utils.ManifestFile, path string, se []error) {
 
-	dLog.Info(path + file.Name + " start")
+	NbChunk += file.NbChunks
 	reserveBytes := make([]byte, file.Size)
 	err := os.WriteFile(path+file.Name, reserveBytes, 0700)
 	if err != nil {
-		ce <- err
+		se = append(se, err)
 		return
 	}
 
-	dLog.Info(path + file.Name + " done")
 }

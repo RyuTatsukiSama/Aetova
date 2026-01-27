@@ -1,46 +1,45 @@
 package api_download
 
 import (
-	"aetova/client/utils"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 )
 
 func downloadChunk(job WorkerData, manifestFile *os.File) {
 
-	currentChunkPath := job.Path + "part" + strconv.Itoa(job.Part) + "_" + job.FileName + ".bin"
+	// currentChunkPath := fmt.Sprintf("%spart%d_%s.bin", job.Path, job.Part, job.FileName)
 
-	data, err := downloadData(currentChunkPath)
-	if err != nil {
-		job.Ce <- err
-		return
-	}
+	// _, err := downloadData(currentChunkPath)
+	// if err != nil {
+	// 	job.Ce <- err
+	// 	return
+	// }
 
-	err = saveChunkAt(job.Path+job.FileName, data, int64(job.Part*utils.SizeChunk))
-	//err = saveChunk(path+fileName, data)
-	if err != nil {
-		job.Ce <- err
-		return
-	}
+	// err = saveChunkAt(job.Path+job.FileName, data, int64(job.Part*utils.SizeChunk))
+	// err = saveChunk(path+fileName, data)
+	// if err != nil {
+	// 	job.Ce <- err
+	// 	return
+	// }
 
-	done := make([]byte, 1)
-	done[0] = 1
-	_, err = manifestFile.WriteAt(done, int64(job.Part))
-	if err != nil {
-		job.Ce <- err
-		return
-	}
+	// done := make([]byte, 1)
+	// done[0] = 1
+	// _, err = manifestFile.WriteAt(done, int64(job.Part))
+	// if err != nil {
+	// 	job.Ce <- err
+	// 	return
+	// }
 
 	job.Cd <- true
 }
 
-func downloadData(path string) ([]byte, error) {
+func downloadData(data DownloaderData) ([]byte, error) {
 
-	jsonData := `{"path": "` + path + `"}`
+	jsonData := fmt.Sprintf(`{"path": "%s"}`, data.path)
 	var reader io.Reader = strings.NewReader(jsonData)
 
 	req, err := http.NewRequest("POST", "http://aetova.duckdns.org:15369"+"/downloader", reader)
@@ -73,19 +72,23 @@ func downloadData(path string) ([]byte, error) {
 		return make([]byte, 0), errors.New(err.Error() + " downloadData close resp")
 	}
 
+	// give the data to the writer
+	data.writerData.data = body
+	chanWrite <- data.writerData
+
 	return body, nil
 }
 
-func saveChunkAt(path string, data []byte, position int64) error {
+func saveChunkAt(data WriterData) error {
 	// open file
-	newFile, err := os.OpenFile(target+path, os.O_RDWR, 0700)
+	newFile, err := os.OpenFile(target+data.path, os.O_RDWR, 0700)
 	if err != nil {
 		return errors.New(err.Error() + " saveChunkAt")
 	}
 	defer newFile.Close()
 
 	// write the byte in the new file
-	if _, err := newFile.WriteAt(data, position); err != nil {
+	if _, err := newFile.WriteAt(data.data, data.position); err != nil {
 		return errors.New(err.Error() + " saveChunkAt")
 	}
 
