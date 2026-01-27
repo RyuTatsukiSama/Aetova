@@ -3,6 +3,7 @@ package api_download
 import (
 	"aetova/client/utils"
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
@@ -42,15 +43,18 @@ func downloadFile(file utils.ManifestFile, path string) error {
 		return err
 	}
 
+	// init worker
 	var nbWorkers int = MaxWorkers
 	jobs := make(chan WorkerData, file.NbChunks)
 	var chanDone = make(chan bool)
 	var chanError = make(chan error)
 
+	// launch worekr
 	for wor := 0; wor < nbWorkers; wor++ {
 		go Worker(jobs, manifestFile)
 	}
 
+	// send jobs to worker
 	for part := 0; part < file.NbChunks; part++ {
 		jobs <- WorkerData{
 			Path:     path,
@@ -61,6 +65,7 @@ func downloadFile(file utils.ManifestFile, path string) error {
 		}
 	}
 
+	// wait for all jobs to be done
 	for range file.NbChunks {
 		select {
 		case <-Ctx.Done():
@@ -71,6 +76,7 @@ func downloadFile(file utils.ManifestFile, path string) error {
 		}
 	}
 
+	// close and remove manifest of the download
 	err = manifestFile.Close()
 	if err != nil {
 		return err
@@ -87,5 +93,13 @@ func downloadFile(file utils.ManifestFile, path string) error {
 }
 
 func newDownloadFile(file utils.ManifestFile, path string) {
-
+	for part := 0; part < file.NbChunks; part++ {
+		chanDownload <- DownloaderData{
+			path: fmt.Sprintf("%spart%d_%s.bin", path, part, file.Name),
+			writerData: WriterData{
+				path:     path + file.Name,
+				position: int64(part * utils.SizeChunk),
+			},
+		}
+	}
 }

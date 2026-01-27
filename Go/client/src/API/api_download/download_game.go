@@ -3,8 +3,11 @@ package api_download
 import (
 	"aetova/client/utils"
 	"errors"
+	"fmt"
 	"os"
 	"sync"
+	"sync/atomic"
+	"time"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
@@ -26,7 +29,9 @@ type WriterData struct {
 
 var (
 	chanDownload chan DownloaderData
+	downloadDone int64
 	chanWrite    chan WriterData
+	writeDone    int64
 )
 
 func DownloadGame(manifest utils.ManifestDir, se []error) {
@@ -45,8 +50,9 @@ func DownloadGame(manifest utils.ManifestDir, se []error) {
 	// start dl workers
 	for i := 0; i < MaxWorkers; i++ {
 		wg.Go(func() {
-			for path := range chanDownload {
-				downloadData(path)
+			for data := range chanDownload {
+				downloadData(data)
+				atomic.AddInt64(&downloadDone, 1)
 			}
 		})
 	}
@@ -56,6 +62,7 @@ func DownloadGame(manifest utils.ManifestDir, se []error) {
 		wg.Go(func() {
 			for data := range chanWrite {
 				saveChunkAt(data)
+				atomic.AddInt64(&writeDone, 1)
 			}
 		})
 	}
@@ -66,10 +73,25 @@ func DownloadGame(manifest utils.ManifestDir, se []error) {
 		se = append(se, err)
 	}
 
-	done := make(chan bool, 1)
+	done := make(chan bool, 2)
 	go func() {
+
 		wg.Wait()
+		dLog.Info("Download done!")
 		done <- true
+		done <- true
+	}()
+
+	go func() {
+		for {
+			select {
+			case <-done:
+				return
+			default:
+				dLog.Info(fmt.Sprintf("Download %d/%d | Write %d/%d", atomic.LoadInt64(&downloadDone), NbChunk, atomic.LoadInt64(&writeDone), NbChunk))
+				time.Sleep(time.Second)
+			}
+		}
 	}()
 
 	select {

@@ -17,10 +17,7 @@ func downloadDir(manifest utils.ManifestDir, path string) error {
 
 	// files
 	for _, file := range manifest.SubFiles {
-		err := downloadFile(file, path+manifest.Name+"/")
-		if err != nil {
-			return err
-		}
+		newDownloadFile(file, path+manifest.Name+"/")
 	}
 
 	return nil
