@@ -5,6 +5,7 @@ import (
 	"aetova/client/src/API/ws"
 	"aetova/client/utils"
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -43,7 +44,7 @@ func LaunchAPI() (err error) {
 
 	// TODO : create a file (or other system) for UI to get the port where the client listen, or have an endpoint "test" and the UI do the same thing has "FindFreePort"
 
-	dLog.Log(docLogger.Info, "Client Launch!")
+	dLog.Log(docLogger.Info, fmt.Sprintf("Client Launch on port %d!", port))
 
 	return http.ListenAndServe(":"+strconv.Itoa(port), nil)
 }

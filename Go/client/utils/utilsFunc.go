@@ -20,13 +20,14 @@ func Exists(path string) (bool, error) {
 }
 
 func FindFreePort(start int) (int, error) {
-
 	for ok := true; ok; {
 		addr := fmt.Sprintf(":%d", start)
 		listener, err := net.Listen("tcp", addr)
 		if err == nil {
 			listener.Close()
 			return start, nil
+		} else {
+			start++
 		}
 	}
 	return 0, fmt.Errorf("there was an error")
