@@ -1,6 +1,7 @@
 package ws
 
 import (
+	mc "aetova/client/src/API/MutexConnection"
 	"net/http"
 	"sync"
 
@@ -13,7 +14,7 @@ var (
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
 	}
-	MxConn MutexConnection
+	MxConn mc.MutexConnection
 )
 
 // Create the connection with the webSocket
@@ -31,9 +32,9 @@ func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	MxConn = MutexConnection{
-		conn:    ws,
-		writeMx: &sync.Mutex{},
+	MxConn = mc.MutexConnection{
+		Conn:    ws,
+		WriteMx: &sync.Mutex{},
 	}
 
 	dLog.Log(docLogger.Info, "Client connected!")

@@ -1,12 +1,13 @@
 package ws
 
 import (
+	mc "aetova/client/src/API/MutexConnection"
 	"os"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
-func webSocketReader(mxConn MutexConnection) {
+func webSocketReader(mxConn mc.MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/websocket")
 
 	// For receiving message

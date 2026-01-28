@@ -1,6 +1,9 @@
 package ws
 
+// TODO : All the resume need to be refactor because of the new download system
+
 import (
+	mc "aetova/client/src/API/MutexConnection"
 	"aetova/client/src/API/api_download"
 	"aetova/client/src/API/resume_download"
 	"aetova/client/utils"
@@ -11,11 +14,11 @@ import (
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
-func handlePostResume(mxConn MutexConnection) {
+func handlePostResume(mxConn mc.MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 
 	// restart the context after cancel
-	ctx, cancelFunc = context.WithCancel(context.Background())
+	ctx, mc.CancelFunc = context.WithCancel(context.Background())
 
 	// check if the manifest exist
 	ok, err := utils.Exists("Manifest.json")
@@ -72,7 +75,7 @@ func handlePostResume(mxConn MutexConnection) {
 	}
 }
 
-func grSearchOnGoingManifest(mxConn MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
+func grSearchOnGoingManifest(mxConn mc.MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 
 	chanManifest := make(chan utils.ManifestFile)
@@ -98,7 +101,7 @@ func grSearchOnGoingManifest(mxConn MutexConnection, manifestDir utils.ManifestD
 	return true, manifest, path
 }
 
-func grCreateNewManifest(mxConn MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestDir) {
+func grCreateNewManifest(mxConn mc.MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestDir) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 	chanManifest := make(chan utils.ManifestDir)
 
@@ -120,7 +123,7 @@ func grCreateNewManifest(mxConn MutexConnection, manifestDir utils.ManifestDir, 
 	return true, newManifest
 }
 
-func grDownloadOnGoingFile(mxConn MutexConnection, manifestFile utils.ManifestFile, path string, ce chan error) bool {
+func grDownloadOnGoingFile(mxConn mc.MutexConnection, manifestFile utils.ManifestFile, path string, ce chan error) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 	api_download.Ctx = ctx
 
@@ -142,8 +145,7 @@ func grDownloadOnGoingFile(mxConn MutexConnection, manifestFile utils.ManifestFi
 	return true
 }
 
-// TODO : refactor this after new refactor
-func grResumeDownload(mxConn MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
+func grResumeDownload(mxConn mc.MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 	api_download.Ctx = ctx
 

@@ -1,6 +1,7 @@
 package ws
 
 import (
+	mc "aetova/client/src/API/MutexConnection"
 	"os"
 	"path/filepath"
 
@@ -23,13 +24,13 @@ func handleStringMessage(message string) {
 		handleDownload(MxConn)
 	case pause:
 		dLog.Debug("pause has been called")
-		cancelFunc()
+		mc.CancelFunc()
 	case resume:
 		dLog.Debug("resume has been called")
 		handlePostResume(MxConn)
 	case cancel:
 		dLog.Debug("cancel has been called")
-		cancelFunc()
+		mc.CancelFunc()
 		dLog.Warning("Doesn't work currently")
 		// TODO : Do it after Worker refactor
 		err := deleteDownloadFiles("BuildOranys") // TODO : hardcode need to be yeet

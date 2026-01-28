@@ -1,6 +1,7 @@
 package api_download
 
 import (
+	mc "aetova/client/src/API/MutexConnection"
 	"aetova/client/utils"
 	"errors"
 	"fmt"
@@ -27,6 +28,13 @@ type WriterData struct {
 	position int64
 }
 
+type MonitoringData struct {
+	DlPrc   float64
+	DlSpeed float64
+	WrPrc   float64
+	WrSpeed float64
+}
+
 var (
 	chanDownload chan DownloaderData
 	downloadDone int64
@@ -34,7 +42,7 @@ var (
 	writeDone    int64
 )
 
-func DownloadGame(manifest utils.ManifestDir, se []error) {
+func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	if NbChunk <= 0 {
@@ -83,26 +91,36 @@ func DownloadGame(manifest utils.ManifestDir, se []error) {
 	}()
 
 	go func() {
-		var previousNbDlDone int64 = 0
-		var previousNbWrDone int64 = 0
-		var chanDlClosed bool = false
-		var chanWrClosed bool = false
+		var (
+			previousNbDlDone int64 = 0
+			previousNbWrDone int64 = 0
+			chanDlClosed     bool  = false
+			chanWrClosed     bool  = false
+		)
+
 		for {
 			select {
 			case <-done:
 				return
 			default:
 				nbDlDone := atomic.LoadInt64(&downloadDone)
-				dlSpeed := (nbDlDone - previousNbDlDone) * int64(utils.SizeChunk)
+				dlSpeed := float64(nbDlDone-previousNbDlDone) * float64(utils.SizeChunk)
 				dlSpeed /= 1000
 				previousNbDlDone = nbDlDone
 
 				nbWrDone := atomic.LoadInt64(&writeDone)
-				wrSpeed := (nbWrDone - previousNbWrDone) * int64(utils.SizeChunk)
+				wrSpeed := float64(nbWrDone-previousNbWrDone) * float64(utils.SizeChunk)
 				wrSpeed /= 1000
 				previousNbWrDone = nbWrDone
 
-				dLog.Info(fmt.Sprintf("Download %f%% at %d kB/s | Write %f%% at %d kB/s", float64(nbDlDone)/float64(NbChunk)*100, dlSpeed, float64(nbWrDone)/float64(NbChunk)*100, wrSpeed))
+				mxConn.WriteJSON(MonitoringData{
+					DlPrc:   float64(nbDlDone) / float64(NbChunk) * 100,
+					DlSpeed: dlSpeed,
+					WrPrc:   float64(nbWrDone) / float64(NbChunk) * 100,
+					WrSpeed: wrSpeed,
+				})
+
+				dLog.Info(fmt.Sprintf("Download %f%% at %f kB/s | Write %f%% at %f kB/s", float64(nbDlDone)/float64(NbChunk)*100, dlSpeed, float64(nbWrDone)/float64(NbChunk)*100, wrSpeed))
 				time.Sleep(time.Second)
 
 				if nbDlDone >= int64(NbChunk) && !chanDlClosed {

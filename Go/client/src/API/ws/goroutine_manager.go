@@ -1,18 +1,19 @@
 package ws
 
 import (
+	mc "aetova/client/src/API/MutexConnection"
 	"context"
 	"net/http"
 )
 
 var (
-	ctx        context.Context
-	cancelFunc context.CancelFunc
-	chanClose  chan bool
+	ctx       context.Context
+	chanClose chan bool
 )
 
 func initGoroutineVar(r *http.Request) {
 
-	ctx, cancelFunc = context.WithCancel(r.Context())
+	ctx, mc.CancelFunc = context.WithCancel(r.Context())
 	chanClose = make(chan bool)
+
 }

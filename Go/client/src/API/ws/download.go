@@ -1,6 +1,7 @@
 package ws
 
 import (
+	mc "aetova/client/src/API/MutexConnection"
 	"aetova/client/src/API/api_download"
 	"aetova/client/utils"
 	"encoding/json"
@@ -12,9 +13,8 @@ import (
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
-func handleDownload(mxConn MutexConnection) {
+func handleDownload(mxConn mc.MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
-
 	start := time.Now()
 
 	chanError := make(chan error)
@@ -43,7 +43,7 @@ func handleDownload(mxConn MutexConnection) {
 	dLog.Log(docLogger.Debug, fmt.Sprintln("Process takes ", time.Since(start)))
 }
 
-func grGetManifest(mxConn MutexConnection, ce chan error) (bool, utils.ManifestDir) {
+func grGetManifest(mxConn mc.MutexConnection, ce chan error) (bool, utils.ManifestDir) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	chanManifest := make(chan utils.ManifestDir)
@@ -77,7 +77,7 @@ func grGetManifest(mxConn MutexConnection, ce chan error) (bool, utils.ManifestD
 	return true, manifest
 }
 
-func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir) bool {
+func grReserveSpace(mxConn mc.MutexConnection, manifest utils.ManifestDir) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	api_download.Ctx = ctx
@@ -112,7 +112,7 @@ func grReserveSpace(mxConn MutexConnection, manifest utils.ManifestDir) bool {
 	return true
 }
 
-func grDownload(mxConn MutexConnection, manifest utils.ManifestDir) bool {
+func grDownload(mxConn mc.MutexConnection, manifest utils.ManifestDir) bool {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
 
 	api_download.Ctx = ctx
@@ -121,7 +121,7 @@ func grDownload(mxConn MutexConnection, manifest utils.ManifestDir) bool {
 	var errors []error
 
 	wg.Go(func() {
-		api_download.DownloadGame(manifest, errors)
+		api_download.DownloadGame(manifest, errors, mxConn)
 	})
 
 	done := make(chan bool, 1)

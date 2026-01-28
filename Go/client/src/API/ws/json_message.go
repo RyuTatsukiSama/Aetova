@@ -1,6 +1,7 @@
 package ws
 
 import (
+	mc "aetova/client/src/API/MutexConnection"
 	"encoding/json"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
@@ -19,12 +20,12 @@ const (
 	Exit
 )
 
-func handleJsonMessage(mxConn MutexConnection) {
+func handleJsonMessage(mxConn mc.MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/websocket")
 
 	// TODO : Lock the mutex here soft lock the programm, but not so thread safe, find a way if possible to be more clean
 	var message Message
-	if err := mxConn.conn.ReadJSON(&message); err != nil {
+	if err := mxConn.Conn.ReadJSON(&message); err != nil {
 		dLog.Error("Error 7 : " + err.Error())
 		return
 	}
@@ -47,11 +48,11 @@ func handleJsonMessage(mxConn MutexConnection) {
 		handleStringMessage(str)
 	case Close:
 		dLog.Debug("close has been called")
-		MxConn.closeConnection()
+		MxConn.CloseConnection()
 		chanClose <- false
 	case Exit:
 		dLog.Debug("Exit has been called")
-		MxConn.closeConnection()
+		MxConn.CloseConnection()
 		chanClose <- true
 	default:
 		dLog.Error("Error 5 : Message type not allowed")
