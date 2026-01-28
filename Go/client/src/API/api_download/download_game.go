@@ -82,58 +82,9 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 	}
 
 	done := make(chan bool, 2)
-	go func() {
+	go grWaitGroup(&wg, done)
 
-		wg.Wait()
-		dLog.Info("Game downloaded!")
-		done <- true
-		done <- true
-	}()
-
-	go func() {
-		var (
-			previousNbDlDone int64 = 0
-			previousNbWrDone int64 = 0
-			chanDlClosed     bool  = false
-			chanWrClosed     bool  = false
-		)
-
-		for {
-			select {
-			case <-done:
-				return
-			default:
-				nbDlDone := atomic.LoadInt64(&downloadDone)
-				dlSpeed := float64(nbDlDone-previousNbDlDone) * float64(utils.SizeChunk)
-				dlSpeed /= 1000
-				previousNbDlDone = nbDlDone
-
-				nbWrDone := atomic.LoadInt64(&writeDone)
-				wrSpeed := float64(nbWrDone-previousNbWrDone) * float64(utils.SizeChunk)
-				wrSpeed /= 1000
-				previousNbWrDone = nbWrDone
-
-				mxConn.WriteJSON(MonitoringData{
-					DlPrc:   float64(nbDlDone) / float64(NbChunk) * 100,
-					DlSpeed: dlSpeed,
-					WrPrc:   float64(nbWrDone) / float64(NbChunk) * 100,
-					WrSpeed: wrSpeed,
-				})
-
-				dLog.Info(fmt.Sprintf("Download %f%% at %f kB/s | Write %f%% at %f kB/s", float64(nbDlDone)/float64(NbChunk)*100, dlSpeed, float64(nbWrDone)/float64(NbChunk)*100, wrSpeed))
-				time.Sleep(time.Second)
-
-				if nbDlDone >= int64(NbChunk) && !chanDlClosed {
-					close(chanDownload)
-					chanDlClosed = true
-				}
-				if nbWrDone >= int64(NbChunk) && !chanWrClosed {
-					close(chanWrite)
-					chanWrClosed = true
-				}
-			}
-		}
-	}()
+	go grMonitoring(done, mxConn)
 
 	select {
 	case <-Ctx.Done():
@@ -150,6 +101,60 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 		err = os.Remove("Manifest.json")
 		if err != nil {
 			se = append(se, err)
+		}
+	}
+}
+
+func grWaitGroup(wg *sync.WaitGroup, done chan bool) {
+	dLog := docLogger.NewLoggerWithGOpts("Client/download")
+	wg.Wait()
+	dLog.Info("Game downloaded!")
+	done <- true
+	done <- true
+}
+
+func grMonitoring(done chan bool, mxConn mc.MutexConnection) {
+	dLog := docLogger.NewLoggerWithGOpts("Client/download")
+	var (
+		previousNbDlDone int64 = 0
+		previousNbWrDone int64 = 0
+		chanDlClosed     bool  = false
+		chanWrClosed     bool  = false
+	)
+
+	for {
+		select {
+		case <-done:
+			return
+		default:
+			nbDlDone := atomic.LoadInt64(&downloadDone)
+			dlSpeed := float64(nbDlDone-previousNbDlDone) * float64(utils.SizeChunk)
+			dlSpeed /= 1000
+			previousNbDlDone = nbDlDone
+
+			nbWrDone := atomic.LoadInt64(&writeDone)
+			wrSpeed := float64(nbWrDone-previousNbWrDone) * float64(utils.SizeChunk)
+			wrSpeed /= 1000
+			previousNbWrDone = nbWrDone
+
+			mxConn.WriteJSON(MonitoringData{
+				DlPrc:   float64(nbDlDone) / float64(NbChunk) * 100,
+				DlSpeed: dlSpeed,
+				WrPrc:   float64(nbWrDone) / float64(NbChunk) * 100,
+				WrSpeed: wrSpeed,
+			})
+
+			dLog.Info(fmt.Sprintf("Download %f%% at %f kB/s | Write %f%% at %f kB/s", float64(nbDlDone)/float64(NbChunk)*100, dlSpeed, float64(nbWrDone)/float64(NbChunk)*100, wrSpeed))
+			time.Sleep(time.Second)
+
+			if nbDlDone >= int64(NbChunk) && !chanDlClosed {
+				close(chanDownload)
+				chanDlClosed = true
+			}
+			if nbWrDone >= int64(NbChunk) && !chanWrClosed {
+				close(chanWrite)
+				chanWrClosed = true
+			}
 		}
 	}
 }

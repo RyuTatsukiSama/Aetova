@@ -7,24 +7,11 @@ import (
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
-type Message struct {
-	Type MessageType     `json:"type"`
-	Data json.RawMessage `json:"Data"`
-}
-
-type MessageType uint
-
-const (
-	Text MessageType = iota
-	Close
-	Exit
-)
-
 func handleJsonMessage(mxConn mc.MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/websocket")
 
 	// TODO : Lock the mutex here soft lock the programm, but not so thread safe, find a way if possible to be more clean
-	var message Message
+	var message mc.Message
 	if err := mxConn.Conn.ReadJSON(&message); err != nil {
 		dLog.Error("Error 7 : " + err.Error())
 		return
@@ -33,12 +20,12 @@ func handleJsonMessage(mxConn mc.MutexConnection) {
 	dLog.Debug("message has been read")
 
 	// start another goroutine to handle multiple message
-	if message.Type != Close && message.Type != Exit {
+	if message.Type != mc.Close && message.Type != mc.Exit {
 		go handleJsonMessage(mxConn)
 	}
 
 	switch message.Type {
-	case Text:
+	case mc.Text:
 		var str string
 		err := json.Unmarshal(message.Data, &str)
 		if err != nil {
@@ -46,11 +33,11 @@ func handleJsonMessage(mxConn mc.MutexConnection) {
 			return
 		}
 		handleStringMessage(str)
-	case Close:
+	case mc.Close:
 		dLog.Debug("close has been called")
 		MxConn.CloseConnection()
 		chanClose <- false
-	case Exit:
+	case mc.Exit:
 		dLog.Debug("Exit has been called")
 		MxConn.CloseConnection()
 		chanClose <- true

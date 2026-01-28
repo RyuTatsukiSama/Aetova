@@ -2,6 +2,7 @@ package mutexconnection
 
 import (
 	"context"
+	"encoding/json"
 	"sync"
 	"time"
 
@@ -28,10 +29,22 @@ func (this *MutexConnection) WriteText(message string) {
 	this.WriteMx.Unlock()
 }
 
-func (this *MutexConnection) WriteJSON(message interface{}) {
+func (this *MutexConnection) WriteJSON(data interface{}) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/MutexConnection")
+	// encode message
+	json, err := json.Marshal(data)
+	if err != nil {
+		dLog.Error(err.Error())
+		return
+	}
+
+	// send message
 	this.WriteMx.Lock()
-	err := this.Conn.WriteJSON(message)
+	err = this.Conn.WriteJSON(Message{
+		Type: Monitoring,
+		Data: json,
+	})
+
 	if err != nil {
 		this.WriteMx.Unlock()
 		dLog.Error(err.Error())

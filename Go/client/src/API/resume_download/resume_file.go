@@ -1,7 +1,7 @@
 package resume_download
 
 import (
-	"aetova/client/src/API/api_download"
+	api_download "aetova/client/src/API/api_download"
 	"aetova/client/utils"
 	"errors"
 	"io"
