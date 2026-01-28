@@ -19,7 +19,7 @@ endif()
 FetchContent_Declare(
   JSON
   GIT_REPOSITORY https://github.com/nlohmann/json.git
-  GIT_TAG v3.11.3  # Vous pouvez changer pour la version souhaitée
+  GIT_TAG v3.11.3 
 )
 
 FetchContent_MakeAvailable(JSON)
@@ -58,6 +58,7 @@ set(SOURCES
     "./Scripts/GameWindow/SplashLabel/splashlabel.h"
     "./Scripts/GameWindow/SplashLabel/splashlabel.cpp"
     "./Scripts/ClientBridge/client.h"
+    "./Scripts/ClientBridge/client_struct.h"
     "./Scripts/ClientBridge/client.cpp"
 )
 

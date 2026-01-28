@@ -5,7 +5,10 @@
 #include <QNetworkRequest>
 #include <docLogger>
 #include <QWebSocket>
+#include <nlohmann/json.hpp>
 #include "../GameWindow/ButtonGame/buttongame.h"
+
+using json = nlohmann::json;
 
 Client::Client(QObject* parent) : QObject(parent)
 {
@@ -49,6 +52,7 @@ void Client::wsConnected()
         this->onTextMessageReceived(message);
     });
     //ws->sendTextMessage(QString("FUCK UP THE WORLD!"));
+    ws->sendBinaryMessage(QByteArray());
     ws->close();
 }
 
