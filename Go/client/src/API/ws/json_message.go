@@ -16,6 +16,7 @@ type MessageType uint
 const (
 	Text MessageType = iota
 	Close
+	Exit
 )
 
 func handleJsonMessage(mxConn MutexConnection) {
@@ -31,7 +32,7 @@ func handleJsonMessage(mxConn MutexConnection) {
 	dLog.Debug("message has been read")
 
 	// start another goroutine to handle multiple message
-	if message.Type != Close {
+	if message.Type != Close && message.Type != Exit {
 		go handleJsonMessage(mxConn)
 	}
 
@@ -46,6 +47,10 @@ func handleJsonMessage(mxConn MutexConnection) {
 		handleStringMessage(str)
 	case Close:
 		dLog.Debug("close has been called")
+		MxConn.closeConnection()
+		chanClose <- false
+	case Exit:
+		dLog.Debug("Exit has been called")
 		MxConn.closeConnection()
 		chanClose <- true
 	default:

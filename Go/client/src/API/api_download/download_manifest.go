@@ -11,7 +11,7 @@ import (
 var (
 	client *http.Client = &http.Client{
 		Transport: &http.Transport{
-			MaxIdleConnsPerHost: MaxWorkers,
+			MaxIdleConnsPerHost: MaxDLWorkers,
 		},
 	}
 )

@@ -48,7 +48,7 @@ func downloadRemaining(remainingChunk []int, manifestFile *os.File, file utils.M
 
 	dLog.Info(file.Name + " resume")
 
-	var nbWorkers int = api_download.MaxWorkers
+	var nbWorkers int = api_download.MaxDLWorkers
 	jobs := make(chan api_download.WorkerData, len(remainingChunk))
 	var chanDone = make(chan bool)
 	var chanError = make(chan error)

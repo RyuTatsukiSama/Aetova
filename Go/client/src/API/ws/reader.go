@@ -1,6 +1,8 @@
 package ws
 
 import (
+	"os"
+
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
@@ -11,9 +13,13 @@ func webSocketReader(mxConn MutexConnection) {
 	for {
 		go handleJsonMessage(mxConn)
 
-		<-chanClose
+		ExitOrder := <-chanClose
 		dLog.Info("Close order given")
 		// close all the goroutine
-		return
+		if ExitOrder {
+			os.Exit(0)
+		} else {
+			return
+		}
 	}
 }

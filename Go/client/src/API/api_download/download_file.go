@@ -10,7 +10,8 @@ import (
 )
 
 const (
-	MaxWorkers int = 438
+	MaxDLWorkers int = 438
+	MaxWRWorkers int = 5000
 )
 
 type WorkerData struct {
@@ -44,7 +45,7 @@ func downloadFile(file utils.ManifestFile, path string) error {
 	}
 
 	// init worker
-	var nbWorkers int = MaxWorkers
+	var nbWorkers int = MaxDLWorkers
 	jobs := make(chan WorkerData, file.NbChunks)
 	var chanDone = make(chan bool)
 	var chanError = make(chan error)

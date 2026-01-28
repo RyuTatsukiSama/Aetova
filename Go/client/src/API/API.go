@@ -15,7 +15,7 @@ import (
 var (
 	client *http.Client = &http.Client{
 		Transport: &http.Transport{
-			MaxIdleConnsPerHost: api_download.MaxWorkers,
+			MaxIdleConnsPerHost: api_download.MaxDLWorkers,
 		},
 	}
 	server_url string = "http://aetova.duckdns.org:15369"

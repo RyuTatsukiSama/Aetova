@@ -48,7 +48,7 @@ func DownloadGame(manifest utils.ManifestDir, se []error) {
 	var sErrors []error = make([]error, 0)
 
 	// start dl workers
-	for i := 0; i < MaxWorkers; i++ {
+	for i := 0; i < MaxDLWorkers; i++ {
 		wg.Go(func() {
 			for data := range chanDownload {
 				downloadData(data)
@@ -58,7 +58,7 @@ func DownloadGame(manifest utils.ManifestDir, se []error) {
 	}
 
 	// start write workers
-	for i := 0; i < MaxWorkers; i++ {
+	for i := 0; i < MaxWRWorkers; i++ {
 		wg.Go(func() {
 			for data := range chanWrite {
 				saveChunkAt(data)
@@ -77,19 +77,42 @@ func DownloadGame(manifest utils.ManifestDir, se []error) {
 	go func() {
 
 		wg.Wait()
-		dLog.Info("Download done!")
+		dLog.Info("Game downloaded!")
 		done <- true
 		done <- true
 	}()
 
 	go func() {
+		var previousNbDlDone int64 = 0
+		var previousNbWrDone int64 = 0
+		var chanDlClosed bool = false
+		var chanWrClosed bool = false
 		for {
 			select {
 			case <-done:
 				return
 			default:
-				dLog.Info(fmt.Sprintf("Download %d/%d | Write %d/%d", atomic.LoadInt64(&downloadDone), NbChunk, atomic.LoadInt64(&writeDone), NbChunk))
+				nbDlDone := atomic.LoadInt64(&downloadDone)
+				dlSpeed := (nbDlDone - previousNbDlDone) * int64(utils.SizeChunk)
+				dlSpeed /= 1000
+				previousNbDlDone = nbDlDone
+
+				nbWrDone := atomic.LoadInt64(&writeDone)
+				wrSpeed := (nbWrDone - previousNbWrDone) * int64(utils.SizeChunk)
+				wrSpeed /= 1000
+				previousNbWrDone = nbWrDone
+
+				dLog.Info(fmt.Sprintf("Download %f%% at %d kB/s | Write %f%% at %d kB/s", float64(nbDlDone)/float64(NbChunk)*100, dlSpeed, float64(nbWrDone)/float64(NbChunk)*100, wrSpeed))
 				time.Sleep(time.Second)
+
+				if nbDlDone >= int64(NbChunk) && !chanDlClosed {
+					close(chanDownload)
+					chanDlClosed = true
+				}
+				if nbWrDone >= int64(NbChunk) && !chanWrClosed {
+					close(chanWrite)
+					chanWrClosed = true
+				}
 			}
 		}
 	}()
