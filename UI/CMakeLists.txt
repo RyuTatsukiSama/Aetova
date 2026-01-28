@@ -4,6 +4,27 @@ project(Aetova LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# nlohmann/json add
+set(FETCHCONTENT_BASE_DIR "${CMAKE_SOURCE_DIR}/.cache" CACHE PATH "FetchContent base dir")
+ 
+include(FetchContent)
+
+set(JSON_SRC_DIR "${CMAKE_SOURCE_DIR}/.cache/json-src")
+if(EXISTS "${JSON_SRC_DIR}/CMakeLists.txt")
+    set(FETCHCONTENT_FULLY_DISCONNECTED ON)
+else()
+    set(FETCHCONTENT_FULLY_DISCONNECTED OFF)
+endif()
+
+FetchContent_Declare(
+  JSON
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG v3.11.3  # Vous pouvez changer pour la version souhaitée
+)
+
+FetchContent_MakeAvailable(JSON)
+
+# Qt setup
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Network)
 find_package(Qt6 REQUIRED COMPONENTS WebSockets)
@@ -60,6 +81,7 @@ target_link_libraries(Aetova PRIVATE
     Qt6::Gui
     Qt6::Network
     Qt6::WebSockets
+    nlohmann_json::nlohmann_json
 )
 
 # add the docLogger
