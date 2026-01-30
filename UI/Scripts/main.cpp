@@ -5,9 +5,27 @@
 #include <QFont>
 #include <QScreen>
 #include <docLogger>
+#include <QProgressBar>
 
 // Use QVBoxLayout for better scaling
 // Qt has a file manager system call QFile
+
+void QTestWindow(QApplication& app)
+{
+	QWidget *testWindow = new QWidget();
+	testWindow->setWindowTitle(QApplication::translate("TestWindow", "TestWindow"));
+	testWindow->resize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	QProgressBar* pb = new QProgressBar(testWindow);
+	pb->resize(500,500);
+	pb->setMaximum(100);
+	pb->setMinimum(0);
+	pb->setValue(50);
+
+	pb->show();
+
+	testWindow->show();
+}
 
 int main(int argc, char *argv[])
 {
@@ -29,6 +47,8 @@ int main(int argc, char *argv[])
 	gw->move(x, y);
 
 	gw->show();
+
+	QTestWindow(app);
 
 	int endCode = app.exec();
 

@@ -1,6 +1,9 @@
 #ifndef MONITORING_DATA_H
 #define MONITORING_DATA_H
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 typedef struct MonitoringData
 {
     float dlPrc;

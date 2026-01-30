@@ -7,7 +7,6 @@
 #include <QWebSocket>
 #include <nlohmann/json.hpp>
 #include "../GameWindow/ButtonGame/buttongame.h"
-#include "monitoring_data.h"
 #include "WSReader/WSReader.h"
 using nlohmann::json;
 
@@ -55,16 +54,15 @@ void Client::wsConnected()
         this->onTextMessageReceived(message);
     });
     //ws->sendTextMessage(QString("FUCK UP THE WORLD!"));
-    ws->sendBinaryMessage(QByteArray());
-    ws->close();
 }
 
 void Client::onTextMessageReceived(QString message)
 {
     auto j = json::parse(message.toStdString());
+    log->Debug(message.toStdString());
     
-    WSReader mess = j.get<WSReader>();
-    
+    Message mess = j.get<Message>();
+    mess.read();
 }
 
 void Client::wsDisconnected()
@@ -75,19 +73,24 @@ void Client::download(ButtonGame *button)
 {
     log->Info("Download Start");
     button->pauseConnect();
-    QNetworkReply *reply = manager->post(QNetworkRequest(QUrl("http://localhost:51419/download")), QByteArray());
-    connect(reply, &QNetworkReply::finished, [reply, button, this]()
-            { 
-    if (reply->error() == QNetworkReply::NoError) 
-    {
-        log->Info("Download done");
-        button->launchConnect();
-    } 
-    else 
-    {
-        log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
-        button->resumeConnect();
-    } });
+    // QNetworkReply *reply = manager->post(QNetworkRequest(QUrl("http://localhost:51419/download")), QByteArray());
+    // connect(reply, &QNetworkReply::finished, [reply, button, this]()
+    //         { 
+    // if (reply->error() == QNetworkReply::NoError) 
+    // {
+    //     log->Info("Download done");
+    //     button->launchConnect();
+    // } 
+    // else 
+    // {
+    //     log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
+    //     button->resumeConnect();
+    // } });
+    Message dlMessage;
+    dlMessage.type = TEXT;
+    dlMessage.data = "download";
+    json j = dlMessage;
+    ws->sendTextMessage(QString::fromStdString(j.dump()));
 }
 
 void Client::pause(ButtonGame *button)

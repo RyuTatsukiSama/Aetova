@@ -58,8 +58,10 @@ set(SOURCES
     "./Scripts/GameWindow/SplashLabel/splashlabel.h"
     "./Scripts/GameWindow/SplashLabel/splashlabel.cpp"
     "./Scripts/ClientBridge/client.h"
-    "./Scripts/ClientBridge/client_struct.h"
+    "./Scripts/ClientBridge/monitoring_data.h"
     "./Scripts/ClientBridge/client.cpp"
+    "./Scripts/ClientBridge/WSReader/WSReader.h"
+    "./Scripts/ClientBridge/WSReader/WSReader.cpp"
 )
 
 set(RESSOURCES

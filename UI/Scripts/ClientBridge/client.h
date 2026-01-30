@@ -1,3 +1,6 @@
+#ifndef CLIENT_H
+#define CLIENT_H
+
 #include "../Common/common.h"
 #include <QObject>
 
@@ -32,3 +35,5 @@ private:
 	void wsDisconnected();
 	void onTextMessageReceived(QString message);
 };
+
+#endif

@@ -2,29 +2,31 @@
 #include <docLogger>
 #include "../monitoring_data.h"
 
-WSReader::WSReader()
+Message::Message()
 {
     log = new doc::Logger();
 }
 
-void WSReader::readText()
-{
-    log->Debug(data);
-}
-
-void WSReader::readClose()
+void Message::readText()
 {
 }
 
-void WSReader::readExit()
+void Message::readClose()
 {
 }
 
-void WSReader::readMonitoring()
+void Message::readExit()
 {
 }
 
-void WSReader::read()
+void Message::readMonitoring()
+{
+    MonitoringData md = json::parse(data).get<MonitoringData>();
+
+    std::cout << std::format("Download {}%% at speed {} kB/s, Writing {}%% at speed {} kB/s\n", md.dlPrc, md.dlSpeed, md.wrPrc, md.wrSpeed);
+}
+
+void Message::read()
 {
     switch (type)
     {
@@ -45,13 +47,13 @@ void WSReader::read()
     }
 }
 
-void to_json(json &j, const WSReader &m)
+void to_json(json &j, const Message &m)
 {
-    j = json{{"type", m.type}, {"data", m.data}};
+    j = json{{"type", m.type}, {"Data", m.data}};
 }
 
-void from_json(const json &j, WSReader &m)
+void from_json(const json &j, Message &m)
 {
     j.at("type").get_to(m.type);
-    j.at("data").get_to(m.data);
+    j.at("Data").get_to(m.data);
 }

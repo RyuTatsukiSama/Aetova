@@ -16,7 +16,7 @@ enum MessageType
     MONITORING
 };
 
-class WSReader
+class Message
 {
 	doc::Logger* log;
 
@@ -26,11 +26,11 @@ class WSReader
     void readMonitoring();
 
 public:
-    WSReader();
+    Message();
 
     void read();
 
-    bool operator==(const WSReader &other) const
+    bool operator==(const Message &other) const
     {
         return type == other.type && data == other.data;
     }
@@ -39,7 +39,7 @@ public:
     std::string data;
 };
 
-void to_json(json &j, const WSReader &m);
-void from_json(const json &j, WSReader &m);
+void to_json(json &j, const Message &m);
+void from_json(const json &j, Message &m);
 
 #endif
