@@ -7,6 +7,9 @@
 #include <QWebSocket>
 #include <nlohmann/json.hpp>
 #include "../GameWindow/ButtonGame/buttongame.h"
+#include "monitoring_data.h"
+#include "WSReader/WSReader.h"
+using nlohmann::json;
 
 using json = nlohmann::json;
 
@@ -58,7 +61,10 @@ void Client::wsConnected()
 
 void Client::onTextMessageReceived(QString message)
 {
-    log->Debug("Message from WS : " + message.toStdString());
+    auto j = json::parse(message.toStdString());
+    
+    WSReader mess = j.get<WSReader>();
+    
 }
 
 void Client::wsDisconnected()
