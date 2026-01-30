@@ -142,7 +142,7 @@ func grMonitoring(done chan bool, mxConn mc.MutexConnection) {
 				DlSpeed: dlSpeed,
 				WrPrc:   float64(nbWrDone) / float64(NbChunk) * 100,
 				WrSpeed: wrSpeed,
-			})
+			}, mc.Monitoring)
 
 			dLog.Info(fmt.Sprintf("Download %f%% at %f kB/s | Write %f%% at %f kB/s", float64(nbDlDone)/float64(NbChunk)*100, dlSpeed, float64(nbWrDone)/float64(NbChunk)*100, wrSpeed))
 			time.Sleep(time.Second)

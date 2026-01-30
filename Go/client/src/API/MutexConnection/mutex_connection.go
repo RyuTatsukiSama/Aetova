@@ -29,7 +29,7 @@ func (this *MutexConnection) WriteText(message string) {
 	this.WriteMx.Unlock()
 }
 
-func (this *MutexConnection) WriteJSON(data interface{}) {
+func (this *MutexConnection) WriteJSON(data interface{}, messageType MessageType) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/MutexConnection")
 	// encode message
 	json, err := json.Marshal(data)
@@ -41,7 +41,7 @@ func (this *MutexConnection) WriteJSON(data interface{}) {
 	// send message
 	this.WriteMx.Lock()
 	err = this.Conn.WriteJSON(Message{
-		Type: Monitoring,
+		Type: messageType,
 		Data: json,
 	})
 

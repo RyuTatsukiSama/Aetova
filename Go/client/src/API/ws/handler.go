@@ -38,13 +38,7 @@ func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dLog.Log(docLogger.Info, "Client connected!")
-
-	err = ws.WriteMessage(websocket.TextMessage, []byte("Client Connected!"))
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		dLog.Log(docLogger.Critical, err.Error())
-		return
-	}
+	MxConn.WriteJSON("Client Connected!", mc.Text)
 
 	webSocketReader(MxConn)
 }
