@@ -10,19 +10,24 @@ typedef struct MonitoringData
     float dlSpeed;
     float wrPrc;
     float wrSpeed;
+
+    bool operator==(const MonitoringData &other) const
+    {
+        return dlPrc == other.dlPrc && dlSpeed == other.dlSpeed && wrPrc == other.wrPrc && wrSpeed == other.wrSpeed;
+    }
 };
 
 void to_json(json &j, const MonitoringData &md)
 {
-    j = json{{"dlPrc", md.dlPrc}, {"dlSpeed", md.dlSpeed},{"wrPrc", md.wrPrc},{"wrSpeed", md.wrSpeed}};
+    j = json{{"DlPrc", md.dlPrc}, {"DlSpeed", md.dlSpeed},{"WrPrc", md.wrPrc},{"WrSpeed", md.wrSpeed}};
 }
 
 void from_json(const json &j, MonitoringData &md)
 {
-    j.at("dlPrc").get_to(md.dlPrc);
-    j.at("dlSpeed").get_to(md.dlSpeed);
-    j.at("wrPrc").get_to(md.wrPrc);
-    j.at("wrSpeed").get_to(md.wrSpeed);
+    j.at("DlPrc").get_to(md.dlPrc);
+    j.at("DlSpeed").get_to(md.dlSpeed);
+    j.at("WrPrc").get_to(md.wrPrc);
+    j.at("WrSpeed").get_to(md.wrSpeed);
 }
 
 

@@ -21,7 +21,7 @@ void Message::readExit()
 
 void Message::readMonitoring()
 {
-    MonitoringData md = json::parse(data).get<MonitoringData>();
+    MonitoringData md = std::get<json>(data).get<MonitoringData>();
 
     std::cout << std::format("Download {}%% at speed {} kB/s, Writing {}%% at speed {} kB/s\n", md.dlPrc, md.dlSpeed, md.wrPrc, md.wrSpeed);
 }
@@ -49,11 +49,47 @@ void Message::read()
 
 void to_json(json &j, const Message &m)
 {
-    j = json{{"type", m.type}, {"Data", m.data}};
+    j["type"] = m.type;
+
+    std::visit([&](const auto& value){
+        using T = std::decay_t<decltype(value)>;
+
+        if constexpr (std::is_same_v<T,json>)
+        {
+            j["data"] = value.dump();
+        }
+        else
+        {
+            j["data"] = value;
+        }
+    }, m.data);
 }
 
 void from_json(const json &j, Message &m)
 {
     j.at("type").get_to(m.type);
-    j.at("Data").get_to(m.data);
+    
+    const auto& datafield = j.at("Data");
+
+    if (datafield.is_object() || datafield.is_array())
+    {
+        m.data = datafield;
+    }
+    else if (datafield.is_string())
+    {
+        std::string dataStr = datafield.get<std::string>();
+
+        try
+        {
+            m.data = json::parse(dataStr);
+        }
+        catch (...)
+        {
+            m.data = dataStr;
+        }
+    }
+    else
+    {
+        m.data = datafield.dump();
+    }
 }

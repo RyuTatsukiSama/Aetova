@@ -16,12 +16,14 @@ else()
     set(FETCHCONTENT_FULLY_DISCONNECTED OFF)
 endif()
 
-FetchContent_Declare(
-  JSON
+FetchContent_Declare(JSON
   GIT_REPOSITORY https://github.com/nlohmann/json.git
   GIT_TAG v3.11.3 
+  GIT_SHALLOW ON
+  EXCLUDE_FROM_ALL
+  SYSTEM
+  SOURCE_DIR "${JSON_SRC_DIR}"
 )
-
 FetchContent_MakeAvailable(JSON)
 
 # Qt setup

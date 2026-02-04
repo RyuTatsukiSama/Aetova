@@ -88,7 +88,8 @@ void Client::download(ButtonGame *button)
     // } });
     Message dlMessage;
     dlMessage.type = TEXT;
-    dlMessage.data = "download";
+    std::string dlstr = "download";
+    dlMessage.data = dlstr;
     json j = dlMessage;
     ws->sendTextMessage(QString::fromStdString(j.dump()));
 }
@@ -135,7 +136,13 @@ Client::~Client()
     delete process;
     process = nullptr;
 
-    manager->get(QNetworkRequest(QUrl("http://localhost:51419/kill")));
+    Message closeMessage;
+    closeMessage.type = CLOSE;
+    json j = closeMessage;
+    ws->sendTextMessage(QString::fromStdString(j.dump()));
+    delete ws;
+    ws = nullptr;
+
     delete manager;
     manager = nullptr;
 }

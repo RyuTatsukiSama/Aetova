@@ -1,9 +1,11 @@
 #ifndef WSREADER_H
 #define WSREADER_H
 
+#include <variant>
 #include <string>
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
+
 namespace doc {
 	class Logger;
 }
@@ -36,7 +38,7 @@ public:
     }
 
     MessageType type;
-    std::string data;
+    std::variant<std::string, json> data;
 };
 
 void to_json(json &j, const Message &m);
