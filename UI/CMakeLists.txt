@@ -30,6 +30,7 @@ FetchContent_MakeAvailable(JSON)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Network)
 find_package(Qt6 REQUIRED COMPONENTS WebSockets)
+find_package(Qt6 REQUIRED COMPONENTS WebEngineWidgets)
 
 qt_standard_project_setup()
 
@@ -86,6 +87,7 @@ target_link_libraries(Aetova PRIVATE
     Qt6::Gui
     Qt6::Network
     Qt6::WebSockets
+    Qt6::WebEngineWidgets
     nlohmann_json::nlohmann_json
 )
 
@@ -103,7 +105,7 @@ add_custom_command(TARGET Aetova POST_BUILD
         "$<TARGET_FILE_DIR:Aetova>/wd"
 )
 
-# Copy the lib for VSS
+# Copy the lib for VS
 add_custom_command(TARGET Aetova PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
         "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib/$<CONFIG>"

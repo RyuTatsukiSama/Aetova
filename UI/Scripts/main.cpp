@@ -6,23 +6,22 @@
 #include <QScreen>
 #include <docLogger>
 #include <QProgressBar>
+#include <QWebEngineView>
 
 // Use QVBoxLayout for better scaling
 // Qt has a file manager system call QFile
 
+int value = 0;
+QLabel* label;
+QPushButton* button;
+QProgressBar* pb;
+QWidget *testWindow;
+
+
 void QTestWindow(QApplication& app)
 {
-	QWidget *testWindow = new QWidget();
-	testWindow->setWindowTitle(QApplication::translate("TestWindow", "TestWindow"));
-	testWindow->resize(SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	QProgressBar* pb = new QProgressBar(testWindow);
-	pb->resize(500,500);
-	pb->setMaximum(100);
-	pb->setMinimum(0);
-	pb->setValue(50);
-
-	pb->show();
+	testWindow = new QWidget();
+	testWindow->setWindowTitle("Test");
 
 	testWindow->show();
 }
