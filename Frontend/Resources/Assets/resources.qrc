@@ -1,0 +1,28 @@
+<RCC>
+	<qresource prefix="/">
+		<file>Sprites/wallpaper.png</file>
+		<file>Sprites/blender.png</file>
+		<file>Sprites/ds.png</file>
+		<file>Sprites/fmod.png</file>
+		<file>Sprites/Notion.png</file>
+		<file>Sprites/ps.png</file>
+		<file>Sprites/pt.png</file>
+		<file>Sprites/maya.png</file>
+		<file>Sprites/unity.png</file>
+		<file>Sprites/PEGI_7.png</file>
+		<file>Sprites/g3d.png</file>
+		<file>Sprites/creajeux.png</file>
+		<file>Sprites/Chibi/Ama_Fond_Blanc.png</file>
+		<file>Sprites/Chibi/Colin_Fond_Blanc.png</file>
+		<file>Sprites/Chibi/Dorian_Fond_Blanc.png</file>
+		<file>Sprites/Chibi/Kath_Fond_Blanc.png</file>
+		<file>Sprites/Chibi/Lou_Anne_Fond_Blanc.png</file>
+		<file>Sprites/Chibi/Lucas_Fond_Blanc.png</file>
+		<file>Sprites/Chibi/Maxime_Fond_Blanc.png</file>
+		<file>Sprites/Chibi/Mickael_Fond_Blanc.png</file>
+		<file>Sprites/Chibi/Sylvain_Fond_Blanc.png</file>
+		<file>Sprites/Chibi/Thomas_Fond_Blanc.png</file>
+		<file>Fonts/Sansation_Regular.ttf</file>
+		<file>Sprites/LogoOranys.png</file>
+	</qresource>
+</RCC>
