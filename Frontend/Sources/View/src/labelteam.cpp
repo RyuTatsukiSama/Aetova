@@ -1,0 +1,35 @@
+#include "labelteam.h"
+#include "QtGui/qpainter.h"
+#include "QtWidgets/qstyle.h"
+#include "QtWidgets/qstyleoption.h"
+#include "QtGui/qpainterpath.h"
+
+TeamLabel::TeamLabel(const QString& pathFile, const QRect& geometry, QWidget* parent) : HTMLLabel(pathFile, geometry, parent)
+{
+    setStyleSheet(R"(
+    QLabel {
+        padding: 10px;
+        border-radius: 8px;
+    }
+	)");
+}
+
+void TeamLabel::paintEvent(QPaintEvent* event)
+{
+    QStyleOption opt;
+    opt.initFrom(this);
+    QPainter painter(this);
+
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
+
+    QPainterPath path;
+    path.addRoundedRect(rect(), 8, 8);
+
+    painter.setClipPath(path);
+
+    QColor overlay(255, 255, 255, 50); // Noir avec alpha (sombre partiellement)
+    painter.fillRect(rect(), overlay);
+    painter.fillPath(path, overlay);
+
+    QLabel::paintEvent(event);
+}
