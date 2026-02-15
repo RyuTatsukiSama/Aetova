@@ -23,9 +23,9 @@ jobs:
 
       - name: Generate SVG
         run: |
-          for file in Frontend/doc/*.mmd; do
-            mmdc -i "$file" -o "${file%.mmd}.svg"
-          done
+          docker run --rm -v ${{ github.workspace }}:/data minlag/mermaid-cli \
+            -i /Frontend/doc/architecture.mmd \
+            -o /Frontend/doc/architecture.svg
 
       - name: Commit SVG
         run: |
