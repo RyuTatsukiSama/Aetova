@@ -23,7 +23,7 @@ jobs:
 
       - name: Generate SVG
         run: |
-          for file in docs/*.mmd; do
+          for file in Frontend/doc/*.mmd; do
             mmdc -i "$file" -o "${file%.mmd}.svg"
           done
 
