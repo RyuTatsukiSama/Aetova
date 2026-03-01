@@ -30,9 +30,7 @@ FetchContent_MakeAvailable(JSON)
 add_library(docLogger SHARED IMPORTED)
 
 set_target_properties(docLogger PROPERTIES
-    IMPORTED_IMPLIB_DEBUG "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib/Debug/docLogger.lib"
-    IMPORTED_IMPLIB_RELEASE "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib/Release/docLogger.lib"
-    IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib/Debug/docLogger.lib"
+    IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib/docLogger.lib"
 )
 
 target_include_directories(docLogger INTERFACE
@@ -55,11 +53,25 @@ set(QT_FORCE_CMP0156_TO_VALUE NEW)
 
 set(app_icon_resource_windows "${CMAKE_SOURCE_DIR}/Resources/Assets/Icons/Logo.rc")
 
-set(SOURCES "${CMAKE_SOURCE_DIR}/Sources/App/src/main.cpp")
+set(SOURCES 
+    "${CMAKE_SOURCE_DIR}/Sources/App/src/main.cpp"
+    "${CMAKE_SOURCE_DIR}/Sources/App/src/Common/common.h"
+    "${CMAKE_SOURCE_DIR}/Sources/App/src/Common/common.cpp"
+)
+
+set(VIEW
+    "${CMAKE_SOURCE_DIR}/Sources/View/include/New/WebView.h"
+    "${CMAKE_SOURCE_DIR}/Sources/View/src/New/WebView.cpp"
+)
+
+set(RESSOURCES
+    "${CMAKE_SOURCE_DIR}/Resources/Web/DFG/DFG.qrc"
+)
 
 # Exe
 qt_add_executable(Aetova
     ${SOURCES}
+    ${VIEW}
     ${RESSOURCES}
     ${app_icon_resource_windows}
 )

@@ -1,49 +1,46 @@
 // #include "GameWindow/gamewindow.h"
-// #include "Common/common.h"
+#include "Common/common.h"
 // #include "GameProcess/GameThread/gamethread.h"
 // #include <QFontDatabase>
 // #include <QFont>
-// #include <QScreen>
-// #include <docLogger>
-// #include <QProgressBar>
-// #include <QWebEngineView>
+#include <QScreen>
+#include <docLogger>
+#include <QApplication>
+
+#include "../../View/include/New/WebView.h"
 
 // Use QVBoxLayout for better scaling
 // Qt has a file manager system call QFile
 
-// void QTestWindow(QApplication& app)
-// {
-// }
-
 int main(int argc, char *argv[])
 {
-	// doc::LoggerOptions opts = doc::LoggerOptions::OptionsBuilder().build();
-	// doc::setGlobalLoggerOptions(opts);
-	// doc::Logger log("Frontend");
-	// log.Log(doc::LoggerSeverity::Info, "Start Aetova");
+	doc::LoggerOptions opts = doc::LoggerOptions::OptionsBuilder().build();
+	doc::setGlobalLoggerOptions(opts);
+	doc::Logger log("Frontend");
+	log.Log(doc::LoggerSeverity::Info, "Start Aetova");
 
-	// QApplication app(argc, argv);
-	// GameWindow *gw = new GameWindow();
-	// gw->resize(SCREEN_WIDTH, 1000);
-	// gw->setWindowTitle(QApplication::translate("Aetova", "Aetova"));
+	QApplication app(argc, argv);
 
-	// // put the GameWindow at the center of the screen
-	// QScreen *screen = QGuiApplication::primaryScreen();
-	// QRect screenGeometry = screen->availableGeometry();
-	// int x = (screenGeometry.width() - gw->width()) / 2;
-	// int y = (screenGeometry.height() - gw->height()) / 2;
-	// gw->move(x, y);
+	WebView *AetovaWindow = new WebView();
 
-	// gw->show();
+	// put the Windows at the center of the screen
+	QScreen *screen = QGuiApplication::primaryScreen();
+	QRect screenGeometry = screen->availableGeometry();
+	int x = (screenGeometry.width() - AetovaWindow->width()) / 2;
+	int y = (screenGeometry.height() - AetovaWindow->height()) / 2;
+	AetovaWindow->move(x, y);
 
-	// QTestWindow(app);
+	AetovaWindow->show();
 
-	// int endCode = app.exec();
+	int endCode = app.exec();
 
-	// if (endCode == 0)
-	// 	log.Info(std::format("Aetova end with code {}", endCode));
-	// else
-	// 	log.Error(std::format("Aetova end with code {}", endCode));
+	delete AetovaWindow;
+	AetovaWindow = nullptr;
 
-	return 0;
+	if (endCode == 0)
+		log.Info(std::format("Aetova end with code {}", endCode));
+	else
+		log.Error(std::format("Aetova end with code {}", endCode));
+
+	return endCode;
 }

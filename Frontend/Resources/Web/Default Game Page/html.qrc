@@ -1,7 +1,0 @@
-<RCC>
-	<qresource prefix="/">
-		<file>View/team.html</file>
-		<file>View/datasheet.html</file>
-		<file>View/spitch.html</file>
-	</qresource>
-</RCC>
