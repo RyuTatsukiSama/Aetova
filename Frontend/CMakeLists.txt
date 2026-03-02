@@ -53,15 +53,40 @@ set(QT_FORCE_CMP0156_TO_VALUE NEW)
 
 set(app_icon_resource_windows "${CMAKE_SOURCE_DIR}/Resources/Assets/Icons/Logo.rc")
 
+# Common deps
+
+add_library(common_deps INTERFACE)
+
+target_link_libraries(common_deps INTERFACE
+    Qt6::Widgets
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Network
+    Qt6::WebSockets
+    Qt6::WebEngineWidgets
+    nlohmann_json::nlohmann_json
+    docLogger
+)
+
+# View
+
+add_library(View STATIC
+    "${CMAKE_SOURCE_DIR}/Sources/View/src/New/WebView.cpp"
+    "${CMAKE_SOURCE_DIR}/Sources/View/src/New/AetovaWindow.cpp"
+)
+
+target_link_libraries(View PUBLIC common_deps)
+
+target_include_directories(View PUBLIC 
+    "${CMAKE_SOURCE_DIR}/Sources/View/include"
+)
+
+# App
+
 set(SOURCES 
     "${CMAKE_SOURCE_DIR}/Sources/App/src/main.cpp"
     "${CMAKE_SOURCE_DIR}/Sources/App/src/Common/common.h"
     "${CMAKE_SOURCE_DIR}/Sources/App/src/Common/common.cpp"
-)
-
-set(VIEW
-    "${CMAKE_SOURCE_DIR}/Sources/View/include/New/WebView.h"
-    "${CMAKE_SOURCE_DIR}/Sources/View/src/New/WebView.cpp"
 )
 
 set(RESSOURCES
@@ -71,20 +96,12 @@ set(RESSOURCES
 # Exe
 qt_add_executable(Aetova
     ${SOURCES}
-    ${VIEW}
     ${RESSOURCES}
     ${app_icon_resource_windows}
 )
 
 target_link_libraries(Aetova PRIVATE 
-    Qt6::Widgets
-    Qt6::Core
-    Qt6::Gui
-    Qt6::Network
-    Qt6::WebSockets
-    Qt6::WebEngineWidgets
-    nlohmann_json::nlohmann_json
-    docLogger
+    View
 )
 
 set_target_properties(Aetova PROPERTIES
