@@ -1,4 +1,4 @@
-#include "../../include/New/WebView.h" // TODO : Don't forget it when include will be do in CMakeList.txt
+#include "New/WebView.h" // TODO : Don't forget it when include will be do in CMakeList.txt
 #include <QWebEngineView>
 #include <QWebChannel>
 #include <QFile>
