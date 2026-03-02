@@ -2,6 +2,8 @@
 #include <QWebEngineView>
 #include <QWebChannel>
 #include <QFile>
+#include <QPainter>
+#include <QPainterPath>
 #include <docLogger>
 
 WebView::WebView(QWidget *parent)
@@ -12,8 +14,14 @@ WebView::WebView(QWidget *parent)
     setWindowTitle("Aetova");
     resize(1280, 768);
 
+    // Frameless Window
+    setAttribute(Qt::WA_TranslucentBackground);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
+
     webView = new QWebEngineView(this);
     setCentralWidget(webView);
+
+    // load HTML
 
     QFile file(":/View/DefaultGamePage.html");
 
@@ -28,6 +36,7 @@ WebView::WebView(QWidget *parent)
     webView->setHtml(html);
 
 #ifdef _DEBUG
+    // Web dev tools
     devTools = new QWebEngineView();
     webView->page()->setDevToolsPage(devTools->page());
     devTools->show();
