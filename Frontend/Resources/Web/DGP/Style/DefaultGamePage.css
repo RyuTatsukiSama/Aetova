@@ -1,0 +1,367 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-dark: #1a1a1e;
+  --bg-panel: #2a2a30;
+  --bg-card: #323238;
+  --accent: #4f9eff;
+  --accent-glow: #4f9eff88;
+  --text: #e8e8ef;
+  --muted: #9090a0;
+  --border: #3e3e4a;
+  --radius: 10px;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: "Nunito", sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+}
+
+.window {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-dark);
+  overflow: hidden;
+}
+
+/* ── Splashart ── */
+.splashart {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background: #2d2040;
+}
+.splashart-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Replace src with your background image path: src="assets/background.png" */
+}
+.splashart-bg-placeholder {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    #2d2040 0%,
+    #4a3060 40%,
+    #7a5090 70%,
+    #c08070 100%
+  );
+}
+.splashart-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, var(--bg-dark) 100%);
+}
+
+/* Game logo */
+.splashart-logo {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 72px;
+  /* Usage: <img class="splashart-logo" src="assets/logo.png" alt="Oranys"> */
+}
+.splashart-logo-placeholder {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Cinzel Decorative", cursive;
+  font-size: 42px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow:
+    0 0 24px #ff7a3088,
+    0 2px 8px #0008;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* Launch button */
+.launch-wrap {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.btn-launch {
+  padding: 12px 60px;
+  background: var(--accent);
+  color: #fff;
+  font-family: "Nunito", sans-serif;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  box-shadow: 0 4px 24px var(--accent-glow);
+  transition:
+    background 0.2s,
+    box-shadow 0.2s,
+    transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-launch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #ffffff22 0%, transparent 60%);
+  pointer-events: none;
+}
+.btn-launch:hover {
+  background: #3d8ef0;
+  box-shadow: 0 6px 32px var(--accent-glow);
+  transform: translateY(-1px);
+}
+.btn-launch:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 12px var(--accent-glow);
+}
+/* JS hook: add class .loading to disable button during launch */
+.btn-launch.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ── Body ── */
+.body {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+}
+
+/* ── Left column ── */
+.left {
+  padding: 28px 28px 28px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.tagline {
+  font-family: "Cinzel Decorative", cursive;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.description p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.description p:last-child {
+  margin-bottom: 0;
+}
+.description strong {
+  color: var(--text);
+  font-weight: 900;
+}
+
+/* Specs */
+.specs {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.spec-row {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.spec-row strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* Software */
+.software-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.software-section h4 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sw-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sw-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  width: 90px;
+  flex-shrink: 0;
+}
+.sw-logos {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+/* Replace placeholder div with: <img class="sw-logo" src="assets/sw_name.png" alt="Name"> */
+.sw-logo {
+  height: 32px;
+  width: auto;
+  border-radius: 4px;
+  object-fit: contain;
+}
+.sw-logo-placeholder {
+  height: 32px;
+  min-width: 32px;
+  padding: 0 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+
+/* ── Right column – Team panel ── */
+.right {
+  background: var(--bg-panel);
+  border-left: 1px solid var(--border);
+  padding: 20px 18px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Editor / Developer */
+.publishers {
+  display: flex;
+  justify-content: space-around;
+  gap: 12px;
+}
+.pub-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.pub-block h4 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+/* Replace placeholder with: <img class="pub-logo" src="assets/logo_name.png" alt="Name"> */
+.pub-logo {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+}
+.pub-logo-placeholder {
+  height: 38px;
+  min-width: 72px;
+  padding: 0 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+}
+
+/* Team */
+.team-title {
+  font-size: 13px;
+  font-weight: 900;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--border);
+}
+.team-section h5 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 10px;
+}
+.member-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 68px;
+}
+/* Replace placeholder with: <img class="member-avatar" src="assets/team/name.png" alt="Name"> */
+.member-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+}
+.member-avatar-placeholder {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--muted);
+}
+.member-name {
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text);
+  line-height: 1.3;
+}
+.member-name.highlight {
+  color: var(--accent);
+}

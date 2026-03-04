@@ -65,7 +65,7 @@ set(VIEW
 )
 
 set(RESSOURCES
-    "${CMAKE_SOURCE_DIR}/Resources/Web/DFG/DFG.qrc"
+    "${CMAKE_SOURCE_DIR}/Resources/Web/DGP/DGP.qrc"
 )
 
 # Exe
