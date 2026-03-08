@@ -1,4 +1,4 @@
-#include "New/WebView.h" // TODO : Don't forget it when include will be do in CMakeList.txt
+#include "New/WebView.h"
 #include <QWebEngineView>
 #include <QWebChannel>
 #include <QFile>
@@ -15,8 +15,8 @@ WebView::WebView(QWidget *parent)
     resize(1280, 768);
 
     // Frameless Window
-    setAttribute(Qt::WA_TranslucentBackground);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
+    // setAttribute(Qt::WA_TranslucentBackground);
+    // setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
 
     webView = new QWebEngineView(this);
     setCentralWidget(webView);
