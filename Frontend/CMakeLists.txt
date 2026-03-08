@@ -30,7 +30,12 @@ FetchContent_MakeAvailable(JSON)
 add_library(docLogger SHARED IMPORTED)
 
 set_target_properties(docLogger PROPERTIES
-    IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib/docLogger.lib"
+    IMPORTED_IMPLIB_DEBUG "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib/Debug/docLogger.lib"
+    IMPORTED_IMPLIB_RELEASE "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib/Release/docLogger.lib"
+    IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/lib/Debug/docLogger.lib"
+    IMPORTED_LOCATION_DEBUG "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/bin/Debug/docLogger.dll"
+    IMPORTED_LOCATION_RELEASE "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/bin/Release/docLogger.dll"
+    IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/bin/Debug/docLogger.dll"
 )
 
 target_include_directories(docLogger INTERFACE
@@ -109,7 +114,7 @@ add_custom_command(TARGET Aetova POST_BUILD
 
 add_custom_command(TARGET Aetova POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/dll/$<CONFIG>/docLogger.dll"
+        "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/bin/$<CONFIG>/docLogger.dll"
         "$<TARGET_FILE_DIR:Aetova>/docLogger.dll"    
 )
 
