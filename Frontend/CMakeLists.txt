@@ -81,6 +81,7 @@ set(SOURCES
 )
 
 set(RESSOURCES
+    "${CMAKE_SOURCE_DIR}/Resources/Assets/resources.qrc"
     "${CMAKE_SOURCE_DIR}/Resources/Web/DGP/DGP.qrc"
 )
 

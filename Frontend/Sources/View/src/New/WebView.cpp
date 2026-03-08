@@ -12,7 +12,6 @@ WebView::WebView(QWidget *parent)
     log->Info("Init Aetova Window...");
 
     setWindowTitle("Aetova");
-    resize(1280, 768);
 
     // Frameless Window
     // setAttribute(Qt::WA_TranslucentBackground);
@@ -23,7 +22,7 @@ WebView::WebView(QWidget *parent)
 
     // load HTML
 
-    QFile file(":/View/DefaultGamePage.html");
+    QFile file(":/DGP/View/DefaultGamePage.html");
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {

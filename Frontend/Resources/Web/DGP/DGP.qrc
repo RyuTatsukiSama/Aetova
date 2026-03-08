@@ -1,8 +1,5 @@
 <RCC>
-    <qresource prefix="/">
-        <file>View/team.html</file>
-        <file>View/datasheet.html</file>
-        <file>View/spitch.html</file>
+    <qresource prefix="/DGP/">
         <file>Script/DefaultGamePage.js</file>
         <file>Style/DefaultGamePage.css</file>
         <file>View/DefaultGamePage.html</file>
