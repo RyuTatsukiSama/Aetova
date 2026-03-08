@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
 	QApplication app(argc, argv);
 
 	WebView *AetovaWindow = new WebView();
+	AetovaWindow->resize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// put the Windows at the center of the screen
 	QScreen *screen = QGuiApplication::primaryScreen();

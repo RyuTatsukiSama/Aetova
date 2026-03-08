@@ -9,24 +9,24 @@
       href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Nunito:wght@400;600;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="qrc:/Style/DefaultGamePage.css" />
+    <link rel="stylesheet" href="qrc:/DGP/Style/DefaultGamePage.css" />
   </head>
   <body>
     <div class="window">
       <!-- Splashart -->
       <div class="splashart">
-        <!--
-      BACKGROUND IMAGE – replace placeholder with:
-      <img class="splashart-bg" src="assets/background.png" alt="">
-    -->
-        <div class="splashart-bg-placeholder"></div>
+        <img
+          class="splashart-bg"
+          src="qrc:/Sprites/wallpaper.png"
+          alt="Wallpaper"
+        />
         <div class="splashart-overlay"></div>
 
-        <!--
-      GAME LOGO – replace placeholder with:
-      <img class="splashart-logo" src="assets/logo.png" alt="Oranys">
-    -->
-        <div class="splashart-logo-placeholder">ORANYS</div>
+        <img
+          class="splashart-logo"
+          src="qrc:/Sprites/LogoOranys.png"
+          alt="Oranys"
+        />
 
         <div class="launch-wrap">
           <!--
@@ -38,14 +38,15 @@
         </div>
       </div>
 
+      <p class="tagline">
+        Slide through vast lands<br />and complete deliveries!
+      </p>
+      <br />
+
       <!-- Main body -->
       <div class="body">
         <!-- Left -->
         <div class="left">
-          <p class="tagline">
-            Slide through vast lands<br />and complete deliveries!
-          </p>
-
           <div class="description">
             <p>
               On an <strong>abandoned planet</strong>, underground
@@ -84,34 +85,46 @@
             <div class="sw-row">
               <span class="sw-label">Prog :</span>
               <div class="sw-logos">
-                <!-- <img class="sw-logo" src="assets/sw_unity.png" alt="Unity"> -->
-                <!-- <img class="sw-logo" src="assets/sw_fmod.png" alt="FMOD"> -->
-                <div class="sw-logo-placeholder">Unity</div>
-                <div class="sw-logo-placeholder">FMOD</div>
+                <img class="sw-logo" src="qrc:/Sprites/unity.png" alt="Unity" />
+                <img class="sw-logo" src="qrc:/Sprites/fmod.png" alt="FMOD" />
               </div>
             </div>
 
             <div class="sw-row">
               <span class="sw-label">Graph :</span>
               <div class="sw-logos">
-                <!-- <img class="sw-logo" src="assets/sw_maya.png" alt="Maya"> -->
-                <!-- <img class="sw-logo" src="assets/sw_blender.png" alt="Blender"> -->
-                <!-- <img class="sw-logo" src="assets/sw_photoshop.png" alt="Photoshop"> -->
-                <!-- <img class="sw-logo" src="assets/sw_substance_painter.png" alt="Substance Painter"> -->
-                <!-- <img class="sw-logo" src="assets/sw_substance_designer.png" alt="Substance Designer"> -->
-                <div class="sw-logo-placeholder">Maya</div>
-                <div class="sw-logo-placeholder">Blender</div>
-                <div class="sw-logo-placeholder">PS</div>
-                <div class="sw-logo-placeholder">Pt</div>
-                <div class="sw-logo-placeholder">Ds</div>
+                <img class="sw-logo" src="qrc:/Sprites/maya.png" alt="Maya" />
+                <img
+                  class="sw-logo"
+                  src="qrc:/Sprites/blender.png"
+                  alt="Blender"
+                />
+                <img
+                  class="sw-logo"
+                  src="qrc:/Sprites/ps.png"
+                  alt="Photoshop"
+                />
+                <img
+                  class="sw-logo"
+                  src="qrc:/Sprites/pt.png"
+                  alt="Substance Painter"
+                />
+                <img
+                  class="sw-logo"
+                  src="qrc:/Sprites/ds.png"
+                  alt="Substance Designer"
+                />
               </div>
             </div>
 
             <div class="sw-row">
               <span class="sw-label">Organisation :</span>
               <div class="sw-logos">
-                <!-- <img class="sw-logo" src="assets/sw_notion.png" alt="Notion"> -->
-                <div class="sw-logo-placeholder">Notion</div>
+                <img
+                  class="sw-logo"
+                  src="qrc:/Sprites/Notion.png"
+                  alt="Notion"
+                />
               </div>
             </div>
           </div>
@@ -123,13 +136,15 @@
           <div class="publishers">
             <div class="pub-block">
               <h4>Editor :</h4>
-              <!-- <img class="pub-logo" src="assets/logo_creajeux.png" alt="Creajeux"> -->
-              <div class="pub-logo-placeholder">Creajeux</div>
+              <img
+                class="pub-logo"
+                src="qrc:/Sprites/creajeux.png"
+                alt="Creajeux"
+              />
             </div>
             <div class="pub-block">
               <h4>Developer :</h4>
-              <!-- <img class="pub-logo" src="assets/logo_developer.png" alt="Developer"> -->
-              <div class="pub-logo-placeholder">Studio</div>
+              <img class="pub-logo" src="qrc:/Sprites/g3d.png" alt="Grog3D" />
             </div>
           </div>
 
@@ -142,27 +157,51 @@
             <div class="member-grid">
               <!-- <img class="member-avatar" src="assets/team/breand_amaryne.png" alt="Bréand Amaryne"> -->
               <div class="member">
-                <div class="member-avatar-placeholder">👤</div>
+                <img
+                  class="member-avatar"
+                  src="qrc:/Sprites/Chibi/Ama_Fond_Blanc.png"
+                  alt="Bréand Amaryne"
+                />
                 <span class="member-name">Bréand Amaryne</span>
               </div>
               <div class="member">
-                <div class="member-avatar-placeholder">👤</div>
+                <img
+                  class="member-avatar"
+                  src="qrc:/Sprites/Chibi/Colin_Fond_Blanc.png"
+                  alt="Daniel Colin"
+                />
                 <span class="member-name highlight">Daniel Colin</span>
               </div>
               <div class="member">
-                <div class="member-avatar-placeholder">👤</div>
+                <img
+                  class="member-avatar"
+                  src="qrc:/Sprites/Chibi/Thomas_Fond_Blanc.png"
+                  alt="Paris-Chevalier Thomas"
+                />
                 <span class="member-name">Paris-Chevalier Thomas</span>
               </div>
               <div class="member">
-                <div class="member-avatar-placeholder">👤</div>
-                <span class="member-name highlight">Rebattet Mickaël</span>
+                <img
+                  class="member-avatar"
+                  src="qrc:/Sprites/Chibi/Mickael_Fond_Blanc.png"
+                  alt="Rebattet Mickaël"
+                />
+                <span class="member-name">Rebattet Mickaël</span>
               </div>
               <div class="member">
-                <div class="member-avatar-placeholder">👤</div>
+                <img
+                  class="member-avatar"
+                  src="qrc:/Sprites/Chibi/Dorian_Fond_Blanc.png"
+                  alt="Ribault Dorian"
+                />
                 <span class="member-name">Ribault Dorian</span>
               </div>
               <div class="member">
-                <div class="member-avatar-placeholder">👤</div>
+                <img
+                  class="member-avatar"
+                  src="qrc:/Sprites/Chibi/Sylvain_Fond_Blanc.png"
+                  alt="Thomas Sylvain"
+                />
                 <span class="member-name">Thomas Sylvain</span>
               </div>
             </div>
@@ -173,19 +212,35 @@
             <h5>Artists :</h5>
             <div class="member-grid">
               <div class="member">
-                <div class="member-avatar-placeholder">👤</div>
+                <img
+                  class="member-avatar"
+                  src="qrc:/Sprites/Chibi/Lou_Anne_Fond_Blanc.png"
+                  alt="Cart Lou Anne"
+                />
                 <span class="member-name">Cart Lou Anne</span>
               </div>
               <div class="member">
-                <div class="member-avatar-placeholder">👤</div>
+                <img
+                  class="member-avatar"
+                  src="qrc:/Sprites/Chibi/Maxime_Fond_Blanc.png"
+                  alt="Langlois Maxime"
+                />
                 <span class="member-name">Langlois Maxime</span>
               </div>
               <div class="member">
-                <div class="member-avatar-placeholder">👤</div>
+                <img
+                  class="member-avatar"
+                  src="qrc:/Sprites/Chibi/Lucas_Fond_Blanc.png"
+                  alt="Raynal Lucas"
+                />
                 <span class="member-name">Raynal Lucas</span>
               </div>
               <div class="member">
-                <div class="member-avatar-placeholder">👤</div>
+                <img
+                  class="member-avatar"
+                  src="qrc:/Sprites/Chibi/Kath_Fond_Blanc.png"
+                  alt="Sarton Kathleen"
+                />
                 <span class="member-name highlight">Sarton Kathleen</span>
               </div>
             </div>
@@ -197,6 +252,6 @@
     </div>
     <!-- /window -->
 
-    <script src="qrc:/Script/DefaultGamePage.js"></script>
+    <script src="qrc:/DGP/Script/DefaultGamePage.js"></script>
   </body>
 </html>
