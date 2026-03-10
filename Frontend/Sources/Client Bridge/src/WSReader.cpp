@@ -1,6 +1,5 @@
 #include "WSReader.h"
 #include <docLogger>
-#include "../monitoring_data.h"
 
 Message::Message()
 {
@@ -19,11 +18,12 @@ void Message::readExit()
 {
 }
 
-void Message::readMonitoring()
+MonitoringData Message::readMonitoring()
 {
     MonitoringData md = std::get<json>(data).get<MonitoringData>();
 
     std::cout << std::format("Download {}%% at speed {} kB/s, Writing {}%% at speed {} kB/s\n", md.dlPrc, md.dlSpeed, md.wrPrc, md.wrSpeed);
+    return md;
 }
 
 void Message::read()
@@ -51,7 +51,8 @@ void to_json(json &j, const Message &m)
 {
     j["type"] = m.type;
 
-    std::visit([&](const auto& value){
+    std::visit([&](const auto &value)
+               {
         using T = std::decay_t<decltype(value)>;
 
         if constexpr (std::is_same_v<T,json>)
@@ -61,15 +62,14 @@ void to_json(json &j, const Message &m)
         else
         {
             j["data"] = value;
-        }
-    }, m.data);
+        } }, m.data);
 }
 
 void from_json(const json &j, Message &m)
 {
     j.at("type").get_to(m.type);
-    
-    const auto& datafield = j.at("Data");
+
+    const auto &datafield = j.at("Data");
 
     if (datafield.is_object() || datafield.is_array())
     {

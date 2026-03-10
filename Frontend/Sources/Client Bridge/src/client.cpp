@@ -6,13 +6,13 @@
 #include <docLogger>
 #include <QWebSocket>
 #include <nlohmann/json.hpp>
-#include "../GameWindow/ButtonGame/buttongame.h"
-#include "WSReader/WSReader.h"
+// #include "../GameWindow/ButtonGame/buttongame.h"
+#include "WSReader.h"
 using nlohmann::json;
 
 using json = nlohmann::json;
 
-Client::Client(QObject* parent) : QObject(parent)
+Client::Client(QObject *parent) : QObject(parent)
 {
     log = new doc::Logger();
 
@@ -41,26 +41,24 @@ Client::Client(QObject* parent) : QObject(parent)
 void Client::websocket()
 {
     ws = new QWebSocket();
-    connect(ws, &QWebSocket::connected, [this](){
-        this->wsConnected();
-    });
+    connect(ws, &QWebSocket::connected, [this]()
+            { this->wsConnected(); });
     ws->open(QUrl("ws://localhost:51419/ws"));
 }
 
 void Client::wsConnected()
 {
     log->Info("WS Connected");
-    connect(ws, &QWebSocket::textMessageReceived, [this](QString message){
-        this->onTextMessageReceived(message);
-    });
-    //ws->sendTextMessage(QString("FUCK UP THE WORLD!"));
+    connect(ws, &QWebSocket::textMessageReceived, [this](QString message)
+            { this->onTextMessageReceived(message); });
+    // ws->sendTextMessage(QString("FUCK UP THE WORLD!"));
 }
 
 void Client::onTextMessageReceived(QString message)
 {
     auto j = json::parse(message.toStdString());
     log->Debug(message.toStdString());
-    
+
     Message mess = j.get<Message>();
     mess.read();
 }
@@ -72,20 +70,24 @@ void Client::wsDisconnected()
 void Client::download(ButtonGame *button)
 {
     log->Info("Download Start");
-    button->pauseConnect();
+    // button->pauseConnect();
+
+    // ---- REST REQUEST ----
     // QNetworkReply *reply = manager->post(QNetworkRequest(QUrl("http://localhost:51419/download")), QByteArray());
     // connect(reply, &QNetworkReply::finished, [reply, button, this]()
-    //         { 
-    // if (reply->error() == QNetworkReply::NoError) 
+    //         {
+    // if (reply->error() == QNetworkReply::NoError)
     // {
     //     log->Info("Download done");
     //     button->launchConnect();
-    // } 
-    // else 
+    // }
+    // else
     // {
     //     log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
     //     button->resumeConnect();
     // } });
+
+    // ---- WEB SOCKET REQUEST ----
     Message dlMessage;
     dlMessage.type = TEXT;
     std::string dlstr = "download";
@@ -103,31 +105,31 @@ void Client::pause(ButtonGame *button)
                 if (reply->error() == QNetworkReply::NoError) 
     {
         log->Info("Pause done");
-        button->resumeConnect();
+        // button->resumeConnect();
     } 
     else 
     {
         log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
-        button->resumeConnect();
+        // button->resumeConnect();
     } });
 }
 
 void Client::resume(ButtonGame *button)
 {
     log->Info("Resume Start");
-    button->pauseConnect();
+    // button->pauseConnect();
     QNetworkReply *reply = manager->post(QNetworkRequest(QUrl("http://localhost:51419/resume")), QByteArray());
     connect(reply, &QNetworkReply::finished, [reply, button, this]()
             {
     if (reply->error() == QNetworkReply::NoError) 
     {
         log->Info("Resume done");
-        button->launchConnect();
+        // button->launchConnect();
     } 
     else 
     {
         log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
-        button->resumeConnect();
+        // button->resumeConnect();
     } });
 }
 

@@ -14,7 +14,7 @@ else()
     )
 endif()
 
-target_link_libraries(View PUBLIC common_deps)
+target_link_libraries(View PUBLIC common_deps ClientBridge)
 
 target_include_directories(View PUBLIC 
     "${CMAKE_SOURCE_DIR}/Sources/View/include"

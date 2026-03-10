@@ -1,11 +1,11 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "../Common/common.h"
 #include <QObject>
 
 class ButtonGame;
-namespace doc {
+namespace doc
+{
 	class Logger;
 }
 
@@ -14,21 +14,20 @@ class Client : QObject
 	Q_OBJECT
 
 private:
-	class QNetworkAccessManager* manager;
-	class QProcess* process;
-	class QWebSocket* ws;
-	doc::Logger* log;
-
+	class QNetworkAccessManager *manager;
+	class QProcess *process;
+	class QWebSocket *ws;
+	doc::Logger *log;
 
 public:
-	Client(QObject* parent);
+	Client(QObject *parent);
 	~Client();
 
 	void websocket();
 
-	void download(ButtonGame* button);
-	void pause(ButtonGame* button);
-	void resume(ButtonGame* button);
+	void download(ButtonGame *button);
+	void pause(ButtonGame *button);
+	void resume(ButtonGame *button);
 
 private:
 	void wsConnected();

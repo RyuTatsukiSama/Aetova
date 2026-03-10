@@ -19,5 +19,6 @@ public:
 private:
     class QWebEngineView *webView;
     class QWebEngineView *devTools;
+    class ClientBridge *bridge;
     doc::Logger *log;
 };
