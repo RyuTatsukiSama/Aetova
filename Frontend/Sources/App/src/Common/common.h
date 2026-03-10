@@ -2,7 +2,7 @@
 #define COMMON_H
 
 constexpr int SCREEN_WIDTH = 1400;
-constexpr int SCREEN_HEIGHT = 823;
+constexpr int SCREEN_HEIGHT = 900;
 
 #include <QString>
 #include <QWidget>

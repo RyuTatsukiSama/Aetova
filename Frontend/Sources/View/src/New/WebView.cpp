@@ -20,19 +20,7 @@ WebView::WebView(QWidget *parent)
     webView = new QWebEngineView(this);
     setCentralWidget(webView);
 
-    // load HTML
-
-    QFile file(":/DGP/View/DefaultGamePage.html");
-
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        log->Error(std::format("Opening file {} failed", file.fileName().toStdString()));
-        return;
-    }
-
-    QString html = file.readAll();
-
-    webView->setHtml(html);
+    webView->setUrl(QUrl("qrc:/DGP/View/DefaultGamePage.html"));
 
 #ifdef _DEBUG
     // Web dev tools
