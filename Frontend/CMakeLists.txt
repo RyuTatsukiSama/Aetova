@@ -75,7 +75,8 @@ target_link_libraries(common_deps INTERFACE
 
 option(BUILD_SHARED "Build Features as shared library" OFF)
 
-add_subdirectory(Sources/View)
+add_subdirectory("Sources/Client Bridge")
+add_subdirectory("Sources/View")
 
 # App
 
@@ -100,6 +101,7 @@ qt_add_executable(Aetova
 
 target_link_libraries(Aetova PRIVATE 
     View
+    ClientBridge
 )
 
 set_target_properties(Aetova PROPERTIES

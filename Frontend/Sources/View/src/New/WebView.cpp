@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <docLogger>
+#include <client_bridge.h>
 
 WebView::WebView(QWidget *parent)
 {
@@ -30,6 +31,15 @@ WebView::WebView(QWidget *parent)
 #endif
 
     log->Info("Aetova Window Init");
+    log->Info("Init Web Channel");
+
+    QWebChannel *channel = new QWebChannel(this);
+    bridge = new ClientBridge(this);
+
+    channel->registerObject("clientBridge", bridge);
+    webView->page()->setWebChannel(channel);
+
+    log->Info("Web Channel Init");
 }
 
 WebView::~WebView()

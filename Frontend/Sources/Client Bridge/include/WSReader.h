@@ -3,11 +3,13 @@
 
 #include <variant>
 #include <string>
+#include "monitoring_data.h"
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
-namespace doc {
-	class Logger;
+namespace doc
+{
+    class Logger;
 }
 
 enum MessageType
@@ -20,14 +22,14 @@ enum MessageType
 
 class Message
 {
-	doc::Logger* log;
+    doc::Logger *log;
 
+public:
     void readText();
     void readClose();
     void readExit();
-    void readMonitoring();
+    MonitoringData readMonitoring();
 
-public:
     Message();
 
     void read();
