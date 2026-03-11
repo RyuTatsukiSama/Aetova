@@ -14,4 +14,5 @@ const (
 	Close
 	Exit
 	Monitoring
+	DownloadDone
 )

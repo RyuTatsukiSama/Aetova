@@ -34,8 +34,24 @@
         Hook: document.getElementById('btn-launch').addEventListener('click', () => { ... });
         Loading state: btnLaunch.classList.add('loading');
       -->
-          <button class="btn-launch" id="btn-launch">Download</button>
+          <button class="btn-launch" id="btn-launch">Empty</button>
         </div>
+      </div>
+
+      <div class="progress-container">
+        <label>Download</label>
+        <div class="progress-bar-bg">
+          <div id="dl-bar" class="progress-bar dl"></div>
+        </div>
+        <span id="dl-info">0% — 0 kB/s</span>
+      </div>
+
+      <div class="progress-container">
+        <label>Write</label>
+        <div class="progress-bar-bg">
+          <div id="wr-bar" class="progress-bar wr"></div>
+        </div>
+        <span id="wr-info">0% — 0 kB/s</span>
       </div>
 
       <p class="tagline">

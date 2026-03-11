@@ -18,11 +18,11 @@
   --radius: 10px;
 }
 
-@font-face{
-    font-family: Sansation_Regular;
-    src: url('qrc:/Fonts/Sansation_Regular.ttf');
-    font-weight: normal;
-    font-style: normal;
+@font-face {
+  font-family: Sansation_Regular;
+  src: url("qrc:/Fonts/Sansation_Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
 }
 
 html,
@@ -114,7 +114,6 @@ body {
   border: none;
   border-radius: var(--radius);
   cursor: pointer;
-  box-shadow: 0 4px 24px var(--accent-glow);
   transition:
     background 0.2s,
     box-shadow 0.2s,
@@ -131,12 +130,10 @@ body {
 }
 .btn-launch:hover {
   background: #3d8ef0;
-  box-shadow: 0 6px 32px var(--accent-glow);
   transform: translateY(-1px);
 }
 .btn-launch:active {
   transform: translateY(1px);
-  box-shadow: 0 2px 12px var(--accent-glow);
 }
 /* JS hook: add class .loading to disable button during launch */
 .btn-launch.loading {
@@ -369,4 +366,37 @@ body {
 }
 .member-name.highlight {
   color: var(--accent);
+}
+
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 4px 25%;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 5px;
+  background-color: #2a2a2a;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 9px;
+  transition: width 0.3s ease;
+}
+
+.progress-bar.dl {
+  background-color: #4a9eff;
+}
+.progress-bar.wr {
+  background-color: #4aff8c;
+}
+
+span {
+  font-size: 12px;
+  color: #aaa;
 }

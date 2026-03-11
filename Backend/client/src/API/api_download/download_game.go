@@ -96,7 +96,7 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 		}
 	}
 
-	if len(se) > 0 {
+	if len(se) == 0 {
 		dLog.Info("Remove Manifest")
 		err = os.Remove("Manifest.json")
 		if err != nil {
@@ -125,6 +125,7 @@ func grMonitoring(done chan bool, mxConn mc.MutexConnection) {
 	for {
 		select {
 		case <-done:
+			mxConn.WriteJSON("Dl Done", mc.Text)
 			return
 		default:
 			nbDlDone := atomic.LoadInt64(&downloadDone)
