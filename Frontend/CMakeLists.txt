@@ -123,6 +123,6 @@ add_custom_command(TARGET Aetova POST_BUILD
 
 add_custom_command(TARGET Aetova POST_BUILD
     COMMAND ${Qt6_DIR}/../../../bin/windeployqt.exe
-        --debug
+        $<IF:$<CONFIG:Debug>,--debug,--release>
         $<TARGET_FILE:Aetova>
 )
