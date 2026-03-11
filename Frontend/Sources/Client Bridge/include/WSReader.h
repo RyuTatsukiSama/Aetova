@@ -17,7 +17,8 @@ enum MessageType
     TEXT,
     CLOSE,
     EXIT,
-    MONITORING
+    MONITORING,
+    DOWNLOAD_DONE
 };
 
 class Message

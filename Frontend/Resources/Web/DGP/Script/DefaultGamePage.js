@@ -11,15 +11,28 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
   // Listen qt signal
   if (clientBridge.monitoringSignal) {
     clientBridge.monitoringSignal.connect(function (dlPrc, dlSpeed, wrPrc, wrSpeed) {
-      console.log("Download Pourcent: " + dlPrc + "% at speed " + dlSpeed + "kB/s");
-      console.log("Write Pourcent: " + wrPrc + "% at speed " + wrSpeed + "kB/s");
+      const dlP = parseFloat(dlPrc).toFixed(1);
+      const wrP = parseFloat(wrPrc).toFixed(1);
+      const dlS = parseFloat(dlSpeed).toFixed(1);
+      const wrS = parseFloat(wrSpeed).toFixed(1);
+
+      document.getElementById("dl-bar").style.width = dlP + "%";
+      document.getElementById("dl-info").textContent = dlP + "% — " + dlS + " kB/s";
+
+      document.getElementById("wr-bar").style.width = wrP + "%";
+      document.getElementById("wr-info").textContent = wrP + "% — " + wrS + " kB/s";
     })
   }
-});
 
-btnLaunch.addEventListener('click', () => {
-  btnLaunch.classList.add('loading');
-  btnLaunch.textContent = 'Launching…';
+  if (clientBridge.bindFunctionToButton) {
+    clientBridge.bindFunctionToButton.connect(function (text, name) {
+      console.log("[JS/NewBind] Func name " + name + "\n");
+      btnLaunch.textContent = text;
+      btnLaunch.onclick = function () {
+        clientBridge.CallFuncByName(name);
+      }
+    })
+  }
 
-  clientBridge.download();
+  clientBridge.StartBinding();
 });

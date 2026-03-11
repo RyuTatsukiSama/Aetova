@@ -7,15 +7,19 @@
 #include <QNetworkAccessManager>
 #include <nlohmann/json.hpp>
 #include "WSReader.h"
+#include <gamelauncher.h>
+#include <filesystem>
+#define fs std::filesystem
 
 ClientBridge::ClientBridge(QObject *parent) : QObject(parent)
 {
     log = new doc::Logger();
 
-    process = new QProcess(nullptr);
-    // process->startDetached("clientGo/client.exe"); // TODO : Change this to a "CREATE_PROCESS", or a more multi platforme fonction
+    process->startDetached("clientGo/client.exe"); // TODO : Change this to a "CREATE_PROCESS", or a more multi platforme fonction
 
     manager = new QNetworkAccessManager(nullptr);
+
+    launcher = new GameLauncher(this);
 
     QNetworkReply *reply = manager->get(QNetworkRequest(QUrl("http://localhost:51419/health")));
     QObject::connect(reply, &QNetworkReply::finished,
@@ -53,13 +57,17 @@ void ClientBridge::wsConnected()
 void ClientBridge::onTextMessageReceived(QString message)
 {
     auto j = json::parse(message.toStdString());
-    log->Debug(message.toStdString());
+    // log->Debug(message.toStdString());
 
     Message mess = j.get<Message>();
     if (mess.type == MONITORING)
     {
         MonitoringData md = mess.readMonitoring();
         monitoringSignal(md.dlPrc, md.dlSpeed, md.wrPrc, md.wrSpeed);
+    }
+    else if (mess.type == DOWNLOAD_DONE)
+    {
+        bindFunctionToButton("Launch", "launch");
     }
     else
         mess.read();
@@ -69,18 +77,91 @@ void ClientBridge::wsDisconnected()
 {
 }
 
+void ClientBridge::CallFuncByName(const QString &name)
+{
+    log->Info(name.toStdString() + "has been called");
+    if (name == "download")
+    {
+        download();
+    }
+    else if (name == "pause")
+    {
+        pause();
+    }
+    else if (name == "resume")
+    {
+        resume();
+    }
+    else if (name == "launch")
+    {
+        launch();
+    }
+    else
+    {
+        log->Error("Function named " + name.toStdString() + " doesn't exist");
+    }
+}
+
+void ClientBridge::StartBinding()
+{
+    log->Info("Start Biding");
+    std::string path = "wd/downloads/BuildOranys";
+    if (fs::exists(path) && fs::is_directory(path)) // the download already started or is done
+    {
+        if (fs::exists("wd/manifest.json")) // the download isn't finish
+        {
+            bindFunctionToButton("Resume", "resume");
+        }
+        else
+        {
+            bindFunctionToButton("Launch", "launch");
+            monitoringSignal(100.f, 0.f, 100.f, 0.f);
+        }
+    }
+    else
+    {
+        bindFunctionToButton("Download", "download");
+    }
+}
+
 void ClientBridge::download()
 {
-    log->Caller();
-    monitoringSignal(0, 0, 0, 0);
+    log->Info("Download Start");
+    Message dlMessage;
+    dlMessage.type = TEXT;
+    std::string dlstr = "download";
+    dlMessage.data = dlstr;
+    json j = dlMessage;
+    ws->sendTextMessage(QString::fromStdString(j.dump()));
+    bindFunctionToButton("Pause", "pause");
 }
 
 void ClientBridge::pause()
 {
-    log->Caller();
+    log->Info("Pause called");
+    Message dlMessage;
+    dlMessage.type = TEXT;
+    std::string dlstr = "pause";
+    dlMessage.data = dlstr;
+    json j = dlMessage;
+    ws->sendTextMessage(QString::fromStdString(j.dump()));
+    bindFunctionToButton("Resume", "resume");
 }
 
 void ClientBridge::resume()
 {
-    log->Caller();
+    log->Info("Resume called");
+    Message dlMessage;
+    dlMessage.type = TEXT;
+    std::string dlstr = "resume";
+    dlMessage.data = dlstr;
+    json j = dlMessage;
+    ws->sendTextMessage(QString::fromStdString(j.dump()));
+    bindFunctionToButton("Pause", "pause");
+}
+
+void ClientBridge::launch()
+{
+    log->Info("Launch called");
+    launcher->launchGame("BuildOranys", "Oranys");
 }
