@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -23,9 +24,10 @@ type DownloaderData struct {
 }
 
 type WriterData struct {
-	path     string
-	data     []byte
-	position int64
+	path       string
+	data       []byte
+	position   int64
+	parentFile utils.ManifestFile
 }
 
 type MonitoringData struct {
@@ -59,8 +61,15 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 	for i := 0; i < MaxDLWorkers; i++ {
 		wg.Go(func() {
 			for data := range chanDownload {
-				downloadData(data)
-				atomic.AddInt64(&downloadDone, 1)
+				select {
+				case <-Ctx.Done():
+					dLog.Info("Downloader" + strconv.Itoa(i) + " Request Cancel")
+					return
+				default:
+
+					downloadData(data)
+					atomic.AddInt64(&downloadDone, 1)
+				}
 			}
 		})
 	}
@@ -69,8 +78,14 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 	for i := 0; i < MaxWRWorkers; i++ {
 		wg.Go(func() {
 			for data := range chanWrite {
-				saveChunkAt(data)
-				atomic.AddInt64(&writeDone, 1)
+				select {
+				case <-Ctx.Done():
+					dLog.Info("Worker" + strconv.Itoa(i) + " Request Cancel")
+					return
+				default:
+					saveChunkAt(data)
+					atomic.AddInt64(&writeDone, 1)
+				}
 			}
 		})
 	}
@@ -124,8 +139,11 @@ func grMonitoring(done chan bool, mxConn mc.MutexConnection) {
 
 	for {
 		select {
+		case <-Ctx.Done():
+			dLog.Info("Monitoring Request Cancel")
+			return
 		case <-done:
-			mxConn.WriteJSON("Dl Done", mc.Text)
+			mxConn.WriteJSON("Dl Done", mc.DownloadDone)
 			return
 		default:
 			nbDlDone := atomic.LoadInt64(&downloadDone)

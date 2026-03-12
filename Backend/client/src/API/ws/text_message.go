@@ -32,7 +32,6 @@ func handleStringMessage(message string) {
 		dLog.Debug("cancel has been called")
 		mc.CancelFunc()
 		dLog.Warning("Doesn't work currently")
-		// TODO : Do it after Worker refactor
 		err := deleteDownloadFiles("BuildOranys") // TODO : hardcode need to be yeet
 		if err != nil {
 			dLog.Error("Error 9 : " + err.Error())
