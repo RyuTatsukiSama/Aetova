@@ -1,1 +1,0 @@
-DEL /Q/S *.log

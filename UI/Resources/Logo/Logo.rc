@@ -1,3 +1,0 @@
-#include "windows.h"
-
-my_icon ICON "Logo.ico"
