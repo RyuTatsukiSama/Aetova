@@ -13,8 +13,13 @@ import (
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
+const (
+	LoggerCD         string = "Client/download"
+	CancelRequestMsg string = "Request Canceled"
+)
+
 func handleDownload(mxConn mc.MutexConnection) {
-	dLog := docLogger.NewLoggerWithGOpts("Client/download")
+	dLog := docLogger.NewLoggerWithGOpts(LoggerCD)
 	start := time.Now()
 
 	chanError := make(chan error)
@@ -44,7 +49,7 @@ func handleDownload(mxConn mc.MutexConnection) {
 }
 
 func grGetManifest(mxConn mc.MutexConnection, ce chan error) (bool, utils.ManifestDir) {
-	dLog := docLogger.NewLoggerWithGOpts("Client/download")
+	dLog := docLogger.NewLoggerWithGOpts(LoggerCD)
 
 	chanManifest := make(chan utils.ManifestDir)
 
@@ -53,7 +58,7 @@ func grGetManifest(mxConn mc.MutexConnection, ce chan error) (bool, utils.Manife
 	var manifest utils.ManifestDir
 	select {
 	case <-ctx.Done():
-		dLog.Log(docLogger.Info, "Request Canceled")
+		dLog.Info(CancelRequestMsg)
 		return false, utils.ManifestDir{}
 	case err := <-ce:
 		mxConn.WriteText(err.Error())
@@ -78,7 +83,7 @@ func grGetManifest(mxConn mc.MutexConnection, ce chan error) (bool, utils.Manife
 }
 
 func grReserveSpace(mxConn mc.MutexConnection, manifest utils.ManifestDir) bool {
-	dLog := docLogger.NewLoggerWithGOpts("Client/download")
+	dLog := docLogger.NewLoggerWithGOpts(LoggerCD)
 
 	api_download.Ctx = ctx
 
@@ -97,7 +102,7 @@ func grReserveSpace(mxConn mc.MutexConnection, manifest utils.ManifestDir) bool 
 
 	select {
 	case <-ctx.Done():
-		dLog.Log(docLogger.Info, "Request Canceled")
+		dLog.Info(CancelRequestMsg)
 		return false
 	case <-done:
 		for i, err := range sErrors {
@@ -113,7 +118,7 @@ func grReserveSpace(mxConn mc.MutexConnection, manifest utils.ManifestDir) bool 
 }
 
 func grDownload(mxConn mc.MutexConnection, manifest utils.ManifestDir) bool {
-	dLog := docLogger.NewLoggerWithGOpts("Client/download")
+	dLog := docLogger.NewLoggerWithGOpts(LoggerCD)
 
 	api_download.Ctx = ctx
 
@@ -132,7 +137,7 @@ func grDownload(mxConn mc.MutexConnection, manifest utils.ManifestDir) bool {
 
 	select {
 	case <-ctx.Done():
-		dLog.Log(docLogger.Info, "Request Canceled")
+		dLog.Info(CancelRequestMsg)
 		return false
 	case <-done:
 		for _, err := range errors {

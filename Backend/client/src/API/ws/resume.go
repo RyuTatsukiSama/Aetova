@@ -15,8 +15,12 @@ import (
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
+const (
+	LoggerCR string = "Client/resume"
+)
+
 func handlePostResume(mxConn mc.MutexConnection) {
-	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
+	dLog := docLogger.NewLoggerWithGOpts(LoggerCR)
 
 	// restart the context after cancel
 	ctx, mc.CancelFunc = context.WithCancel(context.Background())
@@ -77,7 +81,7 @@ func handlePostResume(mxConn mc.MutexConnection) {
 }
 
 func grSearchOnGoingManifest(mxConn mc.MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
-	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
+	dLog := docLogger.NewLoggerWithGOpts(LoggerCR)
 
 	chanManifest := make(chan utils.ManifestFile)
 	chanPath := make(chan string)
@@ -89,7 +93,7 @@ func grSearchOnGoingManifest(mxConn mc.MutexConnection, manifestDir utils.Manife
 
 	select {
 	case <-ctx.Done():
-		dLog.Log(docLogger.Info, "Request Canceled")
+		dLog.Info(CancelRequestMsg)
 		return false, utils.ManifestFile{}, ""
 	case err := <-ce:
 		mxConn.WriteText(err.Error())
@@ -103,7 +107,7 @@ func grSearchOnGoingManifest(mxConn mc.MutexConnection, manifestDir utils.Manife
 }
 
 func grCreateNewManifest(mxConn mc.MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestDir) {
-	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
+	dLog := docLogger.NewLoggerWithGOpts(LoggerCR)
 	chanManifest := make(chan utils.ManifestDir)
 
 	go resume_download.CreateNewManifest(manifestDir, chanManifest, ce)
@@ -112,7 +116,7 @@ func grCreateNewManifest(mxConn mc.MutexConnection, manifestDir utils.ManifestDi
 
 	select {
 	case <-ctx.Done():
-		dLog.Log(docLogger.Info, "Request Canceled")
+		dLog.Info(CancelRequestMsg)
 		return false, utils.ManifestDir{}
 	case err := <-ce:
 		mxConn.WriteText(err.Error())
@@ -125,7 +129,7 @@ func grCreateNewManifest(mxConn mc.MutexConnection, manifestDir utils.ManifestDi
 }
 
 func grDownloadOnGoingFile(mxConn mc.MutexConnection, manifestFile utils.ManifestFile, path string, ce chan error) bool {
-	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
+	dLog := docLogger.NewLoggerWithGOpts(LoggerCR)
 	api_download.Ctx = ctx
 
 	chanDone := make(chan bool)
@@ -134,7 +138,7 @@ func grDownloadOnGoingFile(mxConn mc.MutexConnection, manifestFile utils.Manifes
 
 	select {
 	case <-ctx.Done():
-		dLog.Log(docLogger.Info, "Request Canceled")
+		dLog.Info(CancelRequestMsg)
 		return false
 	case err := <-ce:
 		mxConn.WriteText(err.Error())
@@ -147,7 +151,7 @@ func grDownloadOnGoingFile(mxConn mc.MutexConnection, manifestFile utils.Manifes
 }
 
 func grResumeDownload(mxConn mc.MutexConnection, manifest utils.ManifestDir, cd chan bool, ce chan error) bool {
-	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
+	dLog := docLogger.NewLoggerWithGOpts(LoggerCR)
 	api_download.Ctx = ctx
 
 	var wg sync.WaitGroup
@@ -165,7 +169,7 @@ func grResumeDownload(mxConn mc.MutexConnection, manifest utils.ManifestDir, cd 
 
 	select {
 	case <-ctx.Done():
-		dLog.Log(docLogger.Info, "Request Canceled")
+		dLog.Info(CancelRequestMsg)
 		return false
 	case <-done:
 		for _, err := range errors {
