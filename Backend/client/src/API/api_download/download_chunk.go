@@ -156,7 +156,7 @@ func createManifestDownload(data WriterData) error {
 }
 
 func removeManifestDownload(data WriterData) error {
-	name := strings.TrimSuffix(data.parentFile.Name, filepath.Ext(data.parentFile.Name))
+	name := data.parentFile.Name
 	name = "manifest_" + name + ".bin"
 
 	// Check if he has already been removed

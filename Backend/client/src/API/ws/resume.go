@@ -10,6 +10,7 @@ import (
 	"context"
 	"encoding/json"
 	"os"
+	"sync"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
@@ -149,17 +150,29 @@ func grResumeDownload(mxConn mc.MutexConnection, manifest utils.ManifestDir, cd 
 	dLog := docLogger.NewLoggerWithGOpts("Client/resume")
 	api_download.Ctx = ctx
 
-	//go api_download.DownloadGame(manifest, cd, ce)
+	var wg sync.WaitGroup
+	var errors []error
+
+	wg.Go(func() {
+		api_download.DownloadGame(manifest, errors, mxConn)
+	})
+
+	done := make(chan bool, 1)
+	go func() {
+		wg.Wait()
+		done <- true
+	}()
 
 	select {
 	case <-ctx.Done():
 		dLog.Log(docLogger.Info, "Request Canceled")
 		return false
-	case err := <-ce:
-		mxConn.WriteText(err.Error())
-		dLog.Log(docLogger.Error, err.Error())
-		return false
-	case <-cd:
+	case <-done:
+		for _, err := range errors {
+			dLog.Error(err.Error())
+			mxConn.WriteText(err.Error())
+			return false
+		}
 	}
 
 	return true

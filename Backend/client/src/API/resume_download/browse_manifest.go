@@ -34,7 +34,7 @@ func browseDir(manifestDir utils.ManifestDir) (utils.ManifestFile, string, error
 	}
 
 	for _, subFile := range manifestDir.SubFiles {
-		ok, err := utils.Exists("Manifest_" + subFile.Name + ".bin")
+		ok, err := utils.Exists("manifest_" + subFile.Name + ".bin")
 		if err != nil {
 			return utils.ManifestFile{}, "", err
 		}
