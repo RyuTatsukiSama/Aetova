@@ -1,12 +1,15 @@
 package api_download
 
 import (
+	"aetova/client/utils"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
+	"sync"
 )
 
 func downloadChunk(job WorkerData, manifestFile *os.File) {
@@ -79,7 +82,16 @@ func downloadData(data DownloaderData) ([]byte, error) {
 	return body, nil
 }
 
+var manifestMu sync.Mutex
+
 func saveChunkAt(data WriterData) error {
+	manifestMu.Lock()
+	err := createManifestDownload(data)
+	manifestMu.Unlock()
+	if err != nil {
+		return err
+	}
+
 	// open file
 	newFile, err := os.OpenFile(target+data.path, os.O_RDWR, 0700)
 	if err != nil {
@@ -92,6 +104,25 @@ func saveChunkAt(data WriterData) error {
 		return errors.New(err.Error() + " saveChunkAt")
 	}
 
+	name := strings.TrimSuffix(data.parentFile.Name, filepath.Ext(data.parentFile.Name))
+	manifest_download, err := os.OpenFile("manifest_"+name+".bin", os.O_RDWR, 0700)
+	if err != nil {
+		return err
+	}
+
+	_, err = manifest_download.WriteAt([]byte{1}, data.position/int64(utils.SizeChunk))
+	if err != nil {
+		return err
+	}
+	manifest_download.Close()
+
+	manifestMu.Lock()
+	err = removeManifestDownload(data)
+	manifestMu.Unlock()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -102,4 +133,58 @@ func saveChunk(path string, data []byte) error {
 	}
 
 	return nil
+}
+
+func createManifestDownload(data WriterData) error {
+	name := strings.TrimSuffix(data.parentFile.Name, filepath.Ext(data.parentFile.Name))
+	isExist := fileExists("manifest_" + name + ".bin")
+	if !isExist {
+		f, err := os.Create("manifest_" + name + ".bin")
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+
+		bytes := make([]byte, data.parentFile.NbChunks)
+		_, err = f.Write(bytes)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func removeManifestDownload(data WriterData) error {
+	name := strings.TrimSuffix(data.parentFile.Name, filepath.Ext(data.parentFile.Name))
+	name = "manifest_" + name + ".bin"
+
+	// Check if he has already been removed
+	isExist := fileExists(name)
+	if !isExist {
+		return nil
+	}
+
+	bytes, err := os.ReadFile(name)
+	if err != nil {
+		return err
+	}
+
+	for _, b := range bytes {
+		if b != 1 {
+			return nil
+		}
+	}
+
+	err = os.Remove(name)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func fileExists(path string) bool {
+	_, err := os.Stat(path)
+	return !os.IsNotExist(err)
 }

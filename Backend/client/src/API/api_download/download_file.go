@@ -98,8 +98,9 @@ func newDownloadFile(file utils.ManifestFile, path string) {
 		chanDownload <- DownloaderData{
 			path: fmt.Sprintf("%spart%d_%s.bin", path, part, file.Name),
 			writerData: WriterData{
-				path:     path + file.Name,
-				position: int64(part * utils.SizeChunk),
+				path:       path + file.Name,
+				position:   int64(part * utils.SizeChunk),
+				parentFile: file,
 			},
 		}
 	}
