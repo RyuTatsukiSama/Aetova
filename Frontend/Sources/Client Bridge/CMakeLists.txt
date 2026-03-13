@@ -3,17 +3,14 @@
 if(BUILD_SHARED)
     add_library(ClientBridge SHARED
         "${CMAKE_SOURCE_DIR}/Sources/Client Bridge/src/WSReader.cpp"
-        "${CMAKE_SOURCE_DIR}/Sources/Client Bridge/src/client.cpp"
         "${CMAKE_SOURCE_DIR}/Sources/Client Bridge/src/client_bridge.cpp"
     )
 else()
     add_library(ClientBridge OBJECT
         "${CMAKE_SOURCE_DIR}/Sources/Client Bridge/src/WSReader.cpp"
-        "${CMAKE_SOURCE_DIR}/Sources/Client Bridge/src/client.cpp"
         "${CMAKE_SOURCE_DIR}/Sources/Client Bridge/src/client_bridge.cpp"
         "${CMAKE_SOURCE_DIR}/Sources/Client Bridge/include/WSReader.h"
         "${CMAKE_SOURCE_DIR}/Sources/Client Bridge/include/client_bridge.h"
-        "${CMAKE_SOURCE_DIR}/Sources/Client Bridge/include/client.h"
     )
 endif()
 
