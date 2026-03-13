@@ -10,7 +10,7 @@ echo >> "$LOGFILE"
 git fetch
 
 difference=$(git diff origin/main --name-only ../Go/server)
-if [ -n "$difference" ]; then
+if [[ -n "$difference" ]]; then
 	echo "$difference" >> "$LOGFILE"
 	git pull
 	(cd ../Go/server && sh build_server.sh) >> "$LOGFILE" 2>&1
