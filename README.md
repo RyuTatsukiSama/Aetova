@@ -10,4 +10,4 @@ For client interface : [Qt6](https://www.qt.io/product/qt6) v6.10.0
 
 For logger gestion in C++ : [docLogger](https://github.com/RyuTatsukiSama/docLogger) v1.1.1
 
-For logger gestion in Golang : [docLogger](https://github.com/RyuTatsukiSama/docLogger) v1.0.0
+For logger gestion in Golang : [docLogger](https://github.com/RyuTatsukiSama/docLogger) v1.1.0
