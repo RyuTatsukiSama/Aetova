@@ -17,7 +17,7 @@ var (
 )
 
 func GetManifest(cm chan utils.ManifestDir, ce chan error) {
-	req, err := http.NewRequest("GET", "http://aetova.duckdns.org:15369"+"/manifest", nil) // TODO : Change that to avoid hard code port
+	req, err := http.NewRequest("GET", "http://localhost:51418"+"/manifest", nil) // TODO : Change that to avoid hard code port
 	if err != nil {
 		ce <- err
 		return

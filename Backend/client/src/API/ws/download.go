@@ -91,7 +91,7 @@ func grReserveSpace(mxConn mc.MutexConnection, manifest utils.ManifestDir) bool 
 	var sErrors []error = make([]error, 0)
 
 	wg.Go(func() {
-		api_download.ReserveSpaceDir(manifest, "./downloads/", sErrors)
+		api_download.ReserveSpaceDir(manifest, "./app/", sErrors)
 	})
 
 	done := make(chan bool, 1)

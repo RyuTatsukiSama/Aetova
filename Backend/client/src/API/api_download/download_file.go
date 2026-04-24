@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
@@ -94,6 +95,8 @@ func downloadFile(file utils.ManifestFile, path string) error {
 }
 
 func newDownloadFile(file utils.ManifestFile, path string) {
+	bitmap := NewChunkBitmap(file.NbChunks)
+	bitmap.StartAutoSave(Ctx, targetDl+file.Name+".mfs", 500*time.Millisecond)
 	for part := 0; part < file.NbChunks; part++ {
 		chanDownload <- DownloaderData{
 			path: fmt.Sprintf("%spart%d_%s.bin", path, part, file.Name),
@@ -101,6 +104,7 @@ func newDownloadFile(file utils.ManifestFile, path string) {
 				path:       path + file.Name,
 				position:   int64(part * utils.SizeChunk),
 				parentFile: file,
+				bitmap:     bitmap,
 			},
 		}
 	}
