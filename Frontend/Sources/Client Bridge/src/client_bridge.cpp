@@ -9,6 +9,7 @@
 #include "WSReader.h"
 #include <gamelauncher.h>
 #include <filesystem>
+#include <fstream>
 #define fs std::filesystem
 
 ClientBridge::ClientBridge(QObject *parent) : QObject(parent)
@@ -17,11 +18,13 @@ ClientBridge::ClientBridge(QObject *parent) : QObject(parent)
 
     process->startDetached("clientGo/client.exe"); // TODO : Change this to a "CREATE_PROCESS", or a more multi platforme fonction
 
+    std::fstream confFile("clientGo/.conf", std::ios::in);
+
     manager = new QNetworkAccessManager(nullptr);
 
     launcher = new GameLauncher(this);
 
-    QNetworkReply *reply = manager->get(QNetworkRequest(QUrl("http://localhost:51419/health")));
+    QNetworkReply *reply = manager->get(QNetworkRequest(QUrl("http" + baseUrl + port + "/health")));
     QObject::connect(reply, &QNetworkReply::finished,
                      this, [reply, this]()
                      {
@@ -34,6 +37,34 @@ ClientBridge::ClientBridge(QObject *parent) : QObject(parent)
     else 
     {
         log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
+        ConfPort();
+    }
+    reply->deleteLater(); });
+}
+
+void ClientBridge::ConfPort()
+{
+    std::fstream confFile("Shipyard/.conf", std::ios::in);
+
+    std::string stdPort;
+    confFile >> stdPort;
+
+    port = QString::fromStdString(stdPort);
+
+    QNetworkReply *reply = manager->get(QNetworkRequest(QUrl("http" + baseUrl + port + "/health")));
+    QObject::connect(reply, &QNetworkReply::finished,
+                     this, [reply, this]()
+                     {
+    if (reply->error() == QNetworkReply::NoError) 
+    {
+        QByteArray data = reply->readAll();
+        log->Info(data.toStdString());
+        websocket();
+    } 
+    else 
+    {
+        log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
+        ConfPort();
     }
     reply->deleteLater(); });
 }
@@ -43,7 +74,7 @@ void ClientBridge::websocket()
     ws = new QWebSocket();
     connect(ws, &QWebSocket::connected, [this]()
             { this->wsConnected(); });
-    ws->open(QUrl("ws://localhost:51419/ws"));
+    ws->open(QUrl("ws" + baseUrl + port + "/ws"));
 }
 
 void ClientBridge::wsConnected()

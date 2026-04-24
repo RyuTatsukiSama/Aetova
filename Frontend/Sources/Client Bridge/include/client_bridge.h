@@ -20,6 +20,9 @@ private:
     class GameLauncher *launcher;
     doc::Logger *log;
 
+    QString baseUrl = "://localhost:";
+    QString port = "51419";
+
 public:
     explicit ClientBridge(QObject *parent = nullptr);
 
@@ -29,6 +32,8 @@ public slots:
     void StartBinding();
 
 private:
+    void ConfPort();
+
     void download();
     void pause();
     void resume();
