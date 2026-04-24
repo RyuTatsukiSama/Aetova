@@ -7,3 +7,5 @@ assemble/
 manifest.json
 .env
 docLogs/
+*.exe*
+!client.exe
