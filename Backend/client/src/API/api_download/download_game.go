@@ -70,7 +70,7 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 				default:
 					err := downloadData(data)
 					if err != nil {
-						dLog.Error(err.Error())
+						dLog.Error("Error 14: " + err.Error())
 					} else {
 						atomic.AddInt64(&downloadDone, 1)
 					}
@@ -80,7 +80,7 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 	}
 
 	// start write workers
-	for i := 0; i < 1; i++ {
+	for i := 0; i < MaxWRWorkers; i++ {
 		wg.Go(func() {
 			for data := range chanWrite {
 				select {
@@ -88,16 +88,19 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 					dLog.Info("Writer" + strconv.Itoa(i) + " Request Cancel")
 					return
 				default:
-					dLog.Debug("Write Worker")
-					saveChunkAt(data)
-					atomic.AddInt64(&writeDone, 1)
+					err := saveChunkAt(data)
+					if err != nil {
+						dLog.Error("Error 15: " + err.Error())
+					} else {
+						atomic.AddInt64(&writeDone, 1)
+					}
 				}
 			}
 		})
 	}
 
 	// stock send all the file that need to be download
-	err := downloadDir(manifest, targetDl)
+	err := downloadDir(manifest, "")
 	if err != nil {
 		se = append(se, err)
 	}
@@ -170,7 +173,6 @@ func grMonitoring(done chan bool, mxConn mc.MutexConnection) {
 			}, mc.Monitoring)
 
 			dLog.Info(fmt.Sprintf("Download %f%% at %f kB/s | Write %f%% at %f kB/s", float64(nbDlDone)/float64(NbChunk)*100, dlSpeed, float64(nbWrDone)/float64(NbChunk)*100, wrSpeed))
-			dLog.Debug(fmt.Sprintf("Channel Write %d", len(chanWrite)))
 			time.Sleep(time.Second)
 
 			if nbDlDone >= int64(NbChunk) && !chanDlClosed {

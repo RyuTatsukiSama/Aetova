@@ -1,6 +1,7 @@
 package client_api
 
 import (
+	"aetova/client/src/API/api_download"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -44,7 +45,7 @@ func handleGetHealth(w http.ResponseWriter, r *http.Request) {
 }
 
 func serverHealth() map[string]string {
-	req, err := http.NewRequest("GET", server_url+"/health", nil)
+	req, err := http.NewRequest("GET", api_download.Server_Url+"/health", nil)
 	if err != nil {
 		return map[string]string{
 			"status":         "failed",
