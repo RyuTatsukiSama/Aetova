@@ -96,12 +96,12 @@ func downloadFile(file utils.ManifestFile, path string) error {
 
 func newDownloadFile(file utils.ManifestFile, path string) {
 	bitmap := NewChunkBitmap(file.NbChunks)
-	bitmap.StartAutoSave(Ctx, targetDl+file.Name+".mfs", 500*time.Millisecond)
+	bitmap.StartAutoSave(Ctx, targetDl+file.Name+".mfs", time.Second)
 	for part := 0; part < file.NbChunks; part++ {
 		chanDownload <- DownloaderData{
 			path: fmt.Sprintf("%spart%d_%s.bin", path, part, file.Name),
 			writerData: WriterData{
-				path:       path + file.Name,
+				path:       targetApp + path + file.Name,
 				position:   int64(part * utils.SizeChunk),
 				parentFile: file,
 				bitmap:     bitmap,

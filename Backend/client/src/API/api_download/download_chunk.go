@@ -1,6 +1,7 @@
 package api_download
 
 import (
+	"aetova/client/utils"
 	"errors"
 	"fmt"
 	"io"
@@ -8,9 +9,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
+
+const Server_Url string = "http://localhost:51418"
 
 func downloadChunk(job WorkerData, manifestFile *os.File) {
 
@@ -45,7 +46,7 @@ func downloadData(dData DownloaderData) error {
 	jsonData := fmt.Sprintf(`{"path": "%s"}`, dData.path)
 	var reader io.Reader = strings.NewReader(jsonData)
 
-	req, err := http.NewRequest("POST", "http://aetova.duckdns.org:15369"+"/downloader", reader)
+	req, err := http.NewRequest("POST", Server_Url+"/downloader", reader)
 	if err != nil {
 		return errors.New(err.Error() + " downloadData Request")
 	}
@@ -83,24 +84,20 @@ func downloadData(dData DownloaderData) error {
 }
 
 func saveChunkAt(data WriterData) error {
-	dLog := docLogger.NewLoggerWithGOpts("Client/SaveChunk")
 
-	dLog.Debug("Open file")
 	// open file
-	newFile, err := os.OpenFile(targetApp+data.path, os.O_RDWR, 0700)
+	newFile, err := os.OpenFile(data.path, os.O_RDWR, 0700)
 	if err != nil {
 		return errors.New(err.Error() + " saveChunkAt")
 	}
 	defer newFile.Close()
 
-	dLog.Debug("Write file")
 	// write the byte in the new file
 	if _, err := newFile.WriteAt(data.data, data.position); err != nil {
 		return errors.New(err.Error() + " saveChunkAt")
 	}
 
-	dLog.Debug("Mark bitmap")
-	data.bitmap.Mark(int(data.position))
+	data.bitmap.Mark(int(data.position) / utils.SizeChunk)
 
 	return nil
 }

@@ -18,9 +18,8 @@ var (
 			MaxIdleConnsPerHost: api_download.MaxDLWorkers,
 		},
 	}
-	server_url string = "http://localhost:51418"
-	ctx        context.Context
-	cancel     context.CancelFunc
+	ctx    context.Context
+	cancel context.CancelFunc
 )
 
 func setupRoutes() {
