@@ -1,7 +1,6 @@
 package api_download
 
 import (
-	"aetova/client/utils"
 	"errors"
 	"fmt"
 	"io"
@@ -9,7 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
 func downloadChunk(job WorkerData, manifestFile *os.File) {
@@ -40,14 +40,14 @@ func downloadChunk(job WorkerData, manifestFile *os.File) {
 	job.Cd <- true
 }
 
-func downloadData(data DownloaderData) ([]byte, error) {
+func downloadData(dData DownloaderData) error {
 
-	jsonData := fmt.Sprintf(`{"path": "%s"}`, data.path)
+	jsonData := fmt.Sprintf(`{"path": "%s"}`, dData.path)
 	var reader io.Reader = strings.NewReader(jsonData)
 
 	req, err := http.NewRequest("POST", "http://aetova.duckdns.org:15369"+"/downloader", reader)
 	if err != nil {
-		return make([]byte, 0), errors.New(err.Error() + " downloadData Request")
+		return errors.New(err.Error() + " downloadData Request")
 	}
 
 	req.Header.Add("api_key", "c7e642cc-9928-4248-bd3f-c9588490bb60")
@@ -55,80 +55,59 @@ func downloadData(data DownloaderData) ([]byte, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return make([]byte, 0), errors.New(err.Error() + " downloadData Do")
+		return errors.New(err.Error() + " downloadData Do")
 	}
 	if resp.StatusCode != 200 {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return make([]byte, 0), errors.New(err.Error() + " downloadData Response")
+			return errors.New(err.Error() + " downloadData Response")
 		}
-		return make([]byte, 0), errors.New(resp.Status + " " + string(body[:]))
+		return errors.New(resp.Status + " " + string(body[:]))
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return make([]byte, 0), errors.New(err.Error() + " downloadData Read body")
+		return errors.New(err.Error() + " downloadData Read body")
 	}
 
 	err = resp.Body.Close()
 	if err != nil {
-		return make([]byte, 0), errors.New(err.Error() + " downloadData close resp")
+		return errors.New(err.Error() + " downloadData close resp")
 	}
 
 	// give the data to the writer
-	data.writerData.data = body
-	chanWrite <- data.writerData
+	dData.writerData.data = body
+	chanWrite <- dData.writerData
 
-	return body, nil
+	return nil
 }
 
-var manifestMu sync.Mutex
-
 func saveChunkAt(data WriterData) error {
-	manifestMu.Lock()
-	err := createManifestDownload(data)
-	manifestMu.Unlock()
-	if err != nil {
-		return err
-	}
+	dLog := docLogger.NewLoggerWithGOpts("Client/SaveChunk")
 
+	dLog.Debug("Open file")
 	// open file
-	newFile, err := os.OpenFile(target+data.path, os.O_RDWR, 0700)
+	newFile, err := os.OpenFile(targetApp+data.path, os.O_RDWR, 0700)
 	if err != nil {
 		return errors.New(err.Error() + " saveChunkAt")
 	}
 	defer newFile.Close()
 
+	dLog.Debug("Write file")
 	// write the byte in the new file
 	if _, err := newFile.WriteAt(data.data, data.position); err != nil {
 		return errors.New(err.Error() + " saveChunkAt")
 	}
 
-	name := strings.TrimSuffix(data.parentFile.Name, filepath.Ext(data.parentFile.Name))
-	manifest_download, err := os.OpenFile("manifest_"+name+".bin", os.O_RDWR, 0700)
-	if err != nil {
-		return err
-	}
-
-	_, err = manifest_download.WriteAt([]byte{1}, data.position/int64(utils.SizeChunk))
-	if err != nil {
-		return err
-	}
-	manifest_download.Close()
-
-	manifestMu.Lock()
-	err = removeManifestDownload(data)
-	manifestMu.Unlock()
-	if err != nil {
-		return err
-	}
+	dLog.Debug("Mark bitmap")
+	data.bitmap.Mark(int(data.position))
 
 	return nil
 }
 
-func saveChunk(path string, data []byte) error {
+func saveChunk(wData WriterData) error {
 	// write the byte in the new file
-	if err := os.WriteFile(target+path, data, 0700); err != nil {
+	if err := os.WriteFile(targetApp+wData.path, wData.data, 0700); err != nil {
 		return errors.New(err.Error() + " saveChunk")
 	}
 

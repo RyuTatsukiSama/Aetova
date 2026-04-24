@@ -18,7 +18,7 @@ var (
 			MaxIdleConnsPerHost: api_download.MaxDLWorkers,
 		},
 	}
-	server_url string = "http://aetova.duckdns.org:15369"
+	server_url string = "http://localhost:51418"
 	ctx        context.Context
 	cancel     context.CancelFunc
 )
@@ -41,8 +41,6 @@ func LaunchAPI() (err error) {
 	if err != nil {
 		return err
 	}
-
-	// TODO : create a file (or other system) for UI to get the port where the client listen, or have an endpoint "test" and the UI do the same thing has "FindFreePort"
 
 	dLog.Log(docLogger.Info, fmt.Sprintf("Client Launch on port %d!", port))
 
