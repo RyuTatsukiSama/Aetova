@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	targetApp string = "app/"
-	targetDl  string = "downloads/"
+	TargetApp string = "app/"
+	TargetDl  string = "downloads/"
 )
 
 type DownloaderData struct {
@@ -44,6 +44,7 @@ var (
 	downloadDone int64
 	chanWrite    chan WriterData
 	writeDone    int64
+	guidFolder   string
 )
 
 func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnection) {
@@ -51,6 +52,14 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 
 	if NbChunk <= 0 {
 		se = append(se, errors.New("error 10 : nbchunk is at 0 or less"))
+		return
+	}
+
+	guidFolder = fmt.Sprintf("%d/", 0) // TODO: When PostreSQL is here, get it from the manifest
+
+	err := os.MkdirAll(TargetDl+guidFolder, 0644)
+	if err != nil {
+		se = append(se, errors.New("Error 16: "+err.Error()))
 		return
 	}
 
@@ -100,7 +109,7 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 	}
 
 	// stock send all the file that need to be download
-	err := downloadDir(manifest, "")
+	err = downloadDir(manifest, "")
 	if err != nil {
 		se = append(se, err)
 	}
@@ -122,9 +131,15 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 
 	if len(se) == 0 {
 		dLog.Info("Remove Manifest")
-		err = os.Remove("Manifest.json")
+		err = os.Remove(fmt.Sprintf(TargetDl+"Mfs_%d.json", 0)) // TODO: When PostgreSQL is here, change 0 by the guid in the manifest
 		if err != nil {
-			se = append(se, err)
+			se = append(se, errors.New("Error 17: "+err.Error()))
+		}
+
+		dLog.Info("Delete the BitmapChunk files")
+		err = os.RemoveAll(TargetDl + guidFolder)
+		if err != nil {
+			se = append(se, errors.New("Error 18: "+err.Error()))
 		}
 	}
 }
