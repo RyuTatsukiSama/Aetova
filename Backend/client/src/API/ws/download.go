@@ -73,7 +73,7 @@ func grGetManifest(mxConn mc.MutexConnection, ce chan error) (bool, utils.Manife
 		return false, utils.ManifestDir{}
 	}
 
-	err = os.WriteFile("Manifest.json", data, 0777)
+	err = os.WriteFile(fmt.Sprintf(api_download.TargetDl+"Mfs_%d.json", 0), data, 0777) // TODO: When PostgreSQL is here, change 0 by the guid in the manifest
 	if err != nil {
 		ce <- err
 		return false, utils.ManifestDir{}

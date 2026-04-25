@@ -100,6 +100,8 @@ func (b *ChunkBitmap) StartAutoSave(ctx context.Context, path string, interval t
 				err := b.SaveToDisk(path)
 				if err != nil {
 					dLog.Error("Error 12: " + err.Error())
+				} else if b.IsComplete() {
+					return
 				}
 			}
 		}

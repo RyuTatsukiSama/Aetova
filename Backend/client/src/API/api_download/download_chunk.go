@@ -104,7 +104,7 @@ func saveChunkAt(data WriterData) error {
 
 func saveChunk(wData WriterData) error {
 	// write the byte in the new file
-	if err := os.WriteFile(targetApp+wData.path, wData.data, 0700); err != nil {
+	if err := os.WriteFile(TargetApp+wData.path, wData.data, 0700); err != nil {
 		return errors.New(err.Error() + " saveChunk")
 	}
 
