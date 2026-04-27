@@ -18,7 +18,7 @@ func Exists(path string) (bool, error) {
 	if errors.Is(err, fs.ErrNotExist) {
 		return false, nil
 	}
-	return false, err
+	return false, errors.New("Error 19: " + err.Error())
 }
 
 func FindFreePort(start int) (int, error) {
