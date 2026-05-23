@@ -136,10 +136,11 @@ void ClientBridge::CallFuncByName(const QString &name)
 void ClientBridge::StartBinding()
 {
     log->Info("Start Biding");
-    std::string path = "wd/downloads/BuildOranys";
+    std::string path = "Shipyard/app/BuildOranys";
     if (fs::exists(path) && fs::is_directory(path)) // the download already started or is done
     {
-        if (fs::exists("wd/manifest.json")) // the download isn't finish
+        // TODO : Update it when PostreSQL will be here
+        if (fs::exists(std::format("Shipyard/downloads/Mfs_{}.json", 0))) // the download isn't finish
         {
             bindFunctionToButton("Resume", "resume");
         }
