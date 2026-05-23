@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"strconv"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -47,8 +46,13 @@ var (
 	guidFolder   string
 )
 
-func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnection) {
+func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnection, isResume bool) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/download")
+
+	downloadDone = 0
+	writeDone = 0
+
+	dLog.Info(fmt.Sprintf("Nb Chunk %d", NbChunk))
 
 	if NbChunk <= 0 {
 		se = append(se, errors.New("error 10 : nbchunk is at 0 or less"))
@@ -74,7 +78,6 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 			for data := range chanDownload {
 				select {
 				case <-Ctx.Done():
-					dLog.Info("Downloader" + strconv.Itoa(i) + " Request Cancel")
 					return
 				default:
 					err := downloadData(data)
@@ -94,7 +97,6 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 			for data := range chanWrite {
 				select {
 				case <-Ctx.Done():
-					dLog.Info("Writer" + strconv.Itoa(i) + " Request Cancel")
 					return
 				default:
 					err := saveChunkAt(data)
@@ -109,7 +111,7 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 	}
 
 	// stock send all the file that need to be download
-	err = downloadDir(manifest, "")
+	err = downloadDir(manifest, "", isResume)
 	if err != nil {
 		se = append(se, err)
 	}

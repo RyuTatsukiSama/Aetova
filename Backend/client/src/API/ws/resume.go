@@ -9,6 +9,7 @@ import (
 	"aetova/client/utils"
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"sync"
 
@@ -25,8 +26,10 @@ func handlePostResume(mxConn mc.MutexConnection) {
 	// restart the context after cancel
 	ctx, mc.CancelFunc = context.WithCancel(context.Background())
 
+	mfsPath := fmt.Sprintf("downloads/Mfs_%d.json", 0) // TODO: When PostreSQL is here, get it from the manifest
+
 	// check if the manifest exist
-	ok, err := utils.Exists("Manifest.json")
+	ok, err := utils.Exists(mfsPath)
 	if err != nil {
 		mxConn.WriteText(err.Error())
 		dLog.Log(docLogger.Error, err.Error())
@@ -40,7 +43,7 @@ func handlePostResume(mxConn mc.MutexConnection) {
 
 	// get the data of the manifest
 	var manifestDir utils.ManifestDir
-	data, err := os.ReadFile("Manifest.json")
+	data, err := os.ReadFile(mfsPath)
 	if err != nil {
 		mxConn.WriteText(err.Error())
 		dLog.Log(docLogger.Error, err.Error())
@@ -57,12 +60,12 @@ func handlePostResume(mxConn mc.MutexConnection) {
 	chanError := make(chan error)
 
 	// browse the manifest and create the new manifest
-	done, file, path := grSearchOnGoingManifest(mxConn, manifestDir, chanError)
+	done := grSearchOnGoingManifest(mxConn, manifestDir, chanError)
 	if !done {
 		return
 	}
 
-	done, newManifest := grCreateNewManifest(mxConn, manifestDir, chanError)
+	/*done, newManifest := grCreateNewManifest(mxConn, manifestDir, chanError)
 	if !done {
 		return
 	}
@@ -71,39 +74,33 @@ func handlePostResume(mxConn mc.MutexConnection) {
 	done = grDownloadOnGoingFile(mxConn, file, path, chanError)
 	if !done {
 		return
-	}
+	}*/
 
 	// relaunch download game but with the new manifest
-	done = grResumeDownload(mxConn, newManifest, make(chan bool), chanError)
+	done = grDownload(mxConn, manifestDir, true)
 	if !done {
 		return
 	}
 }
 
-func grSearchOnGoingManifest(mxConn mc.MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestFile, string) {
+func grSearchOnGoingManifest(mxConn mc.MutexConnection, manifestDir utils.ManifestDir, ce chan error) bool {
 	dLog := docLogger.NewLoggerWithGOpts(LoggerCR)
 
-	chanManifest := make(chan utils.ManifestFile)
-	chanPath := make(chan string)
+	chanDone := make(chan bool)
 
-	go resume_download.SearchOnGoingManifest(manifestDir, chanManifest, chanPath, ce)
-
-	var manifest utils.ManifestFile
-	var path string
+	go resume_download.CountChunk(manifestDir, chanDone)
 
 	select {
 	case <-ctx.Done():
 		dLog.Info(CancelRequestMsg)
-		return false, utils.ManifestFile{}, ""
+		return false
 	case err := <-ce:
 		mxConn.WriteText(err.Error())
 		dLog.Log(docLogger.Error, err.Error())
-		return false, utils.ManifestFile{}, ""
-	case manifest = <-chanManifest:
-		path = <-chanPath
+		return false
+	case done := <-chanDone:
+		return done
 	}
-
-	return true, manifest, path
 }
 
 func grCreateNewManifest(mxConn mc.MutexConnection, manifestDir utils.ManifestDir, ce chan error) (bool, utils.ManifestDir) {
@@ -158,7 +155,7 @@ func grResumeDownload(mxConn mc.MutexConnection, manifest utils.ManifestDir, cd 
 	var errors []error
 
 	wg.Go(func() {
-		api_download.DownloadGame(manifest, errors, mxConn)
+		api_download.DownloadGame(manifest, errors, mxConn, true)
 	})
 
 	done := make(chan bool, 1)
