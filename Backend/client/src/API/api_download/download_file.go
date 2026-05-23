@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"sync/atomic"
 	"time"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
@@ -22,6 +23,8 @@ type WorkerData struct {
 	Cd       chan bool
 	Ce       chan error
 }
+
+var dLog docLogger.Logger = *docLogger.NewLogger("download/file", *docLogger.NewOptionsBuilder().Build())
 
 func Worker(jobs <-chan WorkerData, manifestFile *os.File) {
 	for j := range jobs {
@@ -108,4 +111,33 @@ func newDownloadFile(file utils.ManifestFile, path string) {
 			},
 		}
 	}
+}
+
+func resumeDownloadFile(file utils.ManifestFile, path string) error {
+	bitmap := NewChunkBitmap(file.NbChunks)
+	err := bitmap.LoadFromDisk(fmt.Sprintf("%s%s%s.mfs", TargetDl, guidFolder, file.Name))
+	if err != nil {
+		return errors.New("Error 20: " + err.Error())
+	}
+
+	bitmap.StartAutoSave(Ctx, fmt.Sprintf("%s%s%s.mfs", TargetDl, guidFolder, file.Name), time.Second)
+
+	missingChunks := bitmap.MissingChunks()
+
+	atomic.AddInt64(&downloadDone, int64(file.NbChunks)-int64(len(missingChunks)))
+	atomic.AddInt64(&writeDone, int64(file.NbChunks)-int64(len(missingChunks)))
+
+	for _, idChunk := range missingChunks {
+		chanDownload <- DownloaderData{
+			path: fmt.Sprintf("%spart%d_%s.bin", path, idChunk, file.Name),
+			writerData: WriterData{
+				path:       TargetApp + path + file.Name,
+				position:   int64(idChunk * utils.SizeChunk),
+				parentFile: file,
+				bitmap:     bitmap,
+			},
+		}
+	}
+
+	return nil
 }

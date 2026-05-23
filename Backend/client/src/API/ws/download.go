@@ -40,7 +40,7 @@ func handleDownload(mxConn mc.MutexConnection) {
 
 	dLog.Log(docLogger.Info, "Download")
 
-	done = grDownload(mxConn, manifest)
+	done = grDownload(mxConn, manifest, false)
 	if !done {
 		return
 	}
@@ -117,7 +117,7 @@ func grReserveSpace(mxConn mc.MutexConnection, manifest utils.ManifestDir) bool 
 	return true
 }
 
-func grDownload(mxConn mc.MutexConnection, manifest utils.ManifestDir) bool {
+func grDownload(mxConn mc.MutexConnection, manifest utils.ManifestDir, isResume bool) bool {
 	dLog := docLogger.NewLoggerWithGOpts(LoggerCD)
 
 	api_download.Ctx = ctx
@@ -126,7 +126,7 @@ func grDownload(mxConn mc.MutexConnection, manifest utils.ManifestDir) bool {
 	var errors []error
 
 	wg.Go(func() {
-		api_download.DownloadGame(manifest, errors, mxConn)
+		api_download.DownloadGame(manifest, errors, mxConn, isResume)
 	})
 
 	done := make(chan bool, 1)

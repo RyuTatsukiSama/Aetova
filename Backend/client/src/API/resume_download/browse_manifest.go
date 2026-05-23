@@ -1,48 +1,44 @@
 package resume_download
 
 import (
+	"aetova/client/src/API/api_download"
 	"aetova/client/utils"
-	"errors"
+	"fmt"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
-func SearchOnGoingManifest(manifestDir utils.ManifestDir, cm chan utils.ManifestFile, cs chan string, ce chan error) {
+var (
+	downloadDone int64
+	writeDone    int64
+)
 
-	manifestFile, path, err := browseDir(manifestDir)
-	if path == "" && err == nil {
-		err = errors.New("didn't find the manifest")
-		ce <- err
-		return
-	}
-	if err != nil {
-		ce <- err
-		return
-	}
+func CountChunk(manifestDir utils.ManifestDir, cd chan bool) {
+	api_download.NbChunk = 0
 
-	cm <- manifestFile
-	cs <- path
+	dLog := docLogger.NewLoggerWithGOpts("Client/BrowseManifest")
+
+	browseDir(manifestDir)
+
+	dLog.Info(fmt.Sprintf("%d dd %d wd", downloadDone, writeDone))
+
+	cd <- true
 }
 
-func browseDir(manifestDir utils.ManifestDir) (utils.ManifestFile, string, error) {
+func browseDir(manifestDir utils.ManifestDir) {
 	for _, subDir := range manifestDir.SubDir {
-		subManifest, path, err := browseDir(subDir)
-		if err != nil {
-			return utils.ManifestFile{}, "", err
-		}
-		if path != "" {
-			return subManifest, manifestDir.Name + "/" + path, nil
-		}
+		browseDir(subDir)
 	}
 
 	for _, subFile := range manifestDir.SubFiles {
-		ok, err := utils.Exists("manifest_" + subFile.Name + ".bin")
-		if err != nil {
-			return utils.ManifestFile{}, "", err
-		}
+		api_download.NbChunk += subFile.NbChunks
 
-		if ok {
-			return subFile, manifestDir.Name + "/", nil
-		}
+		bitmap := api_download.NewChunkBitmap(subFile.NbChunks)
+		bitmap.LoadFromDisk(fmt.Sprintf("%s%s%s.mfs", "downloads/", "0/", subFile.Name))
+
+		missingChunks := bitmap.MissingChunks()
+
+		downloadDone += int64(subFile.NbChunks) - int64(len(missingChunks))
+		writeDone += int64(subFile.NbChunks) - int64(len(missingChunks))
 	}
-
-	return utils.ManifestFile{}, "", nil
 }
