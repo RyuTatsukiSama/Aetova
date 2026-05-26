@@ -4,6 +4,7 @@ import (
 	"aetova/client/utils"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -17,7 +18,9 @@ var (
 )
 
 func GetManifest(cm chan utils.ManifestDir, ce chan error) {
-	req, err := http.NewRequest("GET", Server_Url+"/manifest", nil) // TODO : Change that to avoid hard code port
+	guid := 0 // TODO : Change this to avoid hard coded guid
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/manifest?guid=%d", Server_Url, guid), nil) // TODO : Change that to avoid hard code port for server URL
 	if err != nil {
 		ce <- err
 		return

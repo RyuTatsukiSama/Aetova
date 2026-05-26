@@ -1,9 +1,10 @@
 chop/
 unzip/
-wd/
+Shipyard/
 docLogger_v1-1-1/
 assemble/
 *.zip
 manifest.json
 .env
 docLogs/
+*.exe

@@ -4,15 +4,18 @@ import (
 	"aetova/server/utils"
 	"fmt"
 	"os"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
 func chopFile(_path string, _name string) (utils.ManifestFile, error) {
+	dLog := docLogger.NewLoggerWithGOpts("Server/ChopFile")
 
-	fmt.Println("Chop file", _name, "start") // ? Here for debug purpose ( replace by docLogger later )
+	dLog.Debug(fmt.Sprintf("Chop file %s start", _name))
 
 	var allPath string = _path + "/" + _name
 	// open the file
-	file, err := os.Open(allPath)
+	file, err := os.Open(fromDir + allPath)
 	if err != nil {
 		return utils.ManifestFile{}, err
 	}
@@ -62,7 +65,12 @@ func chopFile(_path string, _name string) (utils.ManifestFile, error) {
 		return utils.ManifestFile{}, err
 	}
 
-	fmt.Println("Chop file", _name, "done") // ? Here for debug purpose ( replace by docLogger later )
+	dLog.Debug(fmt.Sprintf("Chop file %s done", _name))
 
 	return manifestFile, nil
+}
+
+// Temp function, delete it after compare test end
+func ChopeFileCaller(_path string, _name string) (utils.ManifestFile, error) {
+	return chopFile(_path, _name)
 }

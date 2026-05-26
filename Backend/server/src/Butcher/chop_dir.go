@@ -5,19 +5,31 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
+)
+
+const (
+	fromDir string = "unzip/"
+	toDir   string = "chop/"
 )
 
 func chopDir(dirPath string) (manifestDir utils.ManifestDir, err error) {
+	dLog := docLogger.NewLoggerWithGOpts("Server/ChopDir")
+
 	// get the data of the directory
-	dir, _err := os.ReadDir(dirPath)
+	dir, _err := os.ReadDir(fromDir + dirPath)
 	if _err != nil {
 		return utils.ManifestDir{}, _err
 	}
 
 	manifestDir.Name = strings.Split(dirPath, "/")[len(strings.Split(dirPath, "/"))-1]
-	createDir(dirPath)
+	_err = createDir(dirPath)
+	if _err != nil {
+		return utils.ManifestDir{}, _err
+	}
 
-	fmt.Println("Chop dir", manifestDir.Name, "start") // ? Here for debug purpose ( replace by docLogger later )
+	dLog.Debug(fmt.Sprintf("Chopdir %s start", manifestDir.Name))
 
 	// browse file & subDir
 	for _, entry := range dir {
@@ -37,16 +49,16 @@ func chopDir(dirPath string) (manifestDir utils.ManifestDir, err error) {
 		}
 	}
 
-	fmt.Println("Chop dir", manifestDir.Name, "done") // ? Here for debug purpose ( replace by docLogger later )
+	dLog.Debug(fmt.Sprintf("Chopdir %s done", manifestDir.Name))
 
 	return manifestDir, err
 }
 
 func createDir(_path string) (_err error) {
-	if _err = os.MkdirAll("chop/", 0700); _err != nil {
+	if _err = os.MkdirAll(toDir, 0700); _err != nil {
 		return _err
 	}
-	if _err = os.MkdirAll("chop/"+_path+"/", 0700); _err != nil {
+	if _err = os.MkdirAll(toDir+_path+"/", 0700); _err != nil {
 		return _err
 	}
 	return _err

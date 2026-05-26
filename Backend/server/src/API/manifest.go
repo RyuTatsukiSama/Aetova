@@ -1,6 +1,7 @@
 package server_api
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 )
@@ -17,7 +18,9 @@ func manifestHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleGetManifest(w http.ResponseWriter, r *http.Request) {
-	data, err := os.ReadFile("manifest.json")
+	guid := r.URL.Query().Get("guid")
+
+	data, err := os.ReadFile(fmt.Sprintf("Mfs_%s.json", guid)) // TODO :  Get the guid from the request like this /download?guid=xxxxx
 	if err != nil {
 		http.Error(w, "Can't read the manifest.json", http.StatusNotFound)
 		return

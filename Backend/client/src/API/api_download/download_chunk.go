@@ -43,10 +43,12 @@ func downloadChunk(job WorkerData, manifestFile *os.File) {
 
 func downloadData(dData DownloaderData) error {
 
-	jsonData := fmt.Sprintf(`{"path": "%s"}`, dData.path)
+	guid := 0 // TODO : GUID Hard coded here
+
+	jsonData := fmt.Sprintf(`{"path": "%d/%s"}`, guid, dData.path)
 	var reader io.Reader = strings.NewReader(jsonData)
 
-	req, err := http.NewRequest("POST", Server_Url+"/downloader", reader)
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/downloader", Server_Url), reader)
 	if err != nil {
 		return errors.New(err.Error() + " downloadData Request")
 	}

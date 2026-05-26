@@ -13,7 +13,7 @@ func main() {
 
 	opts := docLogger.NewOptionsBuilder().Build()
 	docLogger.SetGlobalLoggerOptions(opts)
-	dLog := docLogger.NewLogger("Server", *opts)
+	dLog := docLogger.NewLoggerWithGOpts("Server")
 
 	if err = os.MkdirAll("Shipyard", 0700); err != nil {
 		dLog.Log(docLogger.Critical, err.Error())
