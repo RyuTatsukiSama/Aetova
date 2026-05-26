@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func Unzip(path string) (unzipPath string, err error) {
+func Unzip(path string, guid int) (unzipPath string, err error) {
 	reader, err := zip.OpenReader(path)
 	if err != nil {
 		return "", err
@@ -26,7 +26,7 @@ func Unzip(path string) (unzipPath string, err error) {
 		defer rc.Close()
 
 		// define the new file path
-		newFilePath = fmt.Sprintf("unzip/%s", file.Name)
+		newFilePath = fmt.Sprintf("unzip/%d/%s", guid, file.Name)
 
 		if file.FileInfo().IsDir() {
 			err = os.MkdirAll(newFilePath, 0777)
@@ -44,5 +44,5 @@ func Unzip(path string) (unzipPath string, err error) {
 		}
 	}
 
-	return "unzip/" + strings.Split(path, ".")[0], err
+	return fmt.Sprintf("%d/%s", guid, strings.Split(path, ".")[0]), err
 }

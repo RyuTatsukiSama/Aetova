@@ -2,17 +2,19 @@ package server_api
 
 import (
 	"aetova/server/utils"
-	"fmt"
 	"net/http"
-	"os"
 	"strconv"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
 func LaunchAPI() error {
-	fmt.Print("Launch API")
+	dLog := docLogger.NewLoggerWithGOpts("Server/LaunchAPI")
+
+	dLog.Info("Server Launch")
 	loadHandle()
 
-	port, err := strconv.Atoi(os.Getenv("PORT"))
+	port, err := strconv.Atoi("51418") // TODO : Change to avoid hard coded
 	if err != nil {
 		return err
 	}

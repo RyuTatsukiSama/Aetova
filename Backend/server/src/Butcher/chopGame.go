@@ -7,31 +7,39 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
 func ChopGame(zip string) (err error) {
+	dLog := docLogger.NewLoggerWithGOpts("Server/ChopGame")
+
 	start := time.Now()
 
-	fmt.Println("Unzip start")
+	// create the row in data base
+	guid := 0 // TODO: Change it when postgreSQL is setup
+	// Generate a random GUID here, the GUID != ID in database
+
+	dLog.Info("Unzip Start")
 
 	// unzip the game send by the dev
-	var unzipPath string
-	if unzipPath, err = server.Unzip(zip); err != nil {
+	var path string
+	if path, err = server.Unzip(zip, guid); err != nil {
 		return err
 	}
 
-	fmt.Println("Unzip done")
+	dLog.Info("Unzip Done")
 
 	// create the manifest.json for the game
 	var manifestDir utils.ManifestDir
-	manifestDir.Name = strings.Split(unzipPath, "/")[len(strings.Split(unzipPath, "/"))-1]
-	if manifestDir, err = chopDir(unzipPath); err != nil {
+	manifestDir.Name = strings.Split(path, "/")[len(strings.Split(path, "/"))-1]
+	if manifestDir, err = chopDir(path); err != nil {
 		return err
 	}
 
 	// create the manifest file
 	var file *os.File
-	if file, err = os.Create("manifest.json"); err != nil {
+	if file, err = os.Create(fmt.Sprintf("Mfs_%d.json", guid)); err != nil {
 		return err
 	}
 
@@ -40,7 +48,7 @@ func ChopGame(zip string) (err error) {
 		return err
 	}
 
-	fmt.Println("The process takes", time.Since(start))
+	dLog.Info(fmt.Sprintln("The process took", time.Since(start)))
 
 	return err
 }

@@ -4,6 +4,13 @@ const (
 	SizeChunk int64 = 4096 // bytes
 )
 
+type ManifestGame struct {
+	Dir     ManifestDir
+	Version uint
+	Name    string
+	guid    uint
+}
+
 type ManifestDir struct {
 	Name     string
 	SubDir   []ManifestDir

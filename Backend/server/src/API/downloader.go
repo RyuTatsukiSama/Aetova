@@ -30,7 +30,7 @@ func handlePostDownloader(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data, err := os.ReadFile("chop/unzip/" + path["path"])
+	data, err := os.ReadFile("chop/" + path["path"])
 	if err != nil {
 		http.Error(w, "Can't read the file "+path["path"], http.StatusNotFound)
 		return
