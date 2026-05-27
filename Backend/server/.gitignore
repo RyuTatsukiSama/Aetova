@@ -7,4 +7,4 @@ assemble/
 manifest.json
 .env
 docLogs/
-*.exe
+*.exe*
