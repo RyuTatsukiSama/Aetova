@@ -1,8 +1,7 @@
 package main
 
 import (
-	server_api "aetova/server/src/API"
-	butcher "aetova/server/src/Butcher"
+	update "aetova/server/src/Update"
 	"os"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
@@ -25,10 +24,18 @@ func main() {
 		return
 	}
 
-	if err = butcher.ChopGame("BuildOranys.zip"); err != nil {
+	err = update.Compare("v1.0.0.zip", "v1.0.1.zip")
+	if err != nil {
+		dLog.Error(err.Error())
+		return
+	}
+
+	dLog.Info("Compare test done")
+
+	/*if err = butcher.ChopGame("BuildOranys.zip"); err != nil {
 		dLog.Log(docLogger.Critical, err.Error())
 		return
 	}
 
-	dLog.Log(docLogger.Critical, server_api.LaunchAPI().Error())
+	dLog.Log(docLogger.Critical, server_api.LaunchAPI().Error())*/
 }
