@@ -15,18 +15,28 @@ func UpdateGame(updatePath string, guid uint) error {
 	dLog.Info("Update start")
 
 	var manifestGame utils.ManifestGame
-	file, err := os.OpenFile(fmt.Sprintf("%s%d/AppManifest.json", butcher.ToDir, guid), os.O_RDWR, 0777)
+	file, err := os.OpenFile(fmt.Sprintf("%s%d/AppManifest.json", butcher.ToDir, guid), os.O_RDONLY, 0777)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
 
 	err = utils.FromJson(&manifestGame, file)
 	if err != nil {
 		return err
 	}
 
+	err = file.Close()
+	if err != nil {
+		return err
+	}
+
 	// Update version
+
+	file, err = os.OpenFile(fmt.Sprintf("%s%d/AppManifest.json", butcher.ToDir, guid), os.O_WRONLY|os.O_TRUNC, 0777)
+	if err != nil {
+		return err
+	}
+
 	manifestGame.Version += 1
 	err = utils.ToJson(manifestGame, file)
 	if err != nil {

@@ -1,7 +1,5 @@
 package ws
 
-// TODO : All the resume need to be refactor because of the new download system
-
 import (
 	mc "aetova/client/src/API/MutexConnection"
 	"aetova/client/src/API/api_download"

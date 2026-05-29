@@ -2,7 +2,6 @@ package server_api
 
 import (
 	"net/http"
-	"os"
 )
 
 // Middleware pour vérifier l'API key
@@ -15,7 +14,7 @@ func requireAPIKey(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		validKey := os.Getenv("VALID_KEY")
+		validKey := "c7e642cc-9928-4248-bd3f-c9588490bb60" // TODO : Hard code api key
 		if validKey != apiKey {
 			http.Error(w, "Invalid API key", http.StatusForbidden)
 			return

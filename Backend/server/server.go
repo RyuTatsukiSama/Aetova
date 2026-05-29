@@ -41,7 +41,7 @@ func main() {
 		return
 	}
 
-	dLog.Log(docLogger.Critical, server_api.LaunchAPI().Error())
+	dLog.Critical(server_api.LaunchAPI().Error())
 }
 
 func createDirectory() error {
