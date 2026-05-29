@@ -10,7 +10,7 @@ func saveChunk(_data []byte, _path string, _name string, _part int64) (_rname st
 
 	_rname = fmt.Sprintf("part%d_%s.chk", _part, _name)
 
-	path := "chop/" + _path + "/" + _rname // TODO : found a better naming way
+	path := ToDir + _path + "/" + _rname // TODO : found a better naming way
 
 	if ok, err := utils.Exists(path); !ok {
 		// create the file

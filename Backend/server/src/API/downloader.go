@@ -1,6 +1,7 @@
 package server_api
 
 import (
+	butcher "aetova/server/src/Butcher"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -30,7 +31,7 @@ func handlePostDownloader(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data, err := os.ReadFile("chop/" + path["path"])
+	data, err := os.ReadFile(butcher.ToDir + path["path"])
 	if err != nil {
 		http.Error(w, "Can't read the file "+path["path"], http.StatusNotFound)
 		return

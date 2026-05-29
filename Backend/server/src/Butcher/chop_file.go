@@ -15,7 +15,7 @@ func chopFile(_path string, _name string) (utils.ManifestFile, error) {
 
 	var allPath string = _path + "/" + _name
 	// open the file
-	file, err := os.Open(fromDir + allPath)
+	file, err := os.Open(FromDir + allPath)
 	if err != nil {
 		return utils.ManifestFile{}, err
 	}

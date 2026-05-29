@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
 )
 
-func Unzip(path string, guid int) (unzipPath string, err error) {
+func Unzip(path string, guid uint, version uint, gname string) (unzipPath string, err error) {
 	reader, err := zip.OpenReader(path)
 	if err != nil {
 		return "", err
@@ -26,7 +25,7 @@ func Unzip(path string, guid int) (unzipPath string, err error) {
 		defer rc.Close()
 
 		// define the new file path
-		newFilePath = fmt.Sprintf("unzip/%d/%s", guid, file.Name)
+		newFilePath = fmt.Sprintf("unzip/%d/%d/%s", guid, version, file.Name)
 
 		if file.FileInfo().IsDir() {
 			err = os.MkdirAll(newFilePath, 0777)
@@ -44,5 +43,5 @@ func Unzip(path string, guid int) (unzipPath string, err error) {
 		}
 	}
 
-	return fmt.Sprintf("%d/%s", guid, strings.Split(path, ".")[0]), err
+	return fmt.Sprintf("%d/%d/%s", guid, version, gname), err
 }

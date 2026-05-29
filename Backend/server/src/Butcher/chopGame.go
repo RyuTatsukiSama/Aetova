@@ -11,26 +11,66 @@ import (
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
-func ChopGame(zip string) (err error) {
+func RegisterGameManifest(gname string, guid uint, version uint) error {
+	dLog := docLogger.NewLoggerWithGOpts("server/RegisterGameManifest")
+
+	dLog.Info("Register start")
+
+	// Create the manifest of the game
+	manifestGame := utils.ManifestGame{
+		Name:    gname,
+		Version: version,
+		Guid:    guid,
+	}
+
+	err := os.MkdirAll(fmt.Sprintf("%s%d", ToDir, guid), 0700)
+	if err != nil {
+		return err
+	}
+
+	err = os.MkdirAll(fmt.Sprintf("%s%d/Manifest", ToDir, guid), 0700)
+	if err != nil {
+		return err
+	}
+
+	// create the manifest file
+	file, err := os.Create(fmt.Sprintf("%s%d/AppManifest.json", ToDir, guid))
+	if err != nil {
+		return err
+	}
+
+	// save the data into the file
+	err = utils.ToJson(manifestGame, file)
+	if err != nil {
+		return err
+	}
+
+	err = file.Close()
+	if err != nil {
+		return err
+	}
+
+	dLog.Info("Register done")
+
+	return nil
+}
+
+func ChopGame(zip string, gname string, guid uint, version uint) (err error) {
 	dLog := docLogger.NewLoggerWithGOpts("Server/ChopGame")
 
 	start := time.Now()
-
-	// create the row in data base
-	guid := 0 // TODO: Change it when postgreSQL is setup
-	// Generate a random GUID here, the GUID != ID in database
 
 	dLog.Info("Unzip Start")
 
 	// unzip the game send by the dev
 	var path string
-	if path, err = server.Unzip(zip, guid); err != nil {
+	if path, err = server.Unzip(zip, guid, version, gname); err != nil {
 		return err
 	}
 
 	dLog.Info("Unzip Done")
 
-	// create the manifest.json for the game
+	// create the manifest for download
 	var manifestDir utils.ManifestDir
 	manifestDir.Name = strings.Split(path, "/")[len(strings.Split(path, "/"))-1]
 	if manifestDir, err = chopDir(path); err != nil {
@@ -38,13 +78,25 @@ func ChopGame(zip string) (err error) {
 	}
 
 	// create the manifest file
-	var file *os.File
-	if file, err = os.Create(fmt.Sprintf("Mfs_%d.json", guid)); err != nil {
+	file, err := os.Create(fmt.Sprintf("%s%d/Manifest/Mfs_%d.json", ToDir, guid, version))
+	if err != nil {
 		return err
 	}
 
 	// save the data into the file
-	if err = utils.ToJson(manifestDir, file); err != nil {
+	err = utils.ToJson(manifestDir, file)
+	if err != nil {
+		return err
+	}
+
+	err = file.Close()
+	if err != nil {
+		return err
+	}
+
+	// Clear the unzip file
+	err = os.RemoveAll(fmt.Sprintf("%s%d/", FromDir, guid))
+	if err != nil {
 		return err
 	}
 

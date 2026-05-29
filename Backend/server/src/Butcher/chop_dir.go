@@ -10,15 +10,15 @@ import (
 )
 
 const (
-	fromDir string = "unzip/"
-	toDir   string = "chop/"
+	FromDir string = "unzip/"
+	ToDir   string = "data/"
 )
 
 func chopDir(dirPath string) (manifestDir utils.ManifestDir, err error) {
 	dLog := docLogger.NewLoggerWithGOpts("Server/ChopDir")
 
 	// get the data of the directory
-	dir, _err := os.ReadDir(fromDir + dirPath)
+	dir, _err := os.ReadDir(FromDir + dirPath)
 	if _err != nil {
 		return utils.ManifestDir{}, _err
 	}
@@ -55,10 +55,10 @@ func chopDir(dirPath string) (manifestDir utils.ManifestDir, err error) {
 }
 
 func createDir(_path string) (_err error) {
-	if _err = os.MkdirAll(toDir, 0700); _err != nil {
+	if _err = os.MkdirAll(ToDir, 0700); _err != nil {
 		return _err
 	}
-	if _err = os.MkdirAll(toDir+_path+"/", 0700); _err != nil {
+	if _err = os.MkdirAll(ToDir+_path+"/", 0700); _err != nil {
 		return _err
 	}
 	return _err
