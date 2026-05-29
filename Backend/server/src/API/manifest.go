@@ -1,6 +1,7 @@
 package server_api
 
 import (
+	butcher "aetova/server/src/Butcher"
 	"fmt"
 	"net/http"
 	"os"
@@ -20,7 +21,7 @@ func manifestHandler(w http.ResponseWriter, r *http.Request) {
 func handleGetManifest(w http.ResponseWriter, r *http.Request) {
 	guid := r.URL.Query().Get("guid")
 
-	data, err := os.ReadFile(fmt.Sprintf("Mfs_%s.json", guid)) // TODO :  Get the guid from the request like this /download?guid=xxxxx
+	data, err := os.ReadFile(fmt.Sprintf("%s%s/AppManifest.json", butcher.ToDir, guid)) // TODO :  Get the guid from the request like this /download?guid=xxxxx
 	if err != nil {
 		http.Error(w, "Can't read the manifest.json", http.StatusNotFound)
 		return

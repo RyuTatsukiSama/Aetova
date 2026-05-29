@@ -12,6 +12,7 @@ func LaunchAPI() error {
 	dLog := docLogger.NewLoggerWithGOpts("Server/LaunchAPI")
 
 	dLog.Info("Server Launch")
+
 	loadHandle()
 
 	port, err := strconv.Atoi("51418") // TODO : Change to avoid hard coded

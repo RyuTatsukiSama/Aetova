@@ -18,9 +18,10 @@ var (
 )
 
 func GetManifest(cm chan utils.ManifestDir, ce chan error) {
-	guid := 0 // TODO : Change this to avoid hard coded guid
+	guid := 0    // TODO : Change this to avoid hard coded guid
+	version := 0 // TODO : Change this to avoid hard coded guid
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/manifest?guid=%d", Server_Url, guid), nil) // TODO : Change that to avoid hard code port for server URL
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/manifest?guid=%d&version=%d", Server_Url, guid, version), nil) // TODO : Change that to avoid hard code port for server URL
 	if err != nil {
 		ce <- err
 		return
