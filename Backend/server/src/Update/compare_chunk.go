@@ -1,6 +1,7 @@
 package update
 
 import (
+	butcher "aetova/server/src/Butcher"
 	"aetova/server/utils"
 	"fmt"
 	"os"
@@ -19,13 +20,13 @@ func CompareChunk(old utils.ManifestFile, new utils.ManifestFile, isAdding bool)
 	var chk_change []int
 	for chk_id := 0; chk_id < limit-1; chk_id++ {
 		oldChunkName := fmt.Sprintf("Part%d_%s.chk", chk_id, old.Name)
-		oldChunkData, err := os.ReadFile("chop/" + oldChunkName)
+		oldChunkData, err := os.ReadFile(butcher.ToDir + oldChunkName)
 		if err != nil {
 			dLog.Error(err.Error())
 		}
 
 		newChunkName := fmt.Sprintf("Part%d_%s.chk", chk_id, new.Name)
-		newChunkData, err := os.ReadFile("chop/" + newChunkName)
+		newChunkData, err := os.ReadFile(butcher.ToDir + newChunkName)
 		if err != nil {
 			dLog.Error(err.Error())
 		}

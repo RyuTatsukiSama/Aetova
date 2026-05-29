@@ -8,6 +8,12 @@ const (
 	Change
 )
 
+type ManifestUDir struct {
+	Name     string
+	State    State
+	SubFiles []ManifestUFile
+}
+
 type ManifestUFile struct {
 	Name        string
 	State       State

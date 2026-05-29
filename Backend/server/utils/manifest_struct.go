@@ -5,10 +5,9 @@ const (
 )
 
 type ManifestGame struct {
-	Dir     ManifestDir
 	Version uint
 	Name    string
-	guid    uint
+	Guid    uint
 }
 
 type ManifestDir struct {
