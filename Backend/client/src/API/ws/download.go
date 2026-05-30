@@ -53,7 +53,7 @@ func grGetManifest(mxConn mc.MutexConnection, ce chan error) (bool, utils.Manife
 
 	chanManifest := make(chan utils.ManifestDir)
 
-	go api_download.GetManifest(chanManifest, ce)
+	go api_download.GetManifest(chanManifest, ce, 0, 0) // TODO: Hard coded GUID and Version
 
 	var manifest utils.ManifestDir
 	select {

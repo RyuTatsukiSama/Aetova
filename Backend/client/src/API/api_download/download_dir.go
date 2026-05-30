@@ -4,11 +4,11 @@ import (
 	"aetova/client/utils"
 )
 
-func downloadDir(manifest utils.ManifestDir, path string, isResume bool) error {
+func downloadDir(manifest utils.ManifestDir, gManifest utils.ManifestGame, path string, isResume bool) error {
 
 	// sub dir
 	for _, dir := range manifest.SubDir {
-		err := downloadDir(dir, path+manifest.Name+"/", isResume)
+		err := downloadDir(dir, gManifest, path+manifest.Name+"/", isResume)
 		if err != nil {
 			return err
 		}
@@ -18,9 +18,9 @@ func downloadDir(manifest utils.ManifestDir, path string, isResume bool) error {
 	// files
 	for _, file := range manifest.SubFiles {
 		if isResume {
-			resumeDownloadFile(file, path+manifest.Name+"/")
+			resumeDownloadFile(file, gManifest, path+manifest.Name+"/")
 		} else {
-			newDownloadFile(file, path+manifest.Name+"/")
+			newDownloadFile(file, gManifest, path+manifest.Name+"/")
 		}
 	}
 

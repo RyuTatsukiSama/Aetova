@@ -3,6 +3,7 @@ package api_download
 import (
 	mc "aetova/client/src/API/MutexConnection"
 	"aetova/client/utils"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -43,7 +44,6 @@ var (
 	downloadDone int64
 	chanWrite    chan WriterData
 	writeDone    int64
-	guidFolder   string
 )
 
 func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnection, isResume bool) {
@@ -59,9 +59,22 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 		return
 	}
 
-	guidFolder = fmt.Sprintf("%d/", 0) // TODO: When PostreSQL is here, get it from the manifest
+	// Get the app manifest
+	data, err := os.ReadFile(fmt.Sprintf("AppManifest_%d.json", 0)) // TODO : GUID Hard Coded here
+	if err != nil {
+		se = append(se, err)
+		return
+	}
 
-	err := os.MkdirAll(TargetDl+guidFolder, 0644)
+	var gManifest utils.ManifestGame
+	err = json.Unmarshal(data, &gManifest)
+	if err != nil {
+		se = append(se, err)
+		return
+	}
+
+	guidFolder := fmt.Sprintf("%s%d/", TargetDl, gManifest.Guid)
+	err = os.MkdirAll(guidFolder, 0644)
 	if err != nil {
 		se = append(se, errors.New("Error 16: "+err.Error()))
 		return
@@ -80,7 +93,7 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 				case <-Ctx.Done():
 					return
 				default:
-					err := downloadData(data)
+					err := downloadData(data, gManifest)
 					if err != nil {
 						dLog.Error("Error 14: " + err.Error())
 					} else {
@@ -111,7 +124,7 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 	}
 
 	// stock send all the file that need to be download
-	err = downloadDir(manifest, "", isResume)
+	err = downloadDir(manifest, gManifest, "", isResume)
 	if err != nil {
 		se = append(se, err)
 	}
@@ -139,7 +152,7 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 		}
 
 		dLog.Info("Delete the BitmapChunk files")
-		err = os.RemoveAll(TargetDl + guidFolder)
+		err = os.RemoveAll(guidFolder)
 		if err != nil {
 			se = append(se, errors.New("Error 18: "+err.Error()))
 		}

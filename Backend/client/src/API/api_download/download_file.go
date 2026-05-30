@@ -97,12 +97,12 @@ func downloadFile(file utils.ManifestFile, path string) error {
 	return nil
 }
 
-func newDownloadFile(file utils.ManifestFile, path string) {
+func newDownloadFile(file utils.ManifestFile, gManifest utils.ManifestGame, path string) {
 	bitmap := NewChunkBitmap(file.NbChunks)
-	bitmap.StartAutoSave(Ctx, fmt.Sprintf("%s%s%s.mfs", TargetDl, guidFolder, file.Name), time.Second)
+	bitmap.StartAutoSave(Ctx, fmt.Sprintf("%s%d/%s.mfs", TargetDl, gManifest.Guid, file.Name), time.Second)
 	for part := 0; part < file.NbChunks; part++ {
 		chanDownload <- DownloaderData{
-			path: fmt.Sprintf("%spart%d_%s.bin", path, part, file.Name),
+			path: fmt.Sprintf("%spart%d_%s.chk", path, part, file.Name),
 			writerData: WriterData{
 				path:       TargetApp + path + file.Name,
 				position:   int64(part * utils.SizeChunk),
@@ -113,14 +113,14 @@ func newDownloadFile(file utils.ManifestFile, path string) {
 	}
 }
 
-func resumeDownloadFile(file utils.ManifestFile, path string) error {
+func resumeDownloadFile(file utils.ManifestFile, gManifest utils.ManifestGame, path string) error {
 	bitmap := NewChunkBitmap(file.NbChunks)
-	err := bitmap.LoadFromDisk(fmt.Sprintf("%s%s%s.mfs", TargetDl, guidFolder, file.Name))
+	err := bitmap.LoadFromDisk(fmt.Sprintf("%s%d/%s.mfs", TargetDl, gManifest.Guid, file.Name))
 	if err != nil {
 		return errors.New("Error 20: " + err.Error())
 	}
 
-	bitmap.StartAutoSave(Ctx, fmt.Sprintf("%s%s%s.mfs", TargetDl, guidFolder, file.Name), time.Second)
+	bitmap.StartAutoSave(Ctx, fmt.Sprintf("%s%d/%s.mfs", TargetDl, gManifest.Guid, file.Name), time.Second)
 
 	missingChunks := bitmap.MissingChunks()
 
@@ -129,7 +129,7 @@ func resumeDownloadFile(file utils.ManifestFile, path string) error {
 
 	for _, idChunk := range missingChunks {
 		chanDownload <- DownloaderData{
-			path: fmt.Sprintf("%spart%d_%s.bin", path, idChunk, file.Name),
+			path: fmt.Sprintf("%spart%d_%s.chk", path, idChunk, file.Name),
 			writerData: WriterData{
 				path:       TargetApp + path + file.Name,
 				position:   int64(idChunk * utils.SizeChunk),

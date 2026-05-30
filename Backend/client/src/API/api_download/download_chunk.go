@@ -41,11 +41,9 @@ func downloadChunk(job WorkerData, manifestFile *os.File) {
 	job.Cd <- true
 }
 
-func downloadData(dData DownloaderData) error {
+func downloadData(dData DownloaderData, gManifest utils.ManifestGame) error {
 
-	guid := 0 // TODO : GUID Hard coded here
-
-	jsonData := fmt.Sprintf(`{"path": "%d/%s"}`, guid, dData.path)
+	jsonData := fmt.Sprintf(`{"path": "%d/%d/%s"}`, gManifest.Guid, gManifest.Version, dData.path)
 	var reader io.Reader = strings.NewReader(jsonData)
 
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s/downloader", Server_Url), reader)
