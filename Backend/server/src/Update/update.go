@@ -9,18 +9,19 @@ import (
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
 
+var currentGame utils.ManifestGame
+
 func UpdateGame(updatePath string, guid uint) error {
 	dLog := docLogger.NewLoggerWithGOpts("server/UpdateGame")
 
 	dLog.Info("Update start")
 
-	var manifestGame utils.ManifestGame
 	file, err := os.OpenFile(fmt.Sprintf("%s%d/AppManifest.json", butcher.ToDir, guid), os.O_RDONLY, 0777)
 	if err != nil {
 		return err
 	}
 
-	err = utils.FromJson(&manifestGame, file)
+	err = utils.FromJson(&currentGame, file)
 	if err != nil {
 		return err
 	}
@@ -31,27 +32,53 @@ func UpdateGame(updatePath string, guid uint) error {
 	}
 
 	// Update version
+	currentGame.Version += 1
 
+	// Chop the update
+	err = butcher.ChopGame(updatePath, currentGame.Name, guid, currentGame.Version)
+	if err != nil {
+		return err
+	}
+
+	// Get current manifest and previous one
+	currentFile, err := os.OpenFile(fmt.Sprintf("%s%d/Manifest/Mfs_%d.json", butcher.ToDir, guid, currentGame.Version), os.O_RDONLY, 0777)
+	if err != nil {
+		return err
+	}
+
+	var currentManifest utils.ManifestDir
+	err = utils.FromJson(&currentManifest, currentFile)
+	if err != nil {
+		return err
+	}
+
+	previousFile, err := os.OpenFile(fmt.Sprintf("%s%d/Manifest/Mfs_%d.json", butcher.ToDir, guid, currentGame.Version-1), os.O_RDONLY, 0777)
+	if err != nil {
+		return err
+	}
+
+	var previousManifest utils.ManifestDir
+	err = utils.FromJson(&previousManifest, previousFile)
+	if err != nil {
+		return err
+	}
+
+	// Compare it and create the update manifest
+	err = CompareGame(previousManifest, currentManifest)
+	if err != nil {
+		return err
+	}
+
+	// Save the updated version
 	file, err = os.OpenFile(fmt.Sprintf("%s%d/AppManifest.json", butcher.ToDir, guid), os.O_WRONLY|os.O_TRUNC, 0777)
 	if err != nil {
 		return err
 	}
 
-	manifestGame.Version += 1
-	err = utils.ToJson(manifestGame, file)
+	err = utils.ToJson(currentGame, file)
 	if err != nil {
 		return err
 	}
-
-	// Chop the update
-	err = butcher.ChopGame(updatePath, manifestGame.Name, guid, manifestGame.Version)
-	if err != nil {
-		return err
-	}
-
-	// Compare it
-
-	// Create the download update manifest
 
 	dLog.Info("Update done")
 

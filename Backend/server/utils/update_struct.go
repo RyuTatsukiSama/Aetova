@@ -3,19 +3,24 @@ package utils
 type State int
 
 const (
-	Add State = iota
+	None State = iota
+	Add
 	Remove
 	Change
+	NeedCheck
 )
 
 type ManifestUDir struct {
 	Name     string
 	State    State
+	SubDir   []ManifestUDir
 	SubFiles []ManifestUFile
 }
 
 type ManifestUFile struct {
 	Name        string
 	State       State
-	chk_changes []int
+	Chk_changes []int
+	Old         ManifestFile
+	New         ManifestFile
 }

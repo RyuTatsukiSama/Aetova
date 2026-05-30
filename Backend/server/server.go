@@ -10,12 +10,11 @@ import (
 )
 
 func main() {
-	var err error = nil
 	opts := docLogger.NewOptionsBuilder().Build()
 	docLogger.SetGlobalLoggerOptions(opts)
 	dLog := docLogger.NewLoggerWithGOpts("Server")
 
-	err = createDirectory()
+	err := createDirectory()
 	if err != nil {
 		dLog.Critical(err.Error())
 		return
