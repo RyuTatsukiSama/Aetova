@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 )
 
 var (
@@ -17,11 +18,9 @@ var (
 	}
 )
 
-func GetManifest(cm chan utils.ManifestDir, ce chan error) {
-	guid := 0    // TODO : Change this to avoid hard coded guid
-	version := 0 // TODO : Change this to avoid hard coded guid
-
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/manifest?guid=%d&version=%d", Server_Url, guid, version), nil) // TODO : Change that to avoid hard code port for server URL
+func GetManifest(cm chan utils.ManifestDir, ce chan error, guid uint, version uint) {
+	// Create the request
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/manifest?guid=%d&mType=app", Server_Url, guid), nil) // TODO : Change that to avoid hard code port for server URL
 	if err != nil {
 		ce <- err
 		return
@@ -29,6 +28,7 @@ func GetManifest(cm chan utils.ManifestDir, ce chan error) {
 
 	req.Header.Add("api_key", "c7e642cc-9928-4248-bd3f-c9588490bb60")
 
+	// Launch the request and check resp status code
 	resp, err := client.Do(req)
 	if err != nil {
 		ce <- err
@@ -39,22 +39,84 @@ func GetManifest(cm chan utils.ManifestDir, ce chan error) {
 		return
 	}
 
+	// Extract body data
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		ce <- err
 		return
 	}
 
-	var manifest utils.ManifestDir
-	if err := json.Unmarshal(body, &manifest); err != nil {
+	// Unmarshall it
+	var gameManifest utils.ManifestGame
+	if err := json.Unmarshal(body, &gameManifest); err != nil {
 		ce <- err
 		return
 	}
 
+	// Close the body
 	err = resp.Body.Close()
 	if err != nil {
 		ce <- err
 	}
 
-	cm <- manifest
+	// Save the app manifest into a file
+	err = os.WriteFile(fmt.Sprintf("AppManifest_%d.json", gameManifest.Guid), body, 0777) // TODO: When PostgreSQL is here, change 0 by the guid in the manifest
+	if err != nil {
+		ce <- err
+		return
+	}
+
+	// Get the dir manifest
+	dirManifest, err := getDirManifest(gameManifest)
+	if err != nil {
+		ce <- err
+		return
+	}
+
+	cm <- dirManifest
+}
+
+func getDirManifest(gameManifest utils.ManifestGame) (utils.ManifestDir, error) {
+	// Create the request
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/manifest?guid=%d&mType=dl&version=%d", Server_Url, gameManifest.Guid, gameManifest.Version), nil) // TODO : Change that to avoid hard code port for server URL
+	if err != nil {
+		return utils.ManifestDir{}, err
+	}
+
+	req.Header.Add("api_key", "c7e642cc-9928-4248-bd3f-c9588490bb60")
+
+	// Do the request and check the status code respond
+	resp, err := client.Do(req)
+	if err != nil {
+		return utils.ManifestDir{}, err
+	}
+	if resp.StatusCode != 200 {
+		return utils.ManifestDir{}, errors.New(resp.Status)
+	}
+
+	// Extract data from the body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return utils.ManifestDir{}, err
+	}
+
+	// Convert it to manifestDir
+	var dirManifest utils.ManifestDir
+	if err := json.Unmarshal(body, &dirManifest); err != nil {
+		return utils.ManifestDir{}, err
+	}
+
+	// Close the body
+	err = resp.Body.Close()
+	if err != nil {
+		return utils.ManifestDir{}, err
+	}
+
+	// save the manifest into a file
+	err = os.WriteFile(fmt.Sprintf(TargetDl+"Mfs_%d.json", 0), body, 0777) // TODO: When PostgreSQL is here, change 0 by the guid in the manifest
+	if err != nil {
+		return utils.ManifestDir{}, err
+	}
+
+	return dirManifest, nil
 }
