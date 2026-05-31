@@ -1,7 +1,9 @@
 package update
 
 import (
+	butcher "aetova/server/src/Butcher"
 	"aetova/server/utils"
+	"fmt"
 	"os"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
@@ -18,7 +20,8 @@ func CompareGame(old utils.ManifestDir, new utils.ManifestDir) error {
 		return err
 	}
 
-	file, err := os.Create("test.json") // TODO : Get a better way and dir organisation
+	// Save the update manifest
+	file, err := os.Create(fmt.Sprintf("%s%d/UManifest/UMfs_%d.json", butcher.ToDir, currentGame.Guid, currentGame.Version)) // TODO : Get a better way and dir organisation
 	if err != nil {
 		return err
 	}
@@ -27,6 +30,9 @@ func CompareGame(old utils.ManifestDir, new utils.ManifestDir) error {
 	if err != nil {
 		return err
 	}
+
+	// Clear current game, just in case
+	currentGame = utils.ManifestGame{}
 
 	return nil
 }

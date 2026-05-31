@@ -38,6 +38,13 @@ func handleGetManifest(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Can't read the manifest.json", http.StatusNotFound)
 			return
 		}
+	case "upt":
+		version := r.URL.Query().Get("version")
+		data, err = os.ReadFile(fmt.Sprintf("%s%s/UManifest/UMfs_%s.json", butcher.ToDir, guid, version))
+		if err != nil {
+			http.Error(w, "Can't read the manifest.json", http.StatusNotFound)
+			return
+		}
 	default:
 		http.Error(w, "This manifest type doesn't exist", http.StatusNotFound)
 		return

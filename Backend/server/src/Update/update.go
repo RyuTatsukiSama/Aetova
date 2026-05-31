@@ -5,6 +5,7 @@ import (
 	"aetova/server/utils"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
@@ -15,6 +16,13 @@ func UpdateGame(updatePath string, guid uint) error {
 	dLog := docLogger.NewLoggerWithGOpts("server/UpdateGame")
 
 	dLog.Info("Update start")
+
+	start := time.Now()
+
+	err := os.MkdirAll(fmt.Sprintf("%s%d/UManifest", butcher.ToDir, guid), 0777)
+	if err != nil {
+		return err
+	}
 
 	file, err := os.OpenFile(fmt.Sprintf("%s%d/AppManifest.json", butcher.ToDir, guid), os.O_RDONLY, 0777)
 	if err != nil {
@@ -80,7 +88,7 @@ func UpdateGame(updatePath string, guid uint) error {
 		return err
 	}
 
-	dLog.Info("Update done")
+	dLog.Info(fmt.Sprintln("Update done, it took", time.Since(start)))
 
 	return nil
 }
