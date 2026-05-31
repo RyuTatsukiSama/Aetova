@@ -43,6 +43,8 @@ func CompareChunks(old utils.ManifestFile, new utils.ManifestFile, isAdding bool
 		for i := old.NbChunks - 1; i < new.NbChunks; i++ {
 			chk_change = append(chk_change, int(i))
 		}
+	} else if old.NbChunks == new.NbChunks && old.Size != new.Size {
+		chk_change = append(chk_change, int(new.NbChunks-1))
 	}
 
 	// dLog.Debug(fmt.Sprintf("File %s took %s with %d as the limit", new.Name, time.Since(start)/time.Duration(limit), limit))

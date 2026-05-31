@@ -32,72 +32,7 @@ func Worker(jobs <-chan WorkerData, manifestFile *os.File) {
 	}
 }
 
-func downloadFile(file utils.ManifestFile, path string) error {
-	dLog := docLogger.NewLoggerWithGOpts("Client/download")
-	dLog.Info(file.Name + " start")
-
-	// file for the resume
-	manifestFile, err := os.Create("Manifest_" + file.Name + ".bin")
-	if err != nil {
-		return err
-	}
-	defer manifestFile.Close()
-
-	_, err = manifestFile.Write(make([]byte, file.NbChunks))
-	if err != nil {
-		return err
-	}
-
-	// init worker
-	var nbWorkers int = MaxDLWorkers
-	jobs := make(chan WorkerData, file.NbChunks)
-	var chanDone = make(chan bool)
-	var chanError = make(chan error)
-
-	// launch worekr
-	for wor := 0; wor < nbWorkers; wor++ {
-		go Worker(jobs, manifestFile)
-	}
-
-	// send jobs to worker
-	for part := 0; part < file.NbChunks; part++ {
-		jobs <- WorkerData{
-			Path:     path,
-			FileName: file.Name,
-			Part:     part,
-			Cd:       chanDone,
-			Ce:       chanError,
-		}
-	}
-
-	// wait for all jobs to be done
-	for range file.NbChunks {
-		select {
-		case <-Ctx.Done():
-			return errors.New("request has been canceled")
-		case err := <-chanError:
-			return err
-		case <-chanDone:
-		}
-	}
-
-	// close and remove manifest of the download
-	err = manifestFile.Close()
-	if err != nil {
-		return err
-	}
-
-	err = os.Remove(manifestFile.Name())
-	if err != nil {
-		return err
-	}
-
-	dLog.Info(file.Name + " done")
-
-	return nil
-}
-
-func newDownloadFile(file utils.ManifestFile, gManifest utils.ManifestGame, path string) {
+func downloadFile(file utils.ManifestFile, gManifest utils.ManifestGame, path string) {
 	bitmap := NewChunkBitmap(file.NbChunks)
 	bitmap.StartAutoSave(Ctx, fmt.Sprintf("%s%d/%s.mfs", TargetDl, gManifest.Guid, file.Name), time.Second)
 	for part := 0; part < file.NbChunks; part++ {
@@ -113,7 +48,24 @@ func newDownloadFile(file utils.ManifestFile, gManifest utils.ManifestGame, path
 	}
 }
 
-func resumeDownloadFile(file utils.ManifestFile, gManifest utils.ManifestGame, path string) error {
+func downloadUFile(file utils.ManifestUFile, gManifest utils.ManifestGame, path string) {
+	bitmap := NewUChunkBitmap(file.New.NbChunks, file.Chk_changes)
+	bitmap.StartAutoSave(Ctx, fmt.Sprintf("%s%d/%s.mfs", TargetDl, gManifest.Guid, file.Name), time.Second)
+
+	for _, part := range file.Chk_changes {
+		chanDownload <- DownloaderData{
+			path: fmt.Sprintf("%spart%d_%s.chk", path, part, file.Name),
+			writerData: WriterData{
+				path:       TargetApp + path + file.Name,
+				position:   int64(part * utils.SizeChunk),
+				parentFile: file.New,
+				bitmap:     bitmap,
+			},
+		}
+	}
+}
+
+func resumeFile(file utils.ManifestFile, gManifest utils.ManifestGame, path string) error {
 	bitmap := NewChunkBitmap(file.NbChunks)
 	err := bitmap.LoadFromDisk(fmt.Sprintf("%s%d/%s.mfs", TargetDl, gManifest.Guid, file.Name))
 	if err != nil {
@@ -134,6 +86,35 @@ func resumeDownloadFile(file utils.ManifestFile, gManifest utils.ManifestGame, p
 				path:       TargetApp + path + file.Name,
 				position:   int64(idChunk * utils.SizeChunk),
 				parentFile: file,
+				bitmap:     bitmap,
+			},
+		}
+	}
+
+	return nil
+}
+
+func resumeUFile(file utils.ManifestUFile, gManifest utils.ManifestGame, path string) error {
+	bitmap := NewChunkBitmap(file.New.NbChunks)
+	err := bitmap.LoadFromDisk(fmt.Sprintf("%s%d/%s.mfs", TargetDl, gManifest.Guid, file.Name))
+	if err != nil {
+		return errors.New("Error 20: " + err.Error())
+	}
+
+	bitmap.StartAutoSave(Ctx, fmt.Sprintf("%s%d/%s.mfs", TargetDl, gManifest.Guid, file.Name), time.Second)
+
+	missingChunks := bitmap.MissingChunks()
+
+	atomic.AddInt64(&downloadDone, int64(file.New.NbChunks)-int64(len(missingChunks)))
+	atomic.AddInt64(&writeDone, int64(file.New.NbChunks)-int64(len(missingChunks)))
+
+	for _, idChunk := range missingChunks {
+		chanDownload <- DownloaderData{
+			path: fmt.Sprintf("%spart%d_%s.chk", path, idChunk, file.Name),
+			writerData: WriterData{
+				path:       TargetApp + path + file.Name,
+				position:   int64(idChunk * utils.SizeChunk),
+				parentFile: file.New,
 				bitmap:     bitmap,
 			},
 		}

@@ -9,10 +9,12 @@ import (
 )
 
 const (
-	download string = "download"
-	pause    string = "pause"
-	resume   string = "resume"
-	cancel   string = "cancel"
+	download   string = "download"
+	pause      string = "pause"
+	resume     string = "resume"
+	cancel     string = "cancel"
+	update     string = "update"
+	resume_upt string = "resume_upt"
 )
 
 func handleStringMessage(message string) {
@@ -32,11 +34,17 @@ func handleStringMessage(message string) {
 		dLog.Debug("cancel has been called")
 		mc.CancelFunc()
 		dLog.Warning("Doesn't work currently")
-		err := deleteDownloadFiles("BuildOranys") // TODO : hardcode need to be yeet
+		err := deleteDownloadFiles("BuildOranys") // TODO: hardcode need to be yeet
 		if err != nil {
 			dLog.Error("Error 9 : " + err.Error())
 			return
 		}
+	case update:
+		dLog.Debug("update has been called")
+		handleUpdate(MxConn)
+	case resume_upt:
+		dLog.Debug("Resume Update has been called")
+
 	default:
 		dLog.Error("Error 6 : Message " + message + " not listed")
 	}

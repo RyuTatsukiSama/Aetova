@@ -4,9 +4,7 @@ import (
 	mc "aetova/client/src/API/MutexConnection"
 	"aetova/client/src/API/api_download"
 	"aetova/client/utils"
-	"encoding/json"
 	"fmt"
-	"os"
 	"sync"
 	"time"
 
@@ -45,7 +43,7 @@ func handleDownload(mxConn mc.MutexConnection) {
 		return
 	}
 
-	dLog.Log(docLogger.Debug, fmt.Sprintln("Process takes ", time.Since(start)))
+	dLog.Log(docLogger.Debug, fmt.Sprintln("Download took ", time.Since(start)))
 }
 
 func grGetManifest(mxConn mc.MutexConnection, ce chan error) (bool, utils.ManifestDir) {
@@ -65,18 +63,6 @@ func grGetManifest(mxConn mc.MutexConnection, ce chan error) (bool, utils.Manife
 		dLog.Log(docLogger.Error, err.Error())
 		return false, utils.ManifestDir{}
 	case manifest = <-chanManifest:
-	}
-
-	data, err := json.Marshal(manifest)
-	if err != nil {
-		ce <- err
-		return false, utils.ManifestDir{}
-	}
-
-	err = os.WriteFile(fmt.Sprintf(api_download.TargetDl+"Mfs_%d.json", 0), data, 0777) // TODO: When PostgreSQL is here, change 0 by the guid in the manifest
-	if err != nil {
-		ce <- err
-		return false, utils.ManifestDir{}
 	}
 
 	return true, manifest

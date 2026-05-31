@@ -216,3 +216,108 @@ func grMonitoring(done chan bool, mxConn mc.MutexConnection) {
 		}
 	}
 }
+
+func UpdateGame(manifest utils.ManifestUDir, se []error, mxConn mc.MutexConnection, isResume bool, currentGame utils.ManifestGame) {
+	dLog := docLogger.NewLoggerWithGOpts("Client/update")
+
+	downloadDone = 0
+	writeDone = 0
+
+	dLog.Info(fmt.Sprintf("Nb Chunk %d", NbChunk))
+
+	if NbChunk <= 0 {
+		se = append(se, errors.New("error 10 : nbchunk is at 0 or less"))
+		return
+	}
+
+	guidFolder := fmt.Sprintf("%s%d/", TargetDl, currentGame.Guid)
+	err := os.MkdirAll(guidFolder, 0644)
+	if err != nil {
+		se = append(se, errors.New("Error 16: "+err.Error()))
+		return
+	}
+
+	chanDownload = make(chan DownloaderData, NbChunk)
+	chanWrite = make(chan WriterData, NbChunk)
+	var wg sync.WaitGroup = sync.WaitGroup{}
+	var sErrors []error = make([]error, 0)
+
+	// start dl workers
+	for i := 0; i < MaxDLWorkers; i++ {
+		wg.Go(func() {
+			for data := range chanDownload {
+				select {
+				case <-Ctx.Done():
+					return
+				default:
+					err := downloadData(data, currentGame)
+					if err != nil {
+						dLog.Error("Error 14: " + err.Error())
+					} else {
+						atomic.AddInt64(&downloadDone, 1)
+					}
+				}
+			}
+		})
+	}
+
+	// start write workers
+	for i := 0; i < MaxWRWorkers; i++ {
+		wg.Go(func() {
+			for data := range chanWrite {
+				select {
+				case <-Ctx.Done():
+					return
+				default:
+					err := saveChunkAt(data)
+					if err != nil {
+						dLog.Error("Error 15: " + err.Error())
+					} else {
+						atomic.AddInt64(&writeDone, 1)
+					}
+				}
+			}
+		})
+	}
+
+	// stock send all the file that need to be download
+	err = downloadUDir(manifest, currentGame, "", isResume)
+	if err != nil {
+		se = append(se, err)
+	}
+
+	done := make(chan bool, 2)
+	go grWaitGroup(&wg, done)
+
+	go grMonitoring(done, mxConn)
+
+	select {
+	case <-Ctx.Done():
+		dLog.Info("Request Cancel")
+		return
+	case <-done:
+		for _, err := range sErrors {
+			se = append(se, err)
+		}
+	}
+
+	if len(se) == 0 {
+		bitmapWG.Wait()
+		dLog.Info("Remove Manifest")
+		err = os.Remove(fmt.Sprintf(TargetDl+"UMfs_%d.json", 0)) // TODO: When PostgreSQL is here, change 0 by the guid in the manifest
+		if err != nil {
+			se = append(se, errors.New("Error 17: "+err.Error()))
+		}
+
+		dLog.Info("Delete the BitmapChunk files")
+		err = os.RemoveAll(guidFolder)
+		if err != nil {
+			se = append(se, errors.New("Error 18: "+err.Error()))
+		}
+		bitmapWG = sync.WaitGroup{}
+	} else {
+		for _, err := range se {
+			dLog.Error("Error 21: " + err.Error())
+		}
+	}
+}
