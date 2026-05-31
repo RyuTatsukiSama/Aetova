@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 )
 
@@ -20,12 +21,15 @@ var (
 
 func GetManifest(cm chan utils.ManifestDir, ce chan error, guid uint, version uint) {
 	// Create the request
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/manifest?guid=%d&mType=app", Server_Url, guid), nil) // TODO : Change that to avoid hard code port for server URL
+	params := url.Values{}
+	params.Add("guid", fmt.Sprintf("%d", guid))
+	params.Add("mType", "app")
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/manifest?%s", Server_Url, params.Encode()), nil) // TODO : Change that to avoid hard code port for server URL
 	if err != nil {
 		ce <- err
 		return
 	}
-
 	req.Header.Add("api_key", "c7e642cc-9928-4248-bd3f-c9588490bb60")
 
 	// Launch the request and check resp status code
@@ -78,7 +82,12 @@ func GetManifest(cm chan utils.ManifestDir, ce chan error, guid uint, version ui
 
 func getDirManifest(gameManifest utils.ManifestGame) (utils.ManifestDir, error) {
 	// Create the request
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/manifest?guid=%d&mType=dl&version=%d", Server_Url, gameManifest.Guid, gameManifest.Version), nil) // TODO : Change that to avoid hard code port for server URL
+	params := url.Values{}
+	params.Add("guid", fmt.Sprintf("%d", gameManifest.Guid))
+	params.Add("version", fmt.Sprintf("%d", gameManifest.Version))
+	params.Add("mType", "dl")
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/manifest?%s", Server_Url, params.Encode()), nil) // TODO : Change that to avoid hard code port for server URL
 	if err != nil {
 		return utils.ManifestDir{}, err
 	}
@@ -113,10 +122,67 @@ func getDirManifest(gameManifest utils.ManifestGame) (utils.ManifestDir, error) 
 	}
 
 	// save the manifest into a file
-	err = os.WriteFile(fmt.Sprintf(TargetDl+"Mfs_%d.json", 0), body, 0777) // TODO: When PostgreSQL is here, change 0 by the guid in the manifest
+	err = os.WriteFile(fmt.Sprintf(TargetDl+"Mfs_%d.json", gameManifest.Guid), body, 0777) // TODO: When PostgreSQL is here, change 0 by the guid in the manifest
 	if err != nil {
 		return utils.ManifestDir{}, err
 	}
 
 	return dirManifest, nil
+}
+
+func GetUManifest(cm chan utils.ManifestUDir, ce chan error, guid uint, version uint) {
+	// Create the request
+	params := url.Values{}
+	params.Add("guid", fmt.Sprintf("%d", guid))
+	params.Add("version", fmt.Sprintf("%d", version))
+	params.Add("mType", "upt")
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/manifest?%s", Server_Url, params.Encode()), nil) // TODO : Change that to avoid hard code port for server URL
+	if err != nil {
+		ce <- err
+		return
+	}
+
+	req.Header.Add("api_key", "c7e642cc-9928-4248-bd3f-c9588490bb60")
+
+	// Do the request and check the status code respond
+	resp, err := client.Do(req)
+	if err != nil {
+		ce <- err
+		return
+	}
+	if resp.StatusCode != 200 {
+		ce <- errors.New(resp.Status)
+		return
+	}
+
+	// Extract data from the body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		ce <- err
+		return
+	}
+
+	// Convert it to manifestDir
+	var dirManifest utils.ManifestUDir
+	if err := json.Unmarshal(body, &dirManifest); err != nil {
+		ce <- err
+		return
+	}
+
+	// Close the body
+	err = resp.Body.Close()
+	if err != nil {
+		ce <- err
+		return
+	}
+
+	// save the manifest into a file
+	err = os.WriteFile(fmt.Sprintf(TargetDl+"UMfs_%d.json", guid), body, 0777)
+	if err != nil {
+		ce <- err
+		return
+	}
+
+	cm <- dirManifest
 }

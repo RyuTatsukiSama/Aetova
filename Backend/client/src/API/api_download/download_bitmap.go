@@ -5,11 +5,15 @@ import (
 	"encoding/binary"
 	"errors"
 	"os"
+	"slices"
+	"sync"
 	"sync/atomic"
 	"time"
 
 	"github.com/RyuTatsukiSama/docLogger/go/docLogger"
 )
+
+var bitmapWG sync.WaitGroup
 
 type ChunkBitmap struct {
 	words []atomic.Uint64
@@ -23,6 +27,23 @@ func NewChunkBitmap(chunkCount int) *(ChunkBitmap) {
 		words: make([]atomic.Uint64, wordCount),
 		total: chunkCount,
 	}
+}
+
+func NewUChunkBitmap(chunkCount int, changes []int) *(ChunkBitmap) {
+	// +63 for round to superior unit64
+	wordCount := (chunkCount + 63) / 64
+	this := ChunkBitmap{
+		words: make([]atomic.Uint64, wordCount),
+		total: chunkCount,
+	}
+
+	for i := 0; i < chunkCount; i++ {
+		if !slices.Contains(changes, i) {
+			this.Mark(i)
+		}
+	}
+
+	return &this
 }
 
 func (b *ChunkBitmap) Mark(chunkID int) {
@@ -85,7 +106,12 @@ func (b *ChunkBitmap) MissingChunks() []int {
 
 func (b *ChunkBitmap) StartAutoSave(ctx context.Context, path string, interval time.Duration) {
 	dLog := docLogger.NewLoggerWithGOpts("Client/ChunkBitmap")
-	go func() {
+	err := b.SaveToDisk(path)
+	if err != nil {
+		dLog.Error("Error 12: " + err.Error())
+	}
+
+	bitmapWG.Go(func() {
 		ticker := time.NewTicker(interval)
 		defer ticker.Stop()
 		for {
@@ -105,7 +131,7 @@ func (b *ChunkBitmap) StartAutoSave(ctx context.Context, path string, interval t
 				}
 			}
 		}
-	}()
+	})
 }
 
 func (b *ChunkBitmap) IsComplete() bool {

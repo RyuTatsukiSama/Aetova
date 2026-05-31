@@ -15,7 +15,6 @@ if %errorlevel% neq 0 (
 )
 
 :: Change the version in the app manifest
-
 set FILE=".\Shipyard\AppManifest_0.json"
 
 powershell -Command ^
