@@ -44,13 +44,13 @@ func handleStringMessage(message string) {
 		handleUpdate(MxConn)
 	case resume_upt:
 		dLog.Debug("Resume Update has been called")
-
+		handleResumeUpdate(MxConn)
 	default:
 		dLog.Error("Error 6 : Message " + message + " not listed")
 	}
 }
 
-func deleteDownloadFiles(folderName string) error {
+func deleteDownloadFiles(folderName string) error { // TODO: Find a way for it to work
 	// remove the game folder
 	err := os.RemoveAll("downloads/" + folderName)
 	if err != nil {

@@ -56,7 +56,7 @@ func downloadData(dData DownloaderData, gManifest utils.ManifestGame) error {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return errors.New(err.Error() + " downloadData Do")
+		return fmt.Errorf("%s Download do file %s", err.Error(), dData.path)
 	}
 	if resp.StatusCode != 200 {
 		body, err := io.ReadAll(resp.Body)
