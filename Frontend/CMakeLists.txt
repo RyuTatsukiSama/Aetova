@@ -113,14 +113,15 @@ set_target_properties(Aetova PROPERTIES
 # ---- COMMANDS ----
 
 add_custom_command(TARGET Aetova POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory
-        "$<TARGET_FILE_DIR:Aetova>/wd"
-)
-
-add_custom_command(TARGET Aetova POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_SOURCE_DIR}/Dependencies/docLogger_v1-1-1/bin/$<CONFIG>/docLogger.dll"
         "$<TARGET_FILE_DIR:Aetova>/docLogger.dll"    
+)
+
+add_custom_command(TARGET Aetova POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
+        "${CMAKE_SOURCE_DIR}/clientGo/"
+        "$<TARGET_FILE_DIR:Aetova>/clientGo"
 )
 
 add_custom_command(TARGET Aetova POST_BUILD
