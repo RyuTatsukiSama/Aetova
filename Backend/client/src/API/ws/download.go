@@ -4,6 +4,7 @@ import (
 	mc "aetova/client/src/API/MutexConnection"
 	"aetova/client/src/API/api_download"
 	"aetova/client/utils"
+	"context"
 	"fmt"
 	"sync"
 	"time"
@@ -19,6 +20,8 @@ const (
 func handleDownload(mxConn mc.MutexConnection) {
 	dLog := docLogger.NewLoggerWithGOpts(LoggerCD)
 	start := time.Now()
+
+	ctx, mc.CancelFunc = context.WithCancel(context.Background())
 
 	chanError := make(chan error)
 

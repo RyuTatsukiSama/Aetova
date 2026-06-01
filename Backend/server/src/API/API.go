@@ -2,6 +2,7 @@ package server_api
 
 import (
 	"aetova/server/utils"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -10,8 +11,6 @@ import (
 
 func LaunchAPI() error {
 	dLog := docLogger.NewLoggerWithGOpts("Server/LaunchAPI")
-
-	dLog.Info("Server Launch")
 
 	loadHandle()
 
@@ -24,6 +23,8 @@ func LaunchAPI() error {
 	if err != nil {
 		return err
 	}
+
+	dLog.Info(fmt.Sprintf("Server Launch on port %d", port))
 
 	return http.ListenAndServe(":"+strconv.Itoa(port), nil)
 }

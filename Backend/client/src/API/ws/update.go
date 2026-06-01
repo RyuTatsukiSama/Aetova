@@ -4,6 +4,7 @@ import (
 	mc "aetova/client/src/API/MutexConnection"
 	"aetova/client/src/API/api_download"
 	"aetova/client/utils"
+	"context"
 	"fmt"
 	"os"
 	"sync"
@@ -19,6 +20,8 @@ func handleUpdate(mxConn mc.MutexConnection) {
 	start := time.Now()
 
 	chanError := make(chan error)
+
+	ctx, mc.CancelFunc = context.WithCancel(context.Background())
 
 	dLog.Info("Get the app manifest")
 

@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	MaxDLWorkers int = 438
+	MaxDLWorkers int = 200
 	MaxWRWorkers int = 5000
 )
 
