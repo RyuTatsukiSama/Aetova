@@ -18,8 +18,6 @@ ClientBridge::ClientBridge(QObject *parent) : QObject(parent)
 
     process->startDetached("clientGo/client.exe"); // TODO : Change this to a "CREATE_PROCESS", or a more multi platforme fonction
 
-    std::fstream confFile("clientGo/.conf", std::ios::in);
-
     manager = new QNetworkAccessManager(nullptr);
 
     launcher = new GameLauncher(this);
@@ -64,7 +62,6 @@ void ClientBridge::ConfPort()
     else 
     {
         log->Error(reply->errorString().toStdString() + " " + reply->readAll().toStdString());
-        ConfPort();
     }
     reply->deleteLater(); });
 }
@@ -100,6 +97,11 @@ void ClientBridge::onTextMessageReceived(QString message)
     {
         bindFunctionToButton("Launch", "launch");
     }
+    else if (mess.type == NEED_UPDATE)
+    {
+        log->Info("Need update");
+        needUpdate = true;
+    }
     else
         mess.read();
 }
@@ -115,6 +117,10 @@ void ClientBridge::CallFuncByName(const QString &name)
     {
         download();
     }
+    else if (name == "update")
+    {
+        update();
+    }
     else if (name == "pause")
     {
         pause();
@@ -122,6 +128,10 @@ void ClientBridge::CallFuncByName(const QString &name)
     else if (name == "resume")
     {
         resume();
+    }
+    else if (name == "resume_upt")
+    {
+        resumeUpt();
     }
     else if (name == "launch")
     {
@@ -137,6 +147,7 @@ void ClientBridge::StartBinding()
 {
     log->Info("Start Biding");
     std::string path = "Shipyard/app/BuildOranys";
+
     if (fs::exists(path) && fs::is_directory(path)) // the download already started or is done
     {
         // TODO : Update it when PostreSQL will be here
@@ -144,10 +155,21 @@ void ClientBridge::StartBinding()
         {
             bindFunctionToButton("Resume", "resume");
         }
+        else if (fs::exists(std::format("Shipyard/downloads/UMfs_{}.json", 0))) // the download isn't finish
+        {
+            bindFunctionToButton("Resume", "resume_upt");
+        }
         else
         {
-            bindFunctionToButton("Launch", "launch");
-            monitoringSignal(100.f, 0.f, 100.f, 0.f);
+            if (needUpdate)
+            {
+                bindFunctionToButton("Update", "update");
+            }
+            else
+            {
+                bindFunctionToButton("Launch", "launch");
+                monitoringSignal(100.f, 0.f, 100.f, 0.f);
+            }
         }
     }
     else
@@ -162,6 +184,18 @@ void ClientBridge::download()
     Message dlMessage;
     dlMessage.type = TEXT;
     std::string dlstr = "download";
+    dlMessage.data = dlstr;
+    json j = dlMessage;
+    ws->sendTextMessage(QString::fromStdString(j.dump()));
+    bindFunctionToButton("Pause", "pause");
+}
+
+void ClientBridge::update()
+{
+    log->Info("Update Start");
+    Message dlMessage;
+    dlMessage.type = TEXT;
+    std::string dlstr = "update";
     dlMessage.data = dlstr;
     json j = dlMessage;
     ws->sendTextMessage(QString::fromStdString(j.dump()));
@@ -186,6 +220,18 @@ void ClientBridge::resume()
     Message dlMessage;
     dlMessage.type = TEXT;
     std::string dlstr = "resume";
+    dlMessage.data = dlstr;
+    json j = dlMessage;
+    ws->sendTextMessage(QString::fromStdString(j.dump()));
+    bindFunctionToButton("Pause", "pause");
+}
+
+void ClientBridge::resumeUpt()
+{
+    log->Info("Resume update called");
+    Message dlMessage;
+    dlMessage.type = TEXT;
+    std::string dlstr = "resume_upt";
     dlMessage.data = dlstr;
     json j = dlMessage;
     ws->sendTextMessage(QString::fromStdString(j.dump()));

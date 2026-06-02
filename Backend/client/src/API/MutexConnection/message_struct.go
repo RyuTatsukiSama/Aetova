@@ -15,4 +15,5 @@ const (
 	Exit
 	Monitoring
 	DownloadDone
+	NeedUpdate
 )
