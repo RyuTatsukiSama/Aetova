@@ -88,6 +88,9 @@ func UpdateGame(updatePath string, guid uint) error {
 		return err
 	}
 
+	// Clear current game, just in case
+	currentGame = utils.ManifestGame{}
+
 	dLog.Info(fmt.Sprintln("Update done, it took", time.Since(start)))
 
 	return nil

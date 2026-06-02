@@ -145,8 +145,9 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 	}
 
 	if len(se) == 0 {
+		bitmapWG.Wait()
 		dLog.Info("Remove Manifest")
-		err = os.Remove(fmt.Sprintf(TargetDl+"Mfs_%d.json", 0)) // TODO: When PostgreSQL is here, change 0 by the guid in the manifest
+		err = os.Remove(fmt.Sprintf(TargetDl+"UMfs_%d.json", 0)) // TODO: When PostgreSQL is here, change 0 by the guid in the manifest
 		if err != nil {
 			se = append(se, errors.New("Error 17: "+err.Error()))
 		}
@@ -155,6 +156,11 @@ func DownloadGame(manifest utils.ManifestDir, se []error, mxConn mc.MutexConnect
 		err = os.RemoveAll(guidFolder)
 		if err != nil {
 			se = append(se, errors.New("Error 18: "+err.Error()))
+		}
+		bitmapWG = sync.WaitGroup{}
+	} else {
+		for _, err := range se {
+			dLog.Error("Error 21: " + err.Error())
 		}
 	}
 }

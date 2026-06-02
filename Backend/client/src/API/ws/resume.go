@@ -58,7 +58,7 @@ func handlePostResume(mxConn mc.MutexConnection) {
 	chanError := make(chan error)
 
 	// browse the manifest and create the new manifest
-	done := grSearchOnGoingManifest(mxConn, manifestDir, chanError)
+	done := grCountChunk(mxConn, manifestDir, chanError)
 	if !done {
 		return
 	}
@@ -81,7 +81,7 @@ func handlePostResume(mxConn mc.MutexConnection) {
 	}
 }
 
-func grSearchOnGoingManifest(mxConn mc.MutexConnection, manifestDir utils.ManifestDir, ce chan error) bool {
+func grCountChunk(mxConn mc.MutexConnection, manifestDir utils.ManifestDir, ce chan error) bool {
 	dLog := docLogger.NewLoggerWithGOpts(LoggerCR)
 
 	chanDone := make(chan bool)
