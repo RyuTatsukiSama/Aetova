@@ -31,8 +31,5 @@ func CompareGame(old utils.ManifestDir, new utils.ManifestDir) error {
 		return err
 	}
 
-	// Clear current game, just in case
-	currentGame = utils.ManifestGame{}
-
 	return nil
 }
