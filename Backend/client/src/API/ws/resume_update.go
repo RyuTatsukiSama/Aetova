@@ -18,6 +18,22 @@ func handleResumeUpdate(mxConn mc.MutexConnection) {
 	// restart the context after cancel
 	ctx, mc.CancelFunc = context.WithCancel(context.Background())
 
+	dLog.Info("Get the app manifest")
+
+	file, err := os.Open(fmt.Sprintf("AppManifest_%d.json", 0)) // TODO: GUID Hard coded here
+	if err != nil {
+		dLog.Error(err.Error())
+		return
+	}
+
+	err = utils.FromJson(&currentGame, file)
+	if err != nil {
+		dLog.Error(err.Error())
+		return
+	}
+
+	currentGame.Version += 1
+
 	mfsPath := fmt.Sprintf("downloads/UMfs_%d.json", 0) // TODO: When PostreSQL is here, get it from the manifest
 
 	// check if the manifest exist
@@ -60,6 +76,24 @@ func handleResumeUpdate(mxConn mc.MutexConnection) {
 	if !done {
 		return
 	}
+
+	dLog.Info("Update the app manifest")
+
+	file, err = os.OpenFile(fmt.Sprintf("AppManifest_%d.json", 0), os.O_WRONLY|os.O_TRUNC, 0777) // TODO: GUID Hard coded here
+	if err != nil {
+		dLog.Error(err.Error())
+		return
+	}
+
+	err = utils.ToJson(&currentGame, file)
+	if err != nil {
+		dLog.Error(err.Error())
+		return
+	}
+	defer file.Close()
+
+	// Clear the current Game just in case
+	currentGame = utils.ManifestGame{}
 }
 
 func grSearchOnGoingUManifest(mxConn mc.MutexConnection, manifestDir utils.ManifestUDir, ce chan error) bool {

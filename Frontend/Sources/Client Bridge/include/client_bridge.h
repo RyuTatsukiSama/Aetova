@@ -35,14 +35,18 @@ private:
     void ConfPort();
 
     void download();
+    void update();
     void pause();
     void resume();
+    void resumeUpt();
     void launch();
 
     void websocket();
     void wsConnected();
     void wsDisconnected();
     void onTextMessageReceived(QString message);
+
+    bool needUpdate = false;
 
 signals:
     void bindFunctionToButton(const QString &text, const QString &name);

@@ -33,4 +33,5 @@ func loadHandle() {
 	http.HandleFunc("/health", requireAPIKey(healthHandler))
 	http.HandleFunc("/manifest", requireAPIKey(manifestHandler))
 	http.HandleFunc("/downloader", requireAPIKey(handlerDownloader))
+	http.HandleFunc("/version", requireAPIKey(versionHandler))
 }
