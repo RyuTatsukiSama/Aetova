@@ -40,6 +40,26 @@ ClientBridge::ClientBridge(QObject *parent) : QObject(parent)
     reply->deleteLater(); });
 }
 
+ClientBridge::~ClientBridge()
+{
+    exit();
+
+    delete process;
+    process = nullptr;
+
+    delete ws;
+    ws = nullptr;
+
+    delete manager;
+    manager = nullptr;
+
+    delete launcher;
+    launcher = nullptr;
+
+    delete log;
+    log = nullptr;
+}
+
 void ClientBridge::ConfPort()
 {
     std::fstream confFile("Shipyard/.conf", std::ios::in);
@@ -99,8 +119,13 @@ void ClientBridge::onTextMessageReceived(QString message)
     }
     else if (mess.type == NEED_UPDATE)
     {
-        log->Info("Need update");
-        needUpdate = true;
+        if (!isResume)
+        {
+            log->Info("Need update");
+            needUpdate = true;
+            bindFunctionToButton("Update", "update");
+            monitoringSignal(0.f, 0.f, 0.f, 0.f);
+        }
     }
     else
         mess.read();
@@ -154,10 +179,12 @@ void ClientBridge::StartBinding()
         if (fs::exists(std::format("Shipyard/downloads/Mfs_{}.json", 0))) // the download isn't finish
         {
             bindFunctionToButton("Resume", "resume");
+            isResume = true;
         }
         else if (fs::exists(std::format("Shipyard/downloads/UMfs_{}.json", 0))) // the download isn't finish
         {
             bindFunctionToButton("Resume", "resume_upt");
+            isResume = true;
         }
         else
         {
@@ -236,6 +263,17 @@ void ClientBridge::resumeUpt()
     json j = dlMessage;
     ws->sendTextMessage(QString::fromStdString(j.dump()));
     bindFunctionToButton("Pause", "pause");
+}
+
+void ClientBridge::exit()
+{
+    log->Info("Resume update called");
+    Message dlMessage;
+    dlMessage.type = EXIT;
+    std::string dlstr = "";
+    dlMessage.data = dlstr;
+    json j = dlMessage;
+    ws->sendTextMessage(QString::fromStdString(j.dump()));
 }
 
 void ClientBridge::launch()

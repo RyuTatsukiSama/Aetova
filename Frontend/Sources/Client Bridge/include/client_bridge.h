@@ -25,6 +25,7 @@ private:
 
 public:
     explicit ClientBridge(QObject *parent = nullptr);
+    ~ClientBridge();
 
 public slots:
 
@@ -40,6 +41,7 @@ private:
     void resume();
     void resumeUpt();
     void launch();
+    void exit();
 
     void websocket();
     void wsConnected();
@@ -47,6 +49,7 @@ private:
     void onTextMessageReceived(QString message);
 
     bool needUpdate = false;
+    bool isResume = false;
 
 signals:
     void bindFunctionToButton(const QString &text, const QString &name);

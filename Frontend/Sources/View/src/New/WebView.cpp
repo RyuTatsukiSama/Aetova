@@ -52,4 +52,7 @@ WebView::~WebView()
 
     delete log;
     log = nullptr;
+
+    delete bridge;
+    bridge = nullptr;
 }
